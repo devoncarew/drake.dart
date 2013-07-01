@@ -1,0 +1,10 @@
+name: webitor
+version: 0.3.0
+author: devoncarew@google.com
+description: A Chrome app based web development environment.
+dependencies:
+  analyzer_experimental: any
+  browser: any
+  chrome: any
+  js: any
+  unittest: any

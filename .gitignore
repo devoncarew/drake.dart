@@ -1,0 +1,6 @@
+lines.sh
+pubspec.lock
+*.pem
+/packages/
+.svn
+.DS_Store
