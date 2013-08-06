@@ -28,11 +28,11 @@
 library matcher;
 
 import 'dart:async';
+import 'package:meta/meta.dart';
 
 import 'src/pretty_print.dart';
 import 'src/utils.dart';
 
-part 'src/basematcher.dart';
 part 'src/iterable_matchers.dart';
 part 'src/core_matchers.dart';
 part 'src/description.dart';

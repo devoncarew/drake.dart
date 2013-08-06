@@ -7,7 +7,6 @@ import 'dart:json' as json;
 
 import '../packages/chrome/chrome.dart' as chrome;
 
-import 'utils.dart';
 import 'filesystem.dart';
 
 

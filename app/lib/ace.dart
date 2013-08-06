@@ -8,7 +8,6 @@ import '../packages/js/js.dart' as js;
 
 import 'bootstrap.dart';
 import 'utils.dart';
-import 'workbench.dart';
 
 dynamic get _context => js.context;
 dynamic get _ace => _context.ace;

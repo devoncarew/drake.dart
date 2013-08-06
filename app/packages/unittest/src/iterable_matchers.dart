@@ -58,15 +58,21 @@ class _EveryElement extends _IterableMatcher {
 }
 
 /**
+ * Deprecated form of [anyElement].
+ */
+@deprecated
+Matcher someElement(matcher) => new _AnyElement(wrapMatcher(matcher));
+
+/**
  * Returns a matcher which matches [Iterable]s in which at least one
  * element matches the given [matcher].
  */
-Matcher someElement(matcher) => new _SomeElement(wrapMatcher(matcher));
+Matcher anyElement(matcher) => new _AnyElement(wrapMatcher(matcher));
 
-class _SomeElement extends _IterableMatcher {
+class _AnyElement extends _IterableMatcher {
   Matcher _matcher;
 
-  _SomeElement(this._matcher);
+  _AnyElement(this._matcher);
 
   bool matches(item, Map matchState) {
     return item.any((e) => _matcher.matches(e, matchState));
@@ -84,7 +90,7 @@ class _SomeElement extends _IterableMatcher {
 
 Matcher orderedEquals(Iterable expected) => new _OrderedEquals(expected);
 
-class _OrderedEquals extends BaseMatcher {
+class _OrderedEquals extends Matcher {
   final Iterable _expected;
   Matcher _matcher;
 
@@ -117,7 +123,7 @@ class _OrderedEquals extends BaseMatcher {
 Matcher unorderedEquals(Iterable expected) =>
     new _UnorderedEquals(expected);
 
-class _UnorderedEquals extends BaseMatcher {
+class _UnorderedEquals extends Matcher {
   Iterable _expected;
 
   _UnorderedEquals(Iterable this._expected);
@@ -177,7 +183,7 @@ class _UnorderedEquals extends BaseMatcher {
  * Iterable matchers match against [Iterable]s. We add this intermediate
  * class to give better mismatch error messages than the base Matcher class.
  */
-abstract class _IterableMatcher extends BaseMatcher {
+abstract class _IterableMatcher extends Matcher {
   const _IterableMatcher();
   Description describeMismatch(item, Description mismatchDescription,
                                Map matchState, bool verbose) {

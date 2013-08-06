@@ -4,7 +4,6 @@ library chrome_socket;
 import 'dart:async';
 
 import '../packages/js/js.dart' as js;
-import '../packages/js/js_wrapping.dart' as js_wrapping;
 
 // TODO: server socket
 

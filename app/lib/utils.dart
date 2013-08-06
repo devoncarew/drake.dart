@@ -1,7 +1,6 @@
 
 library utils;
 
-import 'dart:async';
 import 'dart:html';
 import 'dart:web_audio';
 
@@ -83,7 +82,7 @@ void beep() {
   
   OscillatorNode osc = _ctx.createOscillator();
 
-  osc.connect(_ctx.destination, 0, 0);
+  osc.connectNode(_ctx.destination, 0, 0);
   osc.start(0);
   osc.stop(_ctx.currentTime + 0.1);
 }

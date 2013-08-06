@@ -5,7 +5,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'packages/chrome/chrome.dart' as chrome;
-import 'packages/unittest/unittest.dart' as unittest;
 
 import 'lib/analysis.dart';
 import 'lib/bootstrap.dart';

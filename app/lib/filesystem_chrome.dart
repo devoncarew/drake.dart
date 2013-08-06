@@ -3,7 +3,6 @@ library filesystem_chrome;
 
 import 'dart:async';
 
-import 'utils.dart';
 import 'filesystem.dart';
 
 final ChromeFileSystem chromeFileSystem = new ChromeFileSystem();

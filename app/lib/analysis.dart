@@ -14,7 +14,6 @@ export '../packages/analyzer_experimental/src/generated/error.dart';
 import '../packages/chrome/chrome.dart' as chrome;
 
 import 'utils.dart';
-import 'widgets.dart';
 
 String analysisLiteralToString(StringLiteral literal) {
   if (literal is SimpleStringLiteral) {
@@ -98,7 +97,7 @@ class AnalysisStringSource extends Source {
     return str == null ? super.hashCode : str.hashCode;
   }
 
-  bool isInSystemLibrary() => false;
+  bool get isInSystemLibrary => false;
 
   Source resolve(String uri) {
     // TODO:

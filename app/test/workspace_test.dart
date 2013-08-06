@@ -1,8 +1,6 @@
 
 library workspace_test;
 
-import 'dart:async';
-
 import '../packages/unittest/unittest.dart';
 import '../lib/workbench.dart';
 import '../lib/workspace.dart';

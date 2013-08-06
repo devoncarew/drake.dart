@@ -6,7 +6,6 @@ import 'dart:html';
 
 import '../packages/unittest/unittest.dart';
 import '../lib/workbench.dart';
-import '../lib/workspace.dart';
 
 main() {
   group('workbench', () {

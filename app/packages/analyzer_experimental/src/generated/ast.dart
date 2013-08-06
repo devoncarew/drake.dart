@@ -11,25 +11,32 @@ import 'engine.dart' show AnalysisEngine;
 import 'utilities_dart.dart';
 import 'element.dart';
 /**
- * The abstract class {@code ASTNode} defines the behavior common to all nodes in the AST structure
+ * The abstract class `ASTNode` defines the behavior common to all nodes in the AST structure
  * for a Dart program.
+ *
  * @coverage dart.engine.ast
  */
 abstract class ASTNode {
 
   /**
-   * The parent of the node, or {@code null} if the node is the root of an AST structure.
+   * An empty array of ast nodes.
+   */
+  static List<ASTNode> EMPTY_ARRAY = new List<ASTNode>(0);
+
+  /**
+   * The parent of the node, or `null` if the node is the root of an AST structure.
    */
   ASTNode _parent;
 
   /**
-   * A table mapping the names of properties to their values, or {@code null} if this node does not
+   * A table mapping the names of properties to their values, or `null` if this node does not
    * have any properties associated with it.
    */
   Map<String, Object> _propertyMap;
 
   /**
-   * A comparator that can be used to sort AST nodes in lexical order. In other words,{@code compare} will return a negative value if the offset of the first node is less than the
+   * A comparator that can be used to sort AST nodes in lexical order. In other words,
+   * `compare` will return a negative value if the offset of the first node is less than the
    * offset of the second node, zero (0) if the nodes have the same offset, and a positive value if
    * if the offset of the first node is greater than the offset of the second node.
    */
@@ -37,14 +44,15 @@ abstract class ASTNode {
 
   /**
    * Use the given visitor to visit this node.
+   *
    * @param visitor the visitor that will visit this node
    * @return the value returned by the visitor as a result of visiting this node
    */
   accept(ASTVisitor visitor);
 
   /**
-   * @return the {@link ASTNode} of given {@link Class} which is {@link ASTNode} itself, or one of
-   * its parents.
+   * @return the [ASTNode] of given [Class] which is [ASTNode] itself, or one of
+   *         its parents.
    */
   ASTNode getAncestor(Type enclosingClass) {
     ASTNode node = this;
@@ -57,27 +65,31 @@ abstract class ASTNode {
 
   /**
    * Return the first token included in this node's source range.
+   *
    * @return the first token included in this node's source range
    */
   Token get beginToken;
 
   /**
    * Return the offset of the character immediately following the last character of this node's
-   * source range. This is equivalent to {@code node.getOffset() + node.getLength()}. For a
+   * source range. This is equivalent to `node.getOffset() + node.getLength()`. For a
    * compilation unit this will be equal to the length of the unit's source. For synthetic nodes
    * this will be equivalent to the node's offset (because the length is zero (0) by definition).
+   *
    * @return the offset of the character just past the node's source range
    */
   int get end => offset + length;
 
   /**
    * Return the last token included in this node's source range.
+   *
    * @return the last token included in this node's source range
    */
   Token get endToken;
 
   /**
    * Return the number of characters in the node's source range.
+   *
    * @return the number of characters in the node's source range
    */
   int get length {
@@ -92,8 +104,9 @@ abstract class ASTNode {
   /**
    * Return the offset from the beginning of the file to the first character in the node's source
    * range.
+   *
    * @return the offset from the beginning of the file to the first character in the node's source
-   * range
+   *         range
    */
   int get offset {
     Token beginToken = this.beginToken;
@@ -104,17 +117,19 @@ abstract class ASTNode {
   }
 
   /**
-   * Return this node's parent node, or {@code null} if this node is the root of an AST structure.
-   * <p>
+   * Return this node's parent node, or `null` if this node is the root of an AST structure.
+   *
    * Note that the relationship between an AST node and its parent node may change over the lifetime
    * of a node.
-   * @return the parent of this node, or {@code null} if none
+   *
+   * @return the parent of this node, or `null` if none
    */
   ASTNode get parent => _parent;
 
   /**
-   * Return the value of the property with the given name, or {@code null} if this node does not
+   * Return the value of the property with the given name, or `null` if this node does not
    * have a property with the given name.
+   *
    * @return the value of the property with the given name
    */
   Object getProperty(String propertyName) {
@@ -127,6 +142,7 @@ abstract class ASTNode {
   /**
    * Return the node at the root of this node's AST structure. Note that this method's performance
    * is linear with respect to the depth of the node in the AST structure (O(depth)).
+   *
    * @return the node at the root of this node's AST structure
    */
   ASTNode get root {
@@ -140,15 +156,18 @@ abstract class ASTNode {
   }
 
   /**
-   * Return {@code true} if this node is a synthetic node. A synthetic node is a node that was
+   * Return `true` if this node is a synthetic node. A synthetic node is a node that was
    * introduced by the parser in order to recover from an error in the code. Synthetic nodes always
-   * have a length of zero ({@code 0}).
-   * @return {@code true} if this node is a synthetic node
+   * have a length of zero (`0`).
+   *
+   * @return `true` if this node is a synthetic node
    */
-  bool isSynthetic() => false;
+  bool get isSynthetic => false;
 
   /**
-   * Set the value of the property with the given name to the given value. If the value is{@code null}, the property will effectively be removed.
+   * Set the value of the property with the given name to the given value. If the value is
+   * `null`, the property will effectively be removed.
+   *
    * @param propertyName the name of the property whose value is to be set
    * @param propertyValue the new value of the property
    */
@@ -171,6 +190,7 @@ abstract class ASTNode {
   /**
    * Return a textual description of this node in a form approximating valid source. The returned
    * string will not be valid source primarily in the case where the node itself is not well-formed.
+   *
    * @return the source code equivalent of this node
    */
   String toSource() {
@@ -183,12 +203,14 @@ abstract class ASTNode {
   /**
    * Use the given visitor to visit all of the children of this node. The children will be visited
    * in source order.
+   *
    * @param visitor the visitor that will be used to visit the children of this node
    */
   void visitChildren(ASTVisitor<Object> visitor);
 
   /**
    * Make this node the parent of the given child node.
+   *
    * @param child the node that will become a child of this node
    * @return the node that was made a child of this node
    */
@@ -201,7 +223,8 @@ abstract class ASTNode {
   }
 
   /**
-   * If the given child is not {@code null}, use the given visitor to visit it.
+   * If the given child is not `null`, use the given visitor to visit it.
+   *
    * @param child the child to be visited
    * @param visitor the visitor that will be used to visit the child
    */
@@ -213,6 +236,7 @@ abstract class ASTNode {
 
   /**
    * Set the parent of this node to the given node.
+   *
    * @param newParent the node that is to be made the parent of this node
    */
   void set parent(ASTNode newParent) {
@@ -222,8 +246,9 @@ abstract class ASTNode {
   final int hashCode = ++_hashCodeGenerator;
 }
 /**
- * The interface {@code ASTVisitor} defines the behavior of objects that can be used to visit an AST
+ * The interface `ASTVisitor` defines the behavior of objects that can be used to visit an AST
  * structure.
+ *
  * @coverage dart.engine.ast
  */
 abstract class ASTVisitor<R> {
@@ -292,6 +317,7 @@ abstract class ASTVisitor<R> {
   R visitMethodDeclaration(MethodDeclaration node);
   R visitMethodInvocation(MethodInvocation node);
   R visitNamedExpression(NamedExpression node);
+  R visitNativeClause(NativeClause node);
   R visitNativeFunctionBody(NativeFunctionBody node);
   R visitNullLiteral(NullLiteral node);
   R visitParenthesizedExpression(ParenthesizedExpression node);
@@ -315,6 +341,7 @@ abstract class ASTVisitor<R> {
   R visitSwitchCase(SwitchCase node);
   R visitSwitchDefault(SwitchDefault node);
   R visitSwitchStatement(SwitchStatement node);
+  R visitSymbolLiteral(SymbolLiteral node);
   R visitThisExpression(ThisExpression node);
   R visitThrowExpression(ThrowExpression node);
   R visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node);
@@ -330,14 +357,17 @@ abstract class ASTVisitor<R> {
   R visitWithClause(WithClause node);
 }
 /**
- * Instances of the class {@code AdjacentStrings} represents two or more string literals that are
+ * Instances of the class `AdjacentStrings` represents two or more string literals that are
  * implicitly concatenated because of being adjacent (separated only by whitespace).
- * <p>
+ *
  * While the grammar only allows adjacent strings when all of the strings are of the same kind
  * (single line or multi-line), this class doesn't enforce that restriction.
+ *
  * <pre>
- * adjacentStrings ::={@link StringLiteral string} {@link StringLiteral string}+
+ * adjacentStrings ::=
+ *     [StringLiteral] [StringLiteral]+
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class AdjacentStrings extends StringLiteral {
@@ -349,6 +379,7 @@ class AdjacentStrings extends StringLiteral {
 
   /**
    * Initialize a newly created list of adjacent strings.
+   *
    * @param strings the strings that are implicitly concatenated
    */
   AdjacentStrings.full(List<StringLiteral> strings) {
@@ -358,6 +389,7 @@ class AdjacentStrings extends StringLiteral {
 
   /**
    * Initialize a newly created list of adjacent strings.
+   *
    * @param strings the strings that are implicitly concatenated
    */
   AdjacentStrings({List<StringLiteral> strings}) : this.full(strings);
@@ -367,6 +399,7 @@ class AdjacentStrings extends StringLiteral {
 
   /**
    * Return the strings that are implicitly concatenated.
+   *
    * @return the strings that are implicitly concatenated
    */
   NodeList<StringLiteral> get strings => _strings;
@@ -380,14 +413,15 @@ class AdjacentStrings extends StringLiteral {
   }
 }
 /**
- * The abstract class {@code AnnotatedNode} defines the behavior of nodes that can be annotated with
+ * The abstract class `AnnotatedNode` defines the behavior of nodes that can be annotated with
  * both a comment and metadata.
+ *
  * @coverage dart.engine.ast
  */
 abstract class AnnotatedNode extends ASTNode {
 
   /**
-   * The documentation comment associated with this node, or {@code null} if this node does not have
+   * The documentation comment associated with this node, or `null` if this node does not have
    * a documentation comment associated with it.
    */
   Comment _comment;
@@ -399,6 +433,7 @@ abstract class AnnotatedNode extends ASTNode {
 
   /**
    * Initialize a newly created node.
+   *
    * @param comment the documentation comment associated with this node
    * @param metadata the annotations associated with this node
    */
@@ -410,6 +445,7 @@ abstract class AnnotatedNode extends ASTNode {
 
   /**
    * Initialize a newly created node.
+   *
    * @param comment the documentation comment associated with this node
    * @param metadata the annotations associated with this node
    */
@@ -433,20 +469,23 @@ abstract class AnnotatedNode extends ASTNode {
   }
 
   /**
-   * Return the documentation comment associated with this node, or {@code null} if this node does
+   * Return the documentation comment associated with this node, or `null` if this node does
    * not have a documentation comment associated with it.
+   *
    * @return the documentation comment associated with this node
    */
   Comment get documentationComment => _comment;
 
   /**
    * Return the annotations associated with this node.
+   *
    * @return the annotations associated with this node
    */
   NodeList<Annotation> get metadata => _metadata;
 
   /**
    * Set the documentation comment associated with this node to the given comment.
+   *
    * @param comment the documentation comment to be associated with this node
    */
   void set documentationComment(Comment comment2) {
@@ -455,6 +494,7 @@ abstract class AnnotatedNode extends ASTNode {
 
   /**
    * Set the metadata associated with this node to the given metadata.
+   *
    * @param metadata the metadata to be associated with this node
    */
   void set metadata(List<Annotation> metadata2) {
@@ -474,13 +514,15 @@ abstract class AnnotatedNode extends ASTNode {
 
   /**
    * Return the first token following the comment and metadata.
+   *
    * @return the first token following the comment and metadata
    */
   Token get firstTokenAfterCommentAndMetadata;
 
   /**
-   * Return {@code true} if the comment is lexically before any annotations.
-   * @return {@code true} if the comment is lexically before any annotations
+   * Return `true` if the comment is lexically before any annotations.
+   *
+   * @return `true` if the comment is lexically before any annotations
    */
   bool commentIsBeforeAnnotations() {
     if (_comment == null || _metadata.isEmpty) {
@@ -493,8 +535,9 @@ abstract class AnnotatedNode extends ASTNode {
   /**
    * Return an array containing the comment and annotations associated with this node, sorted in
    * lexical order.
+   *
    * @return the comment and annotations associated with this node in the order in which they
-   * appeared in the original source
+   *         appeared in the original source
    */
   List<ASTNode> get sortedCommentAndAnnotations {
     List<ASTNode> childList = new List<ASTNode>();
@@ -506,14 +549,17 @@ abstract class AnnotatedNode extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code Annotation} represent an annotation that can be associated with an
+ * Instances of the class `Annotation` represent an annotation that can be associated with an
  * AST node.
+ *
  * <pre>
  * metadata ::=
- * annotation
+ *     annotation*
+ *
  * annotation ::=
- * '@' {@link Identifier qualified} ('.' {@link SimpleIdentifier identifier})? {@link ArgumentList arguments}?
+ *     '@' [Identifier] ('.' [SimpleIdentifier])? [ArgumentList]?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class Annotation extends ASTNode {
@@ -530,34 +576,41 @@ class Annotation extends ASTNode {
   Identifier _name;
 
   /**
-   * The period before the constructor name, or {@code null} if this annotation is not the
+   * The period before the constructor name, or `null` if this annotation is not the
    * invocation of a named constructor.
    */
   Token _period;
 
   /**
-   * The name of the constructor being invoked, or {@code null} if this annotation is not the
+   * The name of the constructor being invoked, or `null` if this annotation is not the
    * invocation of a named constructor.
    */
   SimpleIdentifier _constructorName;
 
   /**
-   * The arguments to the constructor being invoked, or {@code null} if this annotation is not the
+   * The arguments to the constructor being invoked, or `null` if this annotation is not the
    * invocation of a constructor.
    */
   ArgumentList _arguments;
 
   /**
+   * The element associated with this annotation, or `null` if the AST structure has not been
+   * resolved or if this annotation could not be resolved.
+   */
+  Element _element;
+
+  /**
    * Initialize a newly created annotation.
+   *
    * @param atSign the at sign that introduced the annotation
    * @param name the name of the class defining the constructor that is being invoked or the name of
-   * the field that is being referenced
-   * @param period the period before the constructor name, or {@code null} if this annotation is not
-   * the invocation of a named constructor
-   * @param constructorName the name of the constructor being invoked, or {@code null} if this
-   * annotation is not the invocation of a named constructor
-   * @param arguments the arguments to the constructor being invoked, or {@code null} if this
-   * annotation is not the invocation of a constructor
+   *          the field that is being referenced
+   * @param period the period before the constructor name, or `null` if this annotation is not
+   *          the invocation of a named constructor
+   * @param constructorName the name of the constructor being invoked, or `null` if this
+   *          annotation is not the invocation of a named constructor
+   * @param arguments the arguments to the constructor being invoked, or `null` if this
+   *          annotation is not the invocation of a constructor
    */
   Annotation.full(Token atSign, Identifier name, Token period, SimpleIdentifier constructorName, ArgumentList arguments) {
     this._atSign = atSign;
@@ -569,49 +622,55 @@ class Annotation extends ASTNode {
 
   /**
    * Initialize a newly created annotation.
+   *
    * @param atSign the at sign that introduced the annotation
    * @param name the name of the class defining the constructor that is being invoked or the name of
-   * the field that is being referenced
-   * @param period the period before the constructor name, or {@code null} if this annotation is not
-   * the invocation of a named constructor
-   * @param constructorName the name of the constructor being invoked, or {@code null} if this
-   * annotation is not the invocation of a named constructor
-   * @param arguments the arguments to the constructor being invoked, or {@code null} if this
-   * annotation is not the invocation of a constructor
+   *          the field that is being referenced
+   * @param period the period before the constructor name, or `null` if this annotation is not
+   *          the invocation of a named constructor
+   * @param constructorName the name of the constructor being invoked, or `null` if this
+   *          annotation is not the invocation of a named constructor
+   * @param arguments the arguments to the constructor being invoked, or `null` if this
+   *          annotation is not the invocation of a constructor
    */
   Annotation({Token atSign, Identifier name, Token period, SimpleIdentifier constructorName, ArgumentList arguments}) : this.full(atSign, name, period, constructorName, arguments);
   accept(ASTVisitor visitor) => visitor.visitAnnotation(this);
 
   /**
-   * Return the arguments to the constructor being invoked, or {@code null} if this annotation is
+   * Return the arguments to the constructor being invoked, or `null` if this annotation is
    * not the invocation of a constructor.
+   *
    * @return the arguments to the constructor being invoked
    */
   ArgumentList get arguments => _arguments;
 
   /**
    * Return the at sign that introduced the annotation.
+   *
    * @return the at sign that introduced the annotation
    */
   Token get atSign => _atSign;
   Token get beginToken => _atSign;
 
   /**
-   * Return the name of the constructor being invoked, or {@code null} if this annotation is not the
+   * Return the name of the constructor being invoked, or `null` if this annotation is not the
    * invocation of a named constructor.
+   *
    * @return the name of the constructor being invoked
    */
   SimpleIdentifier get constructorName => _constructorName;
 
   /**
-   * Return the element associated with this annotation, or {@code null} if the AST structure has
+   * Return the element associated with this annotation, or `null` if the AST structure has
    * not been resolved or if this annotation could not be resolved.
+   *
    * @return the element associated with this annotation
    */
   Element get element {
-    if (_constructorName != null) {
-      return _constructorName.element;
-    } else if (_name != null) {
+    if (_element != null) {
+      return _element;
+    }
+    if (_name != null) {
       return _name.element;
     }
     return null;
@@ -628,19 +687,22 @@ class Annotation extends ASTNode {
   /**
    * Return the name of the class defining the constructor that is being invoked or the name of the
    * field that is being referenced.
+   *
    * @return the name of the constructor being invoked or the name of the field being referenced
    */
   Identifier get name => _name;
 
   /**
-   * Return the period before the constructor name, or {@code null} if this annotation is not the
+   * Return the period before the constructor name, or `null` if this annotation is not the
    * invocation of a named constructor.
+   *
    * @return the period before the constructor name
    */
   Token get period => _period;
 
   /**
    * Set the arguments to the constructor being invoked to the given arguments.
+   *
    * @param arguments the arguments to the constructor being invoked
    */
   void set arguments(ArgumentList arguments2) {
@@ -649,6 +711,7 @@ class Annotation extends ASTNode {
 
   /**
    * Set the at sign that introduced the annotation to the given token.
+   *
    * @param atSign the at sign that introduced the annotation
    */
   void set atSign(Token atSign2) {
@@ -657,6 +720,7 @@ class Annotation extends ASTNode {
 
   /**
    * Set the name of the constructor being invoked to the given name.
+   *
    * @param constructorName the name of the constructor being invoked
    */
   void set constructorName(SimpleIdentifier constructorName2) {
@@ -664,8 +728,18 @@ class Annotation extends ASTNode {
   }
 
   /**
+   * Set the element associated with this annotation based.
+   *
+   * @param element the element to be associated with this identifier
+   */
+  void set element(Element element2) {
+    this._element = element2;
+  }
+
+  /**
    * Set the name of the class defining the constructor that is being invoked or the name of the
    * field that is being referenced to the given name.
+   *
    * @param name the name of the constructor being invoked or the name of the field being referenced
    */
   void set name(Identifier name2) {
@@ -674,6 +748,7 @@ class Annotation extends ASTNode {
 
   /**
    * Set the period before the constructor name to the given token.
+   *
    * @param period the period before the constructor name
    */
   void set period(Token period2) {
@@ -686,10 +761,13 @@ class Annotation extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code ArgumentDefinitionTest} represent an argument definition test.
+ * Instances of the class `ArgumentDefinitionTest` represent an argument definition test.
+ *
  * <pre>
  * argumentDefinitionTest ::=
- * '?' {@link SimpleIdentifier identifier}</pre>
+ *     '?' [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ArgumentDefinitionTest extends Expression {
@@ -706,6 +784,7 @@ class ArgumentDefinitionTest extends Expression {
 
   /**
    * Initialize a newly created argument definition test.
+   *
    * @param question the token representing the question mark
    * @param identifier the identifier representing the argument being tested
    */
@@ -716,6 +795,7 @@ class ArgumentDefinitionTest extends Expression {
 
   /**
    * Initialize a newly created argument definition test.
+   *
    * @param question the token representing the question mark
    * @param identifier the identifier representing the argument being tested
    */
@@ -726,18 +806,21 @@ class ArgumentDefinitionTest extends Expression {
 
   /**
    * Return the identifier representing the argument being tested.
+   *
    * @return the identifier representing the argument being tested
    */
   SimpleIdentifier get identifier => _identifier;
 
   /**
    * Return the token representing the question mark.
+   *
    * @return the token representing the question mark
    */
   Token get question => _question;
 
   /**
    * Set the identifier representing the argument being tested to the given identifier.
+   *
    * @param identifier the identifier representing the argument being tested
    */
   void set identifier(SimpleIdentifier identifier2) {
@@ -746,6 +829,7 @@ class ArgumentDefinitionTest extends Expression {
 
   /**
    * Set the token representing the question mark to the given token.
+   *
    * @param question the token representing the question mark
    */
   void set question(Token question2) {
@@ -756,14 +840,18 @@ class ArgumentDefinitionTest extends Expression {
   }
 }
 /**
- * Instances of the class {@code ArgumentList} represent a list of arguments in the invocation of a
+ * Instances of the class `ArgumentList` represent a list of arguments in the invocation of a
  * executable element: a function, method, or constructor.
+ *
  * <pre>
  * argumentList ::=
- * '(' arguments? ')'
- * arguments ::={@link NamedExpression namedArgument} (',' {@link NamedExpression namedArgument})
- * | {@link Expression expressionList} (',' {@link NamedExpression namedArgument})
+ *     '(' arguments? ')'
+ *
+ * arguments ::=
+ *     [NamedExpression] (',' [NamedExpression])*
+ *   | [Expression] (',' [NamedExpression])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ArgumentList extends ASTNode {
@@ -785,24 +873,25 @@ class ArgumentList extends ASTNode {
 
   /**
    * An array containing the elements representing the parameters corresponding to each of the
-   * arguments in this list, or {@code null} if the AST has not been resolved or if the function or
+   * arguments in this list, or `null` if the AST has not been resolved or if the function or
    * method being invoked could not be determined based on static type information. The array must
-   * be the same length as the number of arguments, but can contain {@code null} entries if a given
+   * be the same length as the number of arguments, but can contain `null` entries if a given
    * argument does not correspond to a formal parameter.
    */
   List<ParameterElement> _correspondingStaticParameters;
 
   /**
    * An array containing the elements representing the parameters corresponding to each of the
-   * arguments in this list, or {@code null} if the AST has not been resolved or if the function or
+   * arguments in this list, or `null` if the AST has not been resolved or if the function or
    * method being invoked could not be determined based on propagated type information. The array
-   * must be the same length as the number of arguments, but can contain {@code null} entries if a
+   * must be the same length as the number of arguments, but can contain `null` entries if a
    * given argument does not correspond to a formal parameter.
    */
   List<ParameterElement> _correspondingPropagatedParameters;
 
   /**
    * Initialize a newly created list of arguments.
+   *
    * @param leftParenthesis the left parenthesis
    * @param arguments the expressions producing the values of the arguments
    * @param rightParenthesis the right parenthesis
@@ -816,6 +905,7 @@ class ArgumentList extends ASTNode {
 
   /**
    * Initialize a newly created list of arguments.
+   *
    * @param leftParenthesis the left parenthesis
    * @param arguments the expressions producing the values of the arguments
    * @param rightParenthesis the right parenthesis
@@ -827,6 +917,7 @@ class ArgumentList extends ASTNode {
    * Return the expressions producing the values of the arguments. Although the language requires
    * that positional arguments appear before named arguments, this class allows them to be
    * intermixed.
+   *
    * @return the expressions producing the values of the arguments
    */
   NodeList<Expression> get arguments => _arguments;
@@ -835,12 +926,14 @@ class ArgumentList extends ASTNode {
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
@@ -848,8 +941,9 @@ class ArgumentList extends ASTNode {
   /**
    * Set the parameter elements corresponding to each of the arguments in this list to the given
    * array of parameters. The array of parameters must be the same length as the number of
-   * arguments, but can contain {@code null} entries if a given argument does not correspond to a
+   * arguments, but can contain `null` entries if a given argument does not correspond to a
    * formal parameter.
+   *
    * @param parameters the parameter elements corresponding to the arguments
    */
   void set correspondingParameters(List<ParameterElement> parameters) {
@@ -862,8 +956,9 @@ class ArgumentList extends ASTNode {
   /**
    * Set the parameter elements corresponding to each of the arguments in this list to the given
    * array of parameters. The array of parameters must be the same length as the number of
-   * arguments, but can contain {@code null} entries if a given argument does not correspond to a
+   * arguments, but can contain `null` entries if a given argument does not correspond to a
    * formal parameter.
+   *
    * @param parameters the parameter elements corresponding to the arguments
    */
   void set correspondingStaticParameters(List<ParameterElement> parameters) {
@@ -875,6 +970,7 @@ class ArgumentList extends ASTNode {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param parenthesis the left parenthesis
    */
   void set leftParenthesis(Token parenthesis) {
@@ -883,6 +979,7 @@ class ArgumentList extends ASTNode {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param parenthesis the right parenthesis
    */
   void set rightParenthesis(Token parenthesis) {
@@ -897,12 +994,13 @@ class ArgumentList extends ASTNode {
    * the function being invoked is known based on propagated type information, and the expression
    * corresponds to one of the parameters of the function being invoked, then return the parameter
    * element representing the parameter to which the value of the given expression will be bound.
-   * Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getParameterElement()}.
+   * Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getParameterElement].
+   *
    * @param expression the expression corresponding to the parameter to be returned
    * @return the parameter element representing the parameter to which the value of the expression
-   * will be bound
+   *         will be bound
    */
   ParameterElement getPropagatedParameterElementFor(Expression expression) {
     if (_correspondingPropagatedParameters == null) {
@@ -920,12 +1018,13 @@ class ArgumentList extends ASTNode {
    * the function being invoked is known based on static type information, and the expression
    * corresponds to one of the parameters of the function being invoked, then return the parameter
    * element representing the parameter to which the value of the given expression will be bound.
-   * Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getStaticParameterElement()}.
+   * Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getStaticParameterElement].
+   *
    * @param expression the expression corresponding to the parameter to be returned
    * @return the parameter element representing the parameter to which the value of the expression
-   * will be bound
+   *         will be bound
    */
   ParameterElement getStaticParameterElementFor(Expression expression) {
     if (_correspondingStaticParameters == null) {
@@ -939,9 +1038,13 @@ class ArgumentList extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code AsExpression} represent an 'as' expression.
+ * Instances of the class `AsExpression` represent an 'as' expression.
+ *
  * <pre>
- * asExpression ::={@link Expression expression} 'as' {@link TypeName type}</pre>
+ * asExpression ::=
+ *     [Expression] 'as' [TypeName]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class AsExpression extends Expression {
@@ -963,6 +1066,7 @@ class AsExpression extends Expression {
 
   /**
    * Initialize a newly created as expression.
+   *
    * @param expression the expression used to compute the value being cast
    * @param isOperator the is operator
    * @param type the name of the type being cast to
@@ -975,6 +1079,7 @@ class AsExpression extends Expression {
 
   /**
    * Initialize a newly created as expression.
+   *
    * @param expression the expression used to compute the value being cast
    * @param isOperator the is operator
    * @param type the name of the type being cast to
@@ -984,6 +1089,7 @@ class AsExpression extends Expression {
 
   /**
    * Return the is operator being applied.
+   *
    * @return the is operator being applied
    */
   Token get asOperator => _asOperator;
@@ -992,18 +1098,21 @@ class AsExpression extends Expression {
 
   /**
    * Return the expression used to compute the value being cast.
+   *
    * @return the expression used to compute the value being cast
    */
   Expression get expression => _expression;
 
   /**
    * Return the name of the type being cast to.
+   *
    * @return the name of the type being cast to
    */
   TypeName get type => _type;
 
   /**
    * Set the is operator being applied to the given operator.
+   *
    * @param asOperator the is operator being applied
    */
   void set asOperator(Token asOperator2) {
@@ -1012,6 +1121,7 @@ class AsExpression extends Expression {
 
   /**
    * Set the expression used to compute the value being cast to the given expression.
+   *
    * @param expression the expression used to compute the value being cast
    */
   void set expression(Expression expression2) {
@@ -1020,6 +1130,7 @@ class AsExpression extends Expression {
 
   /**
    * Set the name of the type being cast to to the given name.
+   *
    * @param name the name of the type being cast to
    */
   void set type(TypeName name) {
@@ -1031,11 +1142,13 @@ class AsExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code AssertStatement} represent an assert statement.
+ * Instances of the class `AssertStatement` represent an assert statement.
+ *
  * <pre>
  * assertStatement ::=
- * 'assert' '(' {@link Expression conditionalExpression} ')' ';'
+ *     'assert' '(' [Expression] ')' ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class AssertStatement extends Statement {
@@ -1051,7 +1164,7 @@ class AssertStatement extends Statement {
   Token _leftParenthesis;
 
   /**
-   * The condition that is being asserted to be {@code true}.
+   * The condition that is being asserted to be `true`.
    */
   Expression _condition;
 
@@ -1067,9 +1180,10 @@ class AssertStatement extends Statement {
 
   /**
    * Initialize a newly created assert statement.
+   *
    * @param keyword the token representing the 'assert' keyword
    * @param leftParenthesis the left parenthesis
-   * @param condition the condition that is being asserted to be {@code true}
+   * @param condition the condition that is being asserted to be `true`
    * @param rightParenthesis the right parenthesis
    * @param semicolon the semicolon terminating the statement
    */
@@ -1083,9 +1197,10 @@ class AssertStatement extends Statement {
 
   /**
    * Initialize a newly created assert statement.
+   *
    * @param keyword the token representing the 'assert' keyword
    * @param leftParenthesis the left parenthesis
-   * @param condition the condition that is being asserted to be {@code true}
+   * @param condition the condition that is being asserted to be `true`
    * @param rightParenthesis the right parenthesis
    * @param semicolon the semicolon terminating the statement
    */
@@ -1094,39 +1209,45 @@ class AssertStatement extends Statement {
   Token get beginToken => _keyword;
 
   /**
-   * Return the condition that is being asserted to be {@code true}.
-   * @return the condition that is being asserted to be {@code true}
+   * Return the condition that is being asserted to be `true`.
+   *
+   * @return the condition that is being asserted to be `true`
    */
   Expression get condition => _condition;
   Token get endToken => _semicolon;
 
   /**
    * Return the token representing the 'assert' keyword.
+   *
    * @return the token representing the 'assert' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
-   * Set the condition that is being asserted to be {@code true} to the given expression.
-   * @param the condition that is being asserted to be {@code true}
+   * Set the condition that is being asserted to be `true` to the given expression.
+   *
+   * @param the condition that is being asserted to be `true`
    */
   void set condition(Expression condition2) {
     this._condition = becomeParentOf(condition2);
@@ -1134,6 +1255,7 @@ class AssertStatement extends Statement {
 
   /**
    * Set the token representing the 'assert' keyword to the given token.
+   *
    * @param keyword the token representing the 'assert' keyword
    */
   void set keyword(Token keyword2) {
@@ -1142,6 +1264,7 @@ class AssertStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param the left parenthesis
    */
   void set leftParenthesis(Token leftParenthesis2) {
@@ -1150,6 +1273,7 @@ class AssertStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param rightParenthesis the right parenthesis
    */
   void set rightParenthesis(Token rightParenthesis2) {
@@ -1158,6 +1282,7 @@ class AssertStatement extends Statement {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -1168,9 +1293,13 @@ class AssertStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code AssignmentExpression} represent an assignment expression.
+ * Instances of the class `AssignmentExpression` represent an assignment expression.
+ *
  * <pre>
- * assignmentExpression ::={@link Expression leftHandSide} {@link Token operator} {@link Expression rightHandSide}</pre>
+ * assignmentExpression ::=
+ *     [Expression] [Token] [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class AssignmentExpression extends Expression {
@@ -1191,19 +1320,22 @@ class AssignmentExpression extends Expression {
   Expression _rightHandSide;
 
   /**
-   * The element associated with the operator based on the static type of the left-hand-side, or{@code null} if the AST structure has not been resolved, if the operator is not a compound
+   * The element associated with the operator based on the static type of the left-hand-side, or
+   * `null` if the AST structure has not been resolved, if the operator is not a compound
    * operator, or if the operator could not be resolved.
    */
   MethodElement _staticElement;
 
   /**
-   * The element associated with the operator based on the propagated type of the left-hand-side, or{@code null} if the AST structure has not been resolved, if the operator is not a compound
+   * The element associated with the operator based on the propagated type of the left-hand-side, or
+   * `null` if the AST structure has not been resolved, if the operator is not a compound
    * operator, or if the operator could not be resolved.
    */
   MethodElement _propagatedElement;
 
   /**
    * Initialize a newly created assignment expression.
+   *
    * @param leftHandSide the expression used to compute the left hand side
    * @param operator the assignment operator being applied
    * @param rightHandSide the expression used to compute the right hand side
@@ -1216,6 +1348,7 @@ class AssignmentExpression extends Expression {
 
   /**
    * Initialize a newly created assignment expression.
+   *
    * @param leftHandSide the expression used to compute the left hand side
    * @param operator the assignment operator being applied
    * @param rightHandSide the expression used to compute the right hand side
@@ -1226,9 +1359,10 @@ class AssignmentExpression extends Expression {
 
   /**
    * Return the element associated with the operator based on the propagated type of the
-   * left-hand-side, or {@code null} if the AST structure has not been resolved, if the operator is
+   * left-hand-side, or `null` if the AST structure has not been resolved, if the operator is
    * not a compound operator, or if the operator could not be resolved. One example of the latter
    * case is an operator that is not defined for the type of the left-hand operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get element => _propagatedElement;
@@ -1236,27 +1370,31 @@ class AssignmentExpression extends Expression {
 
   /**
    * Set the expression used to compute the left hand side to the given expression.
+   *
    * @return the expression used to compute the left hand side
    */
   Expression get leftHandSide => _leftHandSide;
 
   /**
    * Return the assignment operator being applied.
+   *
    * @return the assignment operator being applied
    */
   Token get operator => _operator;
 
   /**
    * Return the expression used to compute the right hand side.
+   *
    * @return the expression used to compute the right hand side
    */
   Expression get rightHandSide => _rightHandSide;
 
   /**
    * Return the element associated with the operator based on the static type of the left-hand-side,
-   * or {@code null} if the AST structure has not been resolved, if the operator is not a compound
+   * or `null` if the AST structure has not been resolved, if the operator is not a compound
    * operator, or if the operator could not be resolved. One example of the latter case is an
    * operator that is not defined for the type of the left-hand operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get staticElement => _staticElement;
@@ -1264,6 +1402,7 @@ class AssignmentExpression extends Expression {
   /**
    * Set the element associated with the operator based on the propagated type of the left-hand-side
    * to the given element.
+   *
    * @param element the element to be associated with the operator
    */
   void set element(MethodElement element2) {
@@ -1272,6 +1411,7 @@ class AssignmentExpression extends Expression {
 
   /**
    * Return the expression used to compute the left hand side.
+   *
    * @param expression the expression used to compute the left hand side
    */
   void set leftHandSide(Expression expression) {
@@ -1280,6 +1420,7 @@ class AssignmentExpression extends Expression {
 
   /**
    * Set the assignment operator being applied to the given operator.
+   *
    * @param operator the assignment operator being applied
    */
   void set operator(Token operator2) {
@@ -1288,6 +1429,7 @@ class AssignmentExpression extends Expression {
 
   /**
    * Set the expression used to compute the left hand side to the given expression.
+   *
    * @param expression the expression used to compute the left hand side
    */
   void set rightHandSide(Expression expression) {
@@ -1297,6 +1439,7 @@ class AssignmentExpression extends Expression {
   /**
    * Set the element associated with the operator based on the static type of the left-hand-side to
    * the given element.
+   *
    * @param element the static element to be associated with the operator
    */
   void set staticElement(MethodElement element) {
@@ -1308,9 +1451,13 @@ class AssignmentExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code BinaryExpression} represent a binary (infix) expression.
+ * Instances of the class `BinaryExpression` represent a binary (infix) expression.
+ *
  * <pre>
- * binaryExpression ::={@link Expression leftOperand} {@link Token operator} {@link Expression rightOperand}</pre>
+ * binaryExpression ::=
+ *     [Expression] [Token] [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class BinaryExpression extends Expression {
@@ -1331,19 +1478,22 @@ class BinaryExpression extends Expression {
   Expression _rightOperand;
 
   /**
-   * The element associated with the operator based on the static type of the left operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * The element associated with the operator based on the static type of the left operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved.
    */
   MethodElement _staticElement;
 
   /**
-   * The element associated with the operator based on the propagated type of the left operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * The element associated with the operator based on the propagated type of the left operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved.
    */
   MethodElement _propagatedElement;
 
   /**
    * Initialize a newly created binary expression.
+   *
    * @param leftOperand the expression used to compute the left operand
    * @param operator the binary operator being applied
    * @param rightOperand the expression used to compute the right operand
@@ -1356,6 +1506,7 @@ class BinaryExpression extends Expression {
 
   /**
    * Initialize a newly created binary expression.
+   *
    * @param leftOperand the expression used to compute the left operand
    * @param operator the binary operator being applied
    * @param rightOperand the expression used to compute the right operand
@@ -1366,9 +1517,10 @@ class BinaryExpression extends Expression {
 
   /**
    * Return the element associated with the operator based on the propagated type of the left
-   * operand, or {@code null} if the AST structure has not been resolved, if the operator is not
+   * operand, or `null` if the AST structure has not been resolved, if the operator is not
    * user definable, or if the operator could not be resolved. One example of the latter case is an
    * operator that is not defined for the type of the left-hand operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get element => _propagatedElement;
@@ -1376,27 +1528,31 @@ class BinaryExpression extends Expression {
 
   /**
    * Return the expression used to compute the left operand.
+   *
    * @return the expression used to compute the left operand
    */
   Expression get leftOperand => _leftOperand;
 
   /**
    * Return the binary operator being applied.
+   *
    * @return the binary operator being applied
    */
   Token get operator => _operator;
 
   /**
    * Return the expression used to compute the right operand.
+   *
    * @return the expression used to compute the right operand
    */
   Expression get rightOperand => _rightOperand;
 
   /**
    * Return the element associated with the operator based on the static type of the left operand,
-   * or {@code null} if the AST structure has not been resolved, if the operator is not user
+   * or `null` if the AST structure has not been resolved, if the operator is not user
    * definable, or if the operator could not be resolved. One example of the latter case is an
    * operator that is not defined for the type of the left operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get staticElement => _staticElement;
@@ -1404,6 +1560,7 @@ class BinaryExpression extends Expression {
   /**
    * Set the element associated with the operator based on the propagated type of the left operand
    * to the given element.
+   *
    * @param element the element to be associated with the operator
    */
   void set element(MethodElement element2) {
@@ -1412,6 +1569,7 @@ class BinaryExpression extends Expression {
 
   /**
    * Set the expression used to compute the left operand to the given expression.
+   *
    * @param expression the expression used to compute the left operand
    */
   void set leftOperand(Expression expression) {
@@ -1420,6 +1578,7 @@ class BinaryExpression extends Expression {
 
   /**
    * Set the binary operator being applied to the given operator.
+   *
    * @return the binary operator being applied
    */
   void set operator(Token operator2) {
@@ -1428,6 +1587,7 @@ class BinaryExpression extends Expression {
 
   /**
    * Set the expression used to compute the right operand to the given expression.
+   *
    * @param expression the expression used to compute the right operand
    */
   void set rightOperand(Expression expression) {
@@ -1437,6 +1597,7 @@ class BinaryExpression extends Expression {
   /**
    * Set the element associated with the operator based on the static type of the left operand to
    * the given element.
+   *
    * @param element the static element to be associated with the operator
    */
   void set staticElement(MethodElement element) {
@@ -1450,11 +1611,12 @@ class BinaryExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on
    * propagated type information, then return the parameter element representing the parameter to
-   * which the value of the right operand will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getParameterElement()}.
+   * which the value of the right operand will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the right
-   * operand will be bound
+   *         operand will be bound
    */
   ParameterElement get propagatedParameterElementForRightOperand {
     if (_propagatedElement == null) {
@@ -1470,11 +1632,12 @@ class BinaryExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on static
    * type information, then return the parameter element representing the parameter to which the
-   * value of the right operand will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getStaticParameterElement()}.
+   * value of the right operand will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getStaticParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the right
-   * operand will be bound
+   *         operand will be bound
    */
   ParameterElement get staticParameterElementForRightOperand {
     if (_staticElement == null) {
@@ -1488,11 +1651,13 @@ class BinaryExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code Block} represent a sequence of statements.
+ * Instances of the class `Block` represent a sequence of statements.
+ *
  * <pre>
  * block ::=
- * '{' statement* '}'
+ *     '{' statement* '}'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class Block extends Statement {
@@ -1514,6 +1679,7 @@ class Block extends Statement {
 
   /**
    * Initialize a newly created block of code.
+   *
    * @param leftBracket the left curly bracket
    * @param statements the statements contained in the block
    * @param rightBracket the right curly bracket
@@ -1527,6 +1693,7 @@ class Block extends Statement {
 
   /**
    * Initialize a newly created block of code.
+   *
    * @param leftBracket the left curly bracket
    * @param statements the statements contained in the block
    * @param rightBracket the right curly bracket
@@ -1538,24 +1705,28 @@ class Block extends Statement {
 
   /**
    * Return the left curly bracket.
+   *
    * @return the left curly bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the right curly bracket.
+   *
    * @return the right curly bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
    * Return the statements contained in the block.
+   *
    * @return the statements contained in the block
    */
   NodeList<Statement> get statements => _statements;
 
   /**
    * Set the left curly bracket to the given token.
+   *
    * @param leftBracket the left curly bracket
    */
   void set leftBracket(Token leftBracket2) {
@@ -1564,6 +1735,7 @@ class Block extends Statement {
 
   /**
    * Set the right curly bracket to the given token.
+   *
    * @param rightBracket the right curly bracket
    */
   void set rightBracket(Token rightBracket2) {
@@ -1574,10 +1746,14 @@ class Block extends Statement {
   }
 }
 /**
- * Instances of the class {@code BlockFunctionBody} represent a function body that consists of a
+ * Instances of the class `BlockFunctionBody` represent a function body that consists of a
  * block of statements.
+ *
  * <pre>
- * blockFunctionBody ::={@link Block block}</pre>
+ * blockFunctionBody ::=
+ *     [Block]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class BlockFunctionBody extends FunctionBody {
@@ -1589,6 +1765,7 @@ class BlockFunctionBody extends FunctionBody {
 
   /**
    * Initialize a newly created function body consisting of a block of statements.
+   *
    * @param block the block representing the body of the function
    */
   BlockFunctionBody.full(Block block) {
@@ -1597,6 +1774,7 @@ class BlockFunctionBody extends FunctionBody {
 
   /**
    * Initialize a newly created function body consisting of a block of statements.
+   *
    * @param block the block representing the body of the function
    */
   BlockFunctionBody({Block block}) : this.full(block);
@@ -1605,6 +1783,7 @@ class BlockFunctionBody extends FunctionBody {
 
   /**
    * Return the block representing the body of the function.
+   *
    * @return the block representing the body of the function
    */
   Block get block => _block;
@@ -1612,6 +1791,7 @@ class BlockFunctionBody extends FunctionBody {
 
   /**
    * Set the block representing the body of the function to the given block.
+   *
    * @param block the block representing the body of the function
    */
   void set block(Block block2) {
@@ -1622,11 +1802,13 @@ class BlockFunctionBody extends FunctionBody {
   }
 }
 /**
- * Instances of the class {@code BooleanLiteral} represent a boolean literal expression.
+ * Instances of the class `BooleanLiteral` represent a boolean literal expression.
+ *
  * <pre>
  * booleanLiteral ::=
- * 'false' | 'true'
+ *     'false' | 'true'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class BooleanLiteral extends Literal {
@@ -1643,6 +1825,7 @@ class BooleanLiteral extends Literal {
 
   /**
    * Initialize a newly created boolean literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -1653,6 +1836,7 @@ class BooleanLiteral extends Literal {
 
   /**
    * Initialize a newly created boolean literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -1663,19 +1847,22 @@ class BooleanLiteral extends Literal {
 
   /**
    * Return the token representing the literal.
+   *
    * @return the token representing the literal
    */
   Token get literal => _literal;
 
   /**
    * Return the value of the literal.
+   *
    * @return the value of the literal
    */
   bool get value => _value;
-  bool isSynthetic() => _literal.isSynthetic();
+  bool get isSynthetic => _literal.isSynthetic;
 
   /**
    * Set the token representing the literal to the given token.
+   *
    * @param literal the token representing the literal
    */
   void set literal(Token literal2) {
@@ -1684,6 +1871,7 @@ class BooleanLiteral extends Literal {
 
   /**
    * Set the value of the literal to the given value.
+   *
    * @param value the value of the literal
    */
   void set value(bool value2) {
@@ -1693,11 +1881,13 @@ class BooleanLiteral extends Literal {
   }
 }
 /**
- * Instances of the class {@code BreakStatement} represent a break statement.
+ * Instances of the class `BreakStatement` represent a break statement.
+ *
  * <pre>
  * breakStatement ::=
- * 'break' {@link SimpleIdentifier label}? ';'
+ *     'break' [SimpleIdentifier]? ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class BreakStatement extends Statement {
@@ -1708,7 +1898,7 @@ class BreakStatement extends Statement {
   Token _keyword;
 
   /**
-   * The label associated with the statement, or {@code null} if there is no label.
+   * The label associated with the statement, or `null` if there is no label.
    */
   SimpleIdentifier _label;
 
@@ -1719,6 +1909,7 @@ class BreakStatement extends Statement {
 
   /**
    * Initialize a newly created break statement.
+   *
    * @param keyword the token representing the 'break' keyword
    * @param label the label associated with the statement
    * @param semicolon the semicolon terminating the statement
@@ -1731,6 +1922,7 @@ class BreakStatement extends Statement {
 
   /**
    * Initialize a newly created break statement.
+   *
    * @param keyword the token representing the 'break' keyword
    * @param label the label associated with the statement
    * @param semicolon the semicolon terminating the statement
@@ -1742,24 +1934,28 @@ class BreakStatement extends Statement {
 
   /**
    * Return the token representing the 'break' keyword.
+   *
    * @return the token representing the 'break' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the label associated with the statement, or {@code null} if there is no label.
+   * Return the label associated with the statement, or `null` if there is no label.
+   *
    * @return the label associated with the statement
    */
   SimpleIdentifier get label => _label;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the token representing the 'break' keyword to the given token.
+   *
    * @param keyword the token representing the 'break' keyword
    */
   void set keyword(Token keyword2) {
@@ -1768,6 +1964,7 @@ class BreakStatement extends Statement {
 
   /**
    * Set the label associated with the statement to the given identifier.
+   *
    * @param identifier the label associated with the statement
    */
   void set label(SimpleIdentifier identifier) {
@@ -1776,6 +1973,7 @@ class BreakStatement extends Statement {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -1786,17 +1984,23 @@ class BreakStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code CascadeExpression} represent a sequence of cascaded expressions:
+ * Instances of the class `CascadeExpression` represent a sequence of cascaded expressions:
  * expressions that share a common target. There are three kinds of expressions that can be used in
- * a cascade expression: {@link IndexExpression}, {@link MethodInvocation} and{@link PropertyAccess}.
+ * a cascade expression: [IndexExpression], [MethodInvocation] and
+ * [PropertyAccess].
+ *
  * <pre>
- * cascadeExpression ::={@link Expression conditionalExpression} cascadeSection
+ * cascadeExpression ::=
+ *     [Expression] cascadeSection*
+ *
  * cascadeSection ::=
- * '..'  (cascadeSelector arguments*) (assignableSelector arguments*)* (assignmentOperator expressionWithoutCascade)?
+ *     '..'  (cascadeSelector arguments*) (assignableSelector arguments*)* (assignmentOperator expressionWithoutCascade)?
+ *
  * cascadeSelector ::=
- * '\[ ' expression '\] '
- * | identifier
+ *     '[ ' expression '] '
+ *   | identifier
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class CascadeExpression extends Expression {
@@ -1813,6 +2017,7 @@ class CascadeExpression extends Expression {
 
   /**
    * Initialize a newly created cascade expression.
+   *
    * @param target the target of the cascade sections
    * @param cascadeSections the cascade sections sharing the common target
    */
@@ -1824,6 +2029,7 @@ class CascadeExpression extends Expression {
 
   /**
    * Initialize a newly created cascade expression.
+   *
    * @param target the target of the cascade sections
    * @param cascadeSections the cascade sections sharing the common target
    */
@@ -1833,6 +2039,7 @@ class CascadeExpression extends Expression {
 
   /**
    * Return the cascade sections sharing the common target.
+   *
    * @return the cascade sections sharing the common target
    */
   NodeList<Expression> get cascadeSections => _cascadeSections;
@@ -1840,12 +2047,14 @@ class CascadeExpression extends Expression {
 
   /**
    * Return the target of the cascade sections.
+   *
    * @return the target of the cascade sections
    */
   Expression get target => _target;
 
   /**
    * Set the target of the cascade sections to the given expression.
+   *
    * @param target the target of the cascade sections
    */
   void set target(Expression target2) {
@@ -1857,29 +2066,34 @@ class CascadeExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code CatchClause} represent a catch clause within a try statement.
+ * Instances of the class `CatchClause` represent a catch clause within a try statement.
+ *
  * <pre>
  * onPart ::=
- * catchPart {@link Block block}| 'on' type catchPart? {@link Block block}catchPart ::=
- * 'catch' '(' {@link SimpleIdentifier exceptionParameter} (',' {@link SimpleIdentifier stackTraceParameter})? ')'
+ *     catchPart [Block]
+ *   | 'on' type catchPart? [Block]
+ *
+ * catchPart ::=
+ *     'catch' '(' [SimpleIdentifier] (',' [SimpleIdentifier])? ')'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class CatchClause extends ASTNode {
 
   /**
-   * The token representing the 'on' keyword, or {@code null} if there is no 'on' keyword.
+   * The token representing the 'on' keyword, or `null` if there is no 'on' keyword.
    */
   Token _onKeyword;
 
   /**
-   * The type of exceptions caught by this catch clause, or {@code null} if this catch clause
+   * The type of exceptions caught by this catch clause, or `null` if this catch clause
    * catches every type of exception.
    */
   TypeName _exceptionType;
 
   /**
-   * The token representing the 'catch' keyword, or {@code null} if there is no 'catch' keyword.
+   * The token representing the 'catch' keyword, or `null` if there is no 'catch' keyword.
    */
   Token _catchKeyword;
 
@@ -1915,13 +2129,14 @@ class CatchClause extends ASTNode {
 
   /**
    * Initialize a newly created catch clause.
+   *
    * @param onKeyword the token representing the 'on' keyword
    * @param exceptionType the type of exceptions caught by this catch clause
    * @param leftParenthesis the left parenthesis
    * @param exceptionParameter the parameter whose value will be the exception that was thrown
    * @param comma the comma separating the exception parameter from the stack trace parameter
    * @param stackTraceParameter the parameter whose value will be the stack trace associated with
-   * the exception
+   *          the exception
    * @param rightParenthesis the right parenthesis
    * @param body the body of the catch block
    */
@@ -1939,13 +2154,14 @@ class CatchClause extends ASTNode {
 
   /**
    * Initialize a newly created catch clause.
+   *
    * @param onKeyword the token representing the 'on' keyword
    * @param exceptionType the type of exceptions caught by this catch clause
    * @param leftParenthesis the left parenthesis
    * @param exceptionParameter the parameter whose value will be the exception that was thrown
    * @param comma the comma separating the exception parameter from the stack trace parameter
    * @param stackTraceParameter the parameter whose value will be the stack trace associated with
-   * the exception
+   *          the exception
    * @param rightParenthesis the right parenthesis
    * @param body the body of the catch block
    */
@@ -1960,19 +2176,22 @@ class CatchClause extends ASTNode {
 
   /**
    * Return the body of the catch block.
+   *
    * @return the body of the catch block
    */
   Block get body => _body;
 
   /**
-   * Return the token representing the 'catch' keyword, or {@code null} if there is no 'catch'
+   * Return the token representing the 'catch' keyword, or `null` if there is no 'catch'
    * keyword.
+   *
    * @return the token representing the 'catch' keyword
    */
   Token get catchKeyword => _catchKeyword;
 
   /**
    * Return the comma.
+   *
    * @return the comma
    */
   Token get comma => _comma;
@@ -1980,43 +2199,50 @@ class CatchClause extends ASTNode {
 
   /**
    * Return the parameter whose value will be the exception that was thrown.
+   *
    * @return the parameter whose value will be the exception that was thrown
    */
   SimpleIdentifier get exceptionParameter => _exceptionParameter;
 
   /**
-   * Return the type of exceptions caught by this catch clause, or {@code null} if this catch clause
+   * Return the type of exceptions caught by this catch clause, or `null` if this catch clause
    * catches every type of exception.
+   *
    * @return the type of exceptions caught by this catch clause
    */
   TypeName get exceptionType => _exceptionType;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
-   * Return the token representing the 'on' keyword, or {@code null} if there is no 'on' keyword.
+   * Return the token representing the 'on' keyword, or `null` if there is no 'on' keyword.
+   *
    * @return the token representing the 'on' keyword
    */
   Token get onKeyword => _onKeyword;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Return the parameter whose value will be the stack trace associated with the exception.
+   *
    * @return the parameter whose value will be the stack trace associated with the exception
    */
   SimpleIdentifier get stackTraceParameter => _stackTraceParameter;
 
   /**
    * Set the body of the catch block to the given block.
+   *
    * @param block the body of the catch block
    */
   void set body(Block block) {
@@ -2025,6 +2251,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the token representing the 'catch' keyword to the given token.
+   *
    * @param catchKeyword the token representing the 'catch' keyword
    */
   void set catchKeyword(Token catchKeyword2) {
@@ -2033,6 +2260,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the comma to the given token.
+   *
    * @param comma the comma
    */
   void set comma(Token comma2) {
@@ -2041,6 +2269,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the parameter whose value will be the exception that was thrown to the given parameter.
+   *
    * @param parameter the parameter whose value will be the exception that was thrown
    */
   void set exceptionParameter(SimpleIdentifier parameter) {
@@ -2049,6 +2278,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the type of exceptions caught by this catch clause to the given type.
+   *
    * @param exceptionType the type of exceptions caught by this catch clause
    */
   void set exceptionType(TypeName exceptionType2) {
@@ -2057,6 +2287,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param parenthesis the left parenthesis
    */
   void set leftParenthesis(Token parenthesis) {
@@ -2065,6 +2296,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the token representing the 'on' keyword to the given keyword.
+   *
    * @param onKeyword the token representing the 'on' keyword
    */
   void set onKeyword(Token onKeyword2) {
@@ -2073,6 +2305,7 @@ class CatchClause extends ASTNode {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param parenthesis the right parenthesis
    */
   void set rightParenthesis(Token parenthesis) {
@@ -2082,8 +2315,9 @@ class CatchClause extends ASTNode {
   /**
    * Set the parameter whose value will be the stack trace associated with the exception to the
    * given parameter.
+   *
    * @param parameter the parameter whose value will be the stack trace associated with the
-   * exception
+   *          exception
    */
   void set stackTraceParameter(SimpleIdentifier parameter) {
     _stackTraceParameter = becomeParentOf(parameter);
@@ -2096,19 +2330,22 @@ class CatchClause extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code ClassDeclaration} represent the declaration of a class.
+ * Instances of the class `ClassDeclaration` represent the declaration of a class.
+ *
  * <pre>
  * classDeclaration ::=
- * 'abstract'? 'class' {@link SimpleIdentifier name} {@link TypeParameterList typeParameterList}?
- * ({@link ExtendsClause extendsClause} {@link WithClause withClause}?)?{@link ImplementsClause implementsClause}?
- * '{' {@link ClassMember classMember}* '}'
+ *     'abstract'? 'class' [SimpleIdentifier] [TypeParameterList]?
+ *     ([ExtendsClause] [WithClause]?)?
+ *     [ImplementsClause]?
+ *     '{' [ClassMember]* '}'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ClassDeclaration extends CompilationUnitMember {
 
   /**
-   * The 'abstract' keyword, or {@code null} if the keyword was absent.
+   * The 'abstract' keyword, or `null` if the keyword was absent.
    */
   Token _abstractKeyword;
 
@@ -2123,26 +2360,31 @@ class ClassDeclaration extends CompilationUnitMember {
   SimpleIdentifier _name;
 
   /**
-   * The type parameters for the class, or {@code null} if the class does not have any type
+   * The type parameters for the class, or `null` if the class does not have any type
    * parameters.
    */
   TypeParameterList _typeParameters;
 
   /**
-   * The extends clause for the class, or {@code null} if the class does not extend any other class.
+   * The extends clause for the class, or `null` if the class does not extend any other class.
    */
   ExtendsClause _extendsClause;
 
   /**
-   * The with clause for the class, or {@code null} if the class does not have a with clause.
+   * The with clause for the class, or `null` if the class does not have a with clause.
    */
   WithClause _withClause;
 
   /**
-   * The implements clause for the class, or {@code null} if the class does not implement any
+   * The implements clause for the class, or `null` if the class does not implement any
    * interfaces.
    */
   ImplementsClause _implementsClause;
+
+  /**
+   * The native clause for the class, or `null` if the class does not have a native clause.
+   */
+  NativeClause _nativeClause;
 
   /**
    * The left curly bracket.
@@ -2161,9 +2403,10 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Initialize a newly created class declaration.
+   *
    * @param comment the documentation comment associated with this class
    * @param metadata the annotations associated with this class
-   * @param abstractKeyword the 'abstract' keyword, or {@code null} if the keyword was absent
+   * @param abstractKeyword the 'abstract' keyword, or `null` if the keyword was absent
    * @param classKeyword the token representing the 'class' keyword
    * @param name the name of the class being declared
    * @param typeParameters the type parameters for the class
@@ -2190,9 +2433,10 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Initialize a newly created class declaration.
+   *
    * @param comment the documentation comment associated with this class
    * @param metadata the annotations associated with this class
-   * @param abstractKeyword the 'abstract' keyword, or {@code null} if the keyword was absent
+   * @param abstractKeyword the 'abstract' keyword, or `null` if the keyword was absent
    * @param classKeyword the token representing the 'class' keyword
    * @param name the name of the class being declared
    * @param typeParameters the type parameters for the class
@@ -2207,13 +2451,15 @@ class ClassDeclaration extends CompilationUnitMember {
   accept(ASTVisitor visitor) => visitor.visitClassDeclaration(this);
 
   /**
-   * Return the 'abstract' keyword, or {@code null} if the keyword was absent.
+   * Return the 'abstract' keyword, or `null` if the keyword was absent.
+   *
    * @return the 'abstract' keyword
    */
   Token get abstractKeyword => _abstractKeyword;
 
   /**
    * Return the token representing the 'class' keyword.
+   *
    * @return the token representing the 'class' keyword
    */
   Token get classKeyword => _classKeyword;
@@ -2221,58 +2467,75 @@ class ClassDeclaration extends CompilationUnitMember {
   Token get endToken => _rightBracket;
 
   /**
-   * Return the extends clause for this class, or {@code null} if the class does not extend any
+   * Return the extends clause for this class, or `null` if the class does not extend any
    * other class.
+   *
    * @return the extends clause for this class
    */
   ExtendsClause get extendsClause => _extendsClause;
 
   /**
-   * Return the implements clause for the class, or {@code null} if the class does not implement any
+   * Return the implements clause for the class, or `null` if the class does not implement any
    * interfaces.
+   *
    * @return the implements clause for the class
    */
   ImplementsClause get implementsClause => _implementsClause;
 
   /**
    * Return the left curly bracket.
+   *
    * @return the left curly bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the members defined by the class.
+   *
    * @return the members defined by the class
    */
   NodeList<ClassMember> get members => _members;
 
   /**
    * Return the name of the class being declared.
+   *
    * @return the name of the class being declared
    */
   SimpleIdentifier get name => _name;
 
   /**
+   * Return the native clause for this class, or `null` if the class does not have a native
+   * cluse.
+   *
+   * @return the native clause for this class
+   */
+  NativeClause get nativeClause => _nativeClause;
+
+  /**
    * Return the right curly bracket.
+   *
    * @return the right curly bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
-   * Return the type parameters for the class, or {@code null} if the class does not have any type
+   * Return the type parameters for the class, or `null` if the class does not have any type
    * parameters.
+   *
    * @return the type parameters for the class
    */
   TypeParameterList get typeParameters => _typeParameters;
 
   /**
-   * Return the with clause for the class, or {@code null} if the class does not have a with clause.
+   * Return the with clause for the class, or `null` if the class does not have a with clause.
+   *
    * @return the with clause for the class
    */
   WithClause get withClause => _withClause;
 
   /**
    * Set the 'abstract' keyword to the given keyword.
+   *
    * @param abstractKeyword the 'abstract' keyword
    */
   void set abstractKeyword(Token abstractKeyword2) {
@@ -2281,6 +2544,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the token representing the 'class' keyword to the given token.
+   *
    * @param classKeyword the token representing the 'class' keyword
    */
   void set classKeyword(Token classKeyword2) {
@@ -2289,6 +2553,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the extends clause for this class to the given clause.
+   *
    * @param extendsClause the extends clause for this class
    */
   void set extendsClause(ExtendsClause extendsClause2) {
@@ -2297,6 +2562,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the implements clause for the class to the given clause.
+   *
    * @param implementsClause the implements clause for the class
    */
   void set implementsClause(ImplementsClause implementsClause2) {
@@ -2305,6 +2571,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the left curly bracket to the given token.
+   *
    * @param leftBracket the left curly bracket
    */
   void set leftBracket(Token leftBracket2) {
@@ -2313,6 +2580,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the name of the class being declared to the given identifier.
+   *
    * @param identifier the name of the class being declared
    */
   void set name(SimpleIdentifier identifier) {
@@ -2320,7 +2588,17 @@ class ClassDeclaration extends CompilationUnitMember {
   }
 
   /**
+   * Set the native clause for this class to the given clause.
+   *
+   * @param nativeClause the native clause for this class
+   */
+  void set nativeClause(NativeClause nativeClause2) {
+    this._nativeClause = nativeClause2;
+  }
+
+  /**
    * Set the right curly bracket to the given token.
+   *
    * @param rightBracket the right curly bracket
    */
   void set rightBracket(Token rightBracket2) {
@@ -2329,6 +2607,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the type parameters for the class to the given list of type parameters.
+   *
    * @param typeParameters the type parameters for the class
    */
   void set typeParameters(TypeParameterList typeParameters2) {
@@ -2337,6 +2616,7 @@ class ClassDeclaration extends CompilationUnitMember {
 
   /**
    * Set the with clause for the class to the given clause.
+   *
    * @param withClause the with clause for the class
    */
   void set withClause(WithClause withClause2) {
@@ -2359,33 +2639,40 @@ class ClassDeclaration extends CompilationUnitMember {
   }
 }
 /**
- * The abstract class {@code ClassMember} defines the behavior common to nodes that declare a name
+ * The abstract class `ClassMember` defines the behavior common to nodes that declare a name
  * within the scope of a class.
+ *
  * @coverage dart.engine.ast
  */
 abstract class ClassMember extends Declaration {
 
   /**
    * Initialize a newly created member of a class.
+   *
    * @param comment the documentation comment associated with this member
    * @param metadata the annotations associated with this member
    */
-  ClassMember.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata) {
-  }
+  ClassMember.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata);
 
   /**
    * Initialize a newly created member of a class.
+   *
    * @param comment the documentation comment associated with this member
    * @param metadata the annotations associated with this member
    */
   ClassMember({Comment comment, List<Annotation> metadata}) : this.full(comment, metadata);
 }
 /**
- * Instances of the class {@code ClassTypeAlias} represent a class type alias.
+ * Instances of the class `ClassTypeAlias` represent a class type alias.
+ *
  * <pre>
- * classTypeAlias ::={@link SimpleIdentifier identifier} {@link TypeParameterList typeParameters}? '=' 'abstract'? mixinApplication
- * mixinApplication ::={@link TypeName superclass} {@link WithClause withClause} {@link ImplementsClause implementsClause}? ';'
+ * classTypeAlias ::=
+ *     [SimpleIdentifier] [TypeParameterList]? '=' 'abstract'? mixinApplication
+ *
+ * mixinApplication ::=
+ *     [TypeName] [WithClause] [ImplementsClause]? ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ClassTypeAlias extends TypeAlias {
@@ -2396,7 +2683,7 @@ class ClassTypeAlias extends TypeAlias {
   SimpleIdentifier _name;
 
   /**
-   * The type parameters for the class, or {@code null} if the class does not have any type
+   * The type parameters for the class, or `null` if the class does not have any type
    * parameters.
    */
   TypeParameterList _typeParameters;
@@ -2407,7 +2694,7 @@ class ClassTypeAlias extends TypeAlias {
   Token _equals;
 
   /**
-   * The token for the 'abstract' keyword, or {@code null} if this is not defining an abstract
+   * The token for the 'abstract' keyword, or `null` if this is not defining an abstract
    * class.
    */
   Token _abstractKeyword;
@@ -2423,12 +2710,13 @@ class ClassTypeAlias extends TypeAlias {
   WithClause _withClause;
 
   /**
-   * The implements clause for this class, or {@code null} if there is no implements clause.
+   * The implements clause for this class, or `null` if there is no implements clause.
    */
   ImplementsClause _implementsClause;
 
   /**
    * Initialize a newly created class type alias.
+   *
    * @param comment the documentation comment associated with this type alias
    * @param metadata the annotations associated with this type alias
    * @param keyword the token representing the 'typedef' keyword
@@ -2453,6 +2741,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Initialize a newly created class type alias.
+   *
    * @param comment the documentation comment associated with this type alias
    * @param metadata the annotations associated with this type alias
    * @param keyword the token representing the 'typedef' keyword
@@ -2469,8 +2758,9 @@ class ClassTypeAlias extends TypeAlias {
   accept(ASTVisitor visitor) => visitor.visitClassTypeAlias(this);
 
   /**
-   * Return the token for the 'abstract' keyword, or {@code null} if this is not defining an
+   * Return the token for the 'abstract' keyword, or `null` if this is not defining an
    * abstract class.
+   *
    * @return the token for the 'abstract' keyword
    */
   Token get abstractKeyword => _abstractKeyword;
@@ -2478,43 +2768,50 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Return the token for the '=' separating the name from the definition.
+   *
    * @return the token for the '=' separating the name from the definition
    */
   Token get equals => _equals;
 
   /**
-   * Return the implements clause for this class, or {@code null} if there is no implements clause.
+   * Return the implements clause for this class, or `null` if there is no implements clause.
+   *
    * @return the implements clause for this class
    */
   ImplementsClause get implementsClause => _implementsClause;
 
   /**
    * Return the name of the class being declared.
+   *
    * @return the name of the class being declared
    */
   SimpleIdentifier get name => _name;
 
   /**
    * Return the name of the superclass of the class being declared.
+   *
    * @return the name of the superclass of the class being declared
    */
   TypeName get superclass => _superclass;
 
   /**
-   * Return the type parameters for the class, or {@code null} if the class does not have any type
+   * Return the type parameters for the class, or `null` if the class does not have any type
    * parameters.
+   *
    * @return the type parameters for the class
    */
   TypeParameterList get typeParameters => _typeParameters;
 
   /**
    * Return the with clause for this class.
+   *
    * @return the with clause for this class
    */
   WithClause get withClause => _withClause;
 
   /**
    * Set the token for the 'abstract' keyword to the given token.
+   *
    * @param abstractKeyword the token for the 'abstract' keyword
    */
   void set abstractKeyword(Token abstractKeyword2) {
@@ -2523,6 +2820,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Set the token for the '=' separating the name from the definition to the given token.
+   *
    * @param equals the token for the '=' separating the name from the definition
    */
   void set equals(Token equals2) {
@@ -2531,6 +2829,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Set the implements clause for this class to the given implements clause.
+   *
    * @param implementsClause the implements clause for this class
    */
   void set implementsClause(ImplementsClause implementsClause2) {
@@ -2539,6 +2838,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Set the name of the class being declared to the given identifier.
+   *
    * @param name the name of the class being declared
    */
   void set name(SimpleIdentifier name2) {
@@ -2547,6 +2847,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Set the name of the superclass of the class being declared to the given name.
+   *
    * @param superclass the name of the superclass of the class being declared
    */
   void set superclass(TypeName superclass2) {
@@ -2555,6 +2856,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Set the type parameters for the class to the given list of parameters.
+   *
    * @param typeParameters the type parameters for the class
    */
   void set typeParameters(TypeParameterList typeParameters2) {
@@ -2563,6 +2865,7 @@ class ClassTypeAlias extends TypeAlias {
 
   /**
    * Set the with clause for this class to the given with clause.
+   *
    * @param withClause the with clause for this class
    */
   void set withClause(WithClause withClause2) {
@@ -2578,10 +2881,15 @@ class ClassTypeAlias extends TypeAlias {
   }
 }
 /**
- * Instances of the class {@code Combinator} represent the combinator associated with an import
+ * Instances of the class `Combinator` represent the combinator associated with an import
  * directive.
+ *
  * <pre>
- * combinator ::={@link HideCombinator hideCombinator}| {@link ShowCombinator showCombinator}</pre>
+ * combinator ::=
+ *     [HideCombinator]
+ *   | [ShowCombinator]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class Combinator extends ASTNode {
@@ -2593,8 +2901,9 @@ abstract class Combinator extends ASTNode {
 
   /**
    * Initialize a newly created import combinator.
+   *
    * @param keyword the keyword specifying what kind of processing is to be done on the imported
-   * names
+   *          names
    */
   Combinator.full(Token keyword) {
     this._keyword = keyword;
@@ -2602,14 +2911,16 @@ abstract class Combinator extends ASTNode {
 
   /**
    * Initialize a newly created import combinator.
+   *
    * @param keyword the keyword specifying what kind of processing is to be done on the imported
-   * names
+   *          names
    */
   Combinator({Token keyword}) : this.full(keyword);
   Token get beginToken => _keyword;
 
   /**
    * Return the keyword specifying what kind of processing is to be done on the imported names.
+   *
    * @return the keyword specifying what kind of processing is to be done on the imported names
    */
   Token get keyword => _keyword;
@@ -2617,34 +2928,41 @@ abstract class Combinator extends ASTNode {
   /**
    * Set the keyword specifying what kind of processing is to be done on the imported names to the
    * given token.
+   *
    * @param keyword the keyword specifying what kind of processing is to be done on the imported
-   * names
+   *          names
    */
   void set keyword(Token keyword2) {
     this._keyword = keyword2;
   }
 }
 /**
- * Instances of the class {@code Comment} represent a comment within the source code.
+ * Instances of the class `Comment` represent a comment within the source code.
+ *
  * <pre>
  * comment ::=
- * endOfLineComment
- * | blockComment
- * | documentationComment
+ *     endOfLineComment
+ *   | blockComment
+ *   | documentationComment
+ *
  * endOfLineComment ::=
- * '//' (CHARACTER - EOL)* EOL
+ *     '//' (CHARACTER - EOL)* EOL
+ *
  * blockComment ::=
- * '/ *' CHARACTER* '&#42;/'
+ *     '/ *' CHARACTER* '&#42;/'
+ *
  * documentationComment ::=
- * '/ **' (CHARACTER | {@link CommentReference commentReference})* '&#42;/'
- * | ('///' (CHARACTER - EOL)* EOL)+
+ *     '/ **' (CHARACTER | [CommentReference])* '&#42;/'
+ *   | ('///' (CHARACTER - EOL)* EOL)+
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class Comment extends ASTNode {
 
   /**
    * Create a block comment.
+   *
    * @param tokens the tokens representing the comment
    * @return the block comment that was created
    */
@@ -2652,6 +2970,7 @@ class Comment extends ASTNode {
 
   /**
    * Create a documentation comment.
+   *
    * @param tokens the tokens representing the comment
    * @return the documentation comment that was created
    */
@@ -2659,6 +2978,7 @@ class Comment extends ASTNode {
 
   /**
    * Create a documentation comment.
+   *
    * @param tokens the tokens representing the comment
    * @param references the references embedded within the documentation comment
    * @return the documentation comment that was created
@@ -2667,6 +2987,7 @@ class Comment extends ASTNode {
 
   /**
    * Create an end-of-line comment.
+   *
    * @param tokens the tokens representing the comment
    * @return the end-of-line comment that was created
    */
@@ -2690,6 +3011,7 @@ class Comment extends ASTNode {
 
   /**
    * Initialize a newly created comment.
+   *
    * @param tokens the tokens representing the comment
    * @param type the type of the comment
    * @param references the references embedded within the documentation comment
@@ -2703,6 +3025,7 @@ class Comment extends ASTNode {
 
   /**
    * Initialize a newly created comment.
+   *
    * @param tokens the tokens representing the comment
    * @param type the type of the comment
    * @param references the references embedded within the documentation comment
@@ -2714,39 +3037,44 @@ class Comment extends ASTNode {
 
   /**
    * Return the references embedded within the documentation comment.
+   *
    * @return the references embedded within the documentation comment
    */
   NodeList<CommentReference> get references => _references;
 
   /**
    * Return the tokens representing the comment.
+   *
    * @return the tokens representing the comment
    */
   List<Token> get tokens => _tokens;
 
   /**
-   * Return {@code true} if this is a block comment.
-   * @return {@code true} if this is a block comment
+   * Return `true` if this is a block comment.
+   *
+   * @return `true` if this is a block comment
    */
-  bool isBlock() => identical(_type, CommentType.BLOCK);
+  bool get isBlock => identical(_type, CommentType.BLOCK);
 
   /**
-   * Return {@code true} if this is a documentation comment.
-   * @return {@code true} if this is a documentation comment
+   * Return `true` if this is a documentation comment.
+   *
+   * @return `true` if this is a documentation comment
    */
-  bool isDocumentation() => identical(_type, CommentType.DOCUMENTATION);
+  bool get isDocumentation => identical(_type, CommentType.DOCUMENTATION);
 
   /**
-   * Return {@code true} if this is an end-of-line comment.
-   * @return {@code true} if this is an end-of-line comment
+   * Return `true` if this is an end-of-line comment.
+   *
+   * @return `true` if this is an end-of-line comment
    */
-  bool isEndOfLine() => identical(_type, CommentType.END_OF_LINE);
+  bool get isEndOfLine => identical(_type, CommentType.END_OF_LINE);
   void visitChildren(ASTVisitor<Object> visitor) {
     _references.accept(visitor);
   }
 }
 /**
- * The enumeration {@code CommentType} encodes all the different types of comments that are
+ * The enumeration `CommentType` encodes all the different types of comments that are
  * recognized by the parser.
  */
 class CommentType implements Comparable<CommentType> {
@@ -2772,25 +3100,26 @@ class CommentType implements Comparable<CommentType> {
 
   /// The position in the enum declaration.
   final int ordinal;
-  CommentType(this.name, this.ordinal) {
-  }
+  CommentType(this.name, this.ordinal);
   int compareTo(CommentType other) => ordinal - other.ordinal;
   int get hashCode => ordinal;
   String toString() => name;
 }
 /**
- * Instances of the class {@code CommentReference} represent a reference to a Dart element that is
+ * Instances of the class `CommentReference` represent a reference to a Dart element that is
  * found within a documentation comment.
+ *
  * <pre>
  * commentReference ::=
- * '\[' 'new'? {@link Identifier identifier} '\]'
+ *     '[' 'new'? [Identifier] ']'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class CommentReference extends ASTNode {
 
   /**
-   * The token representing the 'new' keyword, or {@code null} if there was no 'new' keyword.
+   * The token representing the 'new' keyword, or `null` if there was no 'new' keyword.
    */
   Token _newKeyword;
 
@@ -2801,6 +3130,7 @@ class CommentReference extends ASTNode {
 
   /**
    * Initialize a newly created reference to a Dart element.
+   *
    * @param newKeyword the token representing the 'new' keyword
    * @param identifier the identifier being referenced
    */
@@ -2811,6 +3141,7 @@ class CommentReference extends ASTNode {
 
   /**
    * Initialize a newly created reference to a Dart element.
+   *
    * @param newKeyword the token representing the 'new' keyword
    * @param identifier the identifier being referenced
    */
@@ -2821,18 +3152,21 @@ class CommentReference extends ASTNode {
 
   /**
    * Return the identifier being referenced.
+   *
    * @return the identifier being referenced
    */
   Identifier get identifier => _identifier;
 
   /**
-   * Return the token representing the 'new' keyword, or {@code null} if there was no 'new' keyword.
+   * Return the token representing the 'new' keyword, or `null` if there was no 'new' keyword.
+   *
    * @return the token representing the 'new' keyword
    */
   Token get newKeyword => _newKeyword;
 
   /**
    * Set the identifier being referenced to the given identifier.
+   *
    * @param identifier the identifier being referenced
    */
   void set identifier(Identifier identifier2) {
@@ -2841,6 +3175,7 @@ class CommentReference extends ASTNode {
 
   /**
    * Set the token representing the 'new' keyword to the given token.
+   *
    * @param newKeyword the token representing the 'new' keyword
    */
   void set newKeyword(Token newKeyword2) {
@@ -2851,16 +3186,29 @@ class CommentReference extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code CompilationUnit} represent a compilation unit.
- * <p>
+ * Instances of the class `CompilationUnit` represent a compilation unit.
+ *
  * While the grammar restricts the order of the directives and declarations within a compilation
  * unit, this class does not enforce those restrictions. In particular, the children of a
  * compilation unit will be visited in lexical order even if lexical order does not conform to the
  * restrictions of the grammar.
+ *
  * <pre>
  * compilationUnit ::=
- * directives declarations
- * directives ::={@link ScriptTag scriptTag}? {@link LibraryDirective libraryDirective}? namespaceDirective* {@link PartDirective partDirective}| {@link PartOfDirective partOfDirective}namespaceDirective ::={@link ImportDirective importDirective}| {@link ExportDirective exportDirective}declarations ::={@link CompilationUnitMember compilationUnitMember}</pre>
+ *     directives declarations
+ *
+ * directives ::=
+ *     [ScriptTag]? [LibraryDirective]? namespaceDirective* [PartDirective]*
+ *   | [PartOfDirective]
+ *
+ * namespaceDirective ::=
+ *     [ImportDirective]
+ *   | [ExportDirective]
+ *
+ * declarations ::=
+ *     [CompilationUnitMember]*
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class CompilationUnit extends ASTNode {
@@ -2871,7 +3219,7 @@ class CompilationUnit extends ASTNode {
   Token _beginToken;
 
   /**
-   * The script tag at the beginning of the compilation unit, or {@code null} if there is no script
+   * The script tag at the beginning of the compilation unit, or `null` if there is no script
    * tag in this compilation unit.
    */
   ScriptTag _scriptTag;
@@ -2888,18 +3236,18 @@ class CompilationUnit extends ASTNode {
 
   /**
    * The last token in the token stream that was parsed to form this compilation unit. This token
-   * should always have a type of {@link TokenType.EOF}.
+   * should always have a type of [TokenType.EOF].
    */
   Token _endToken;
 
   /**
-   * The element associated with this compilation unit, or {@code null} if the AST structure has not
+   * The element associated with this compilation unit, or `null` if the AST structure has not
    * been resolved.
    */
   CompilationUnitElement _element;
 
   /**
-   * The {@link LineInfo} for this {@link CompilationUnit}.
+   * The [LineInfo] for this [CompilationUnit].
    */
   LineInfo _lineInfo;
 
@@ -2915,6 +3263,7 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Initialize a newly created compilation unit to have the given directives and declarations.
+   *
    * @param beginToken the first token in the token stream
    * @param scriptTag the script tag at the beginning of the compilation unit
    * @param directives the directives contained in this compilation unit
@@ -2933,6 +3282,7 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Initialize a newly created compilation unit to have the given directives and declarations.
+   *
    * @param beginToken the first token in the token stream
    * @param scriptTag the script tag at the beginning of the compilation unit
    * @param directives the directives contained in this compilation unit
@@ -2945,19 +3295,22 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Return the declarations contained in this compilation unit.
+   *
    * @return the declarations contained in this compilation unit
    */
   NodeList<CompilationUnitMember> get declarations => _declarations;
 
   /**
    * Return the directives contained in this compilation unit.
+   *
    * @return the directives contained in this compilation unit
    */
   NodeList<Directive> get directives => _directives;
 
   /**
-   * Return the element associated with this compilation unit, or {@code null} if the AST structure
+   * Return the element associated with this compilation unit, or `null` if the AST structure
    * has not been resolved.
+   *
    * @return the element associated with this compilation unit
    */
   CompilationUnitElement get element => _element;
@@ -2965,9 +3318,10 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Return an array containing all of the errors associated with the receiver. If the receiver has
-   * not been resolved, then return {@code null}.
-   * @return an array of errors (contains no {@code null}s) or {@code null} if the receiver has not
-   * been resolved
+   * not been resolved, then return `null`.
+   *
+   * @return an array of errors (contains no `null`s) or `null` if the receiver has not
+   *         been resolved
    */
   List<AnalysisError> get errors {
     List<AnalysisError> parserErrors = parsingErrors;
@@ -2992,35 +3346,40 @@ class CompilationUnit extends ASTNode {
   }
 
   /**
-   * Get the {@link LineInfo} object for this compilation unit.
-   * @return the associated {@link LineInfo}
+   * Get the [LineInfo] object for this compilation unit.
+   *
+   * @return the associated [LineInfo]
    */
   LineInfo get lineInfo => _lineInfo;
   int get offset => 0;
 
   /**
    * Return an array containing all of the parsing errors associated with the receiver.
-   * @return an array of errors (not {@code null}, contains no {@code null}s).
+   *
+   * @return an array of errors (not `null`, contains no `null`s).
    */
   List<AnalysisError> get parsingErrors => _parsingErrors;
 
   /**
    * Return an array containing all of the resolution errors associated with the receiver. If the
-   * receiver has not been resolved, then return {@code null}.
-   * @return an array of errors (contains no {@code null}s) or {@code null} if the receiver has not
-   * been resolved
+   * receiver has not been resolved, then return `null`.
+   *
+   * @return an array of errors (contains no `null`s) or `null` if the receiver has not
+   *         been resolved
    */
   List<AnalysisError> get resolutionErrors => _resolutionErrors;
 
   /**
-   * Return the script tag at the beginning of the compilation unit, or {@code null} if there is no
+   * Return the script tag at the beginning of the compilation unit, or `null` if there is no
    * script tag in this compilation unit.
+   *
    * @return the script tag at the beginning of the compilation unit
    */
   ScriptTag get scriptTag => _scriptTag;
 
   /**
    * Set the element associated with this compilation unit to the given element.
+   *
    * @param element the element associated with this compilation unit
    */
   void set element(CompilationUnitElement element2) {
@@ -3028,7 +3387,8 @@ class CompilationUnit extends ASTNode {
   }
 
   /**
-   * Set the {@link LineInfo} object for this compilation unit.
+   * Set the [LineInfo] object for this compilation unit.
+   *
    * @param errors LineInfo to associate with this compilation unit
    */
   void set lineInfo(LineInfo lineInfo2) {
@@ -3037,8 +3397,9 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Called to cache the parsing errors when the unit is parsed.
-   * @param errors an array of parsing errors, if {@code null} is passed, the error array is set to
-   * an empty array, {@link AnalysisError#NO_ERRORS}
+   *
+   * @param errors an array of parsing errors, if `null` is passed, the error array is set to
+   *          an empty array, [AnalysisError#NO_ERRORS]
    */
   void set parsingErrors(List<AnalysisError> errors) {
     _parsingErrors = errors == null ? AnalysisError.NO_ERRORS : errors;
@@ -3046,8 +3407,9 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Called to cache the resolution errors when the unit is resolved.
-   * @param errors an array of resolution errors, if {@code null} is passed, the error array is set
-   * to an empty array, {@link AnalysisError#NO_ERRORS}
+   *
+   * @param errors an array of resolution errors, if `null` is passed, the error array is set
+   *          to an empty array, [AnalysisError#NO_ERRORS]
    */
   void set resolutionErrors(List<AnalysisError> errors) {
     _resolutionErrors = errors == null ? AnalysisError.NO_ERRORS : errors;
@@ -3055,6 +3417,7 @@ class CompilationUnit extends ASTNode {
 
   /**
    * Set the script tag at the beginning of the compilation unit to the given script tag.
+   *
    * @param scriptTag the script tag at the beginning of the compilation unit
    */
   void set scriptTag(ScriptTag scriptTag2) {
@@ -3073,8 +3436,9 @@ class CompilationUnit extends ASTNode {
   }
 
   /**
-   * Return {@code true} if all of the directives are lexically before any declarations.
-   * @return {@code true} if all of the directives are lexically before any declarations
+   * Return `true` if all of the directives are lexically before any declarations.
+   *
+   * @return `true` if all of the directives are lexically before any declarations
    */
   bool directivesAreBeforeDeclarations() {
     if (_directives.isEmpty || _declarations.isEmpty) {
@@ -3088,8 +3452,9 @@ class CompilationUnit extends ASTNode {
   /**
    * Return an array containing all of the directives and declarations in this compilation unit,
    * sorted in lexical order.
+   *
    * @return the directives and declarations in this compilation unit in the order in which they
-   * appeared in the original source
+   *         appeared in the original source
    */
   List<ASTNode> get sortedDirectivesAndDeclarations {
     List<ASTNode> childList = new List<ASTNode>();
@@ -3101,33 +3466,47 @@ class CompilationUnit extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code CompilationUnitMember} defines the behavior common to nodes that
+ * Instances of the class `CompilationUnitMember` defines the behavior common to nodes that
  * declare a name within the scope of a compilation unit.
+ *
  * <pre>
- * compilationUnitMember ::={@link ClassDeclaration classDeclaration}| {@link TypeAlias typeAlias}| {@link FunctionDeclaration functionDeclaration}| {@link MethodDeclaration getOrSetDeclaration}| {@link VariableDeclaration constantsDeclaration}| {@link VariableDeclaration variablesDeclaration}</pre>
+ * compilationUnitMember ::=
+ *     [ClassDeclaration]
+ *   | [TypeAlias]
+ *   | [FunctionDeclaration]
+ *   | [MethodDeclaration]
+ *   | [VariableDeclaration]
+ *   | [VariableDeclaration]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class CompilationUnitMember extends Declaration {
 
   /**
    * Initialize a newly created generic compilation unit member.
+   *
    * @param comment the documentation comment associated with this member
    * @param metadata the annotations associated with this member
    */
-  CompilationUnitMember.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata) {
-  }
+  CompilationUnitMember.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata);
 
   /**
    * Initialize a newly created generic compilation unit member.
+   *
    * @param comment the documentation comment associated with this member
    * @param metadata the annotations associated with this member
    */
   CompilationUnitMember({Comment comment, List<Annotation> metadata}) : this.full(comment, metadata);
 }
 /**
- * Instances of the class {@code ConditionalExpression} represent a conditional expression.
+ * Instances of the class `ConditionalExpression` represent a conditional expression.
+ *
  * <pre>
- * conditionalExpression ::={@link Expression condition} '?' {@link Expression thenExpression} ':' {@link Expression elseExpression}</pre>
+ * conditionalExpression ::=
+ *     [Expression] '?' [Expression] ':' [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ConditionalExpression extends Expression {
@@ -3143,7 +3522,7 @@ class ConditionalExpression extends Expression {
   Token _question;
 
   /**
-   * The expression that is executed if the condition evaluates to {@code true}.
+   * The expression that is executed if the condition evaluates to `true`.
    */
   Expression _thenExpression;
 
@@ -3153,17 +3532,20 @@ class ConditionalExpression extends Expression {
   Token _colon;
 
   /**
-   * The expression that is executed if the condition evaluates to {@code false}.
+   * The expression that is executed if the condition evaluates to `false`.
    */
   Expression _elseExpression;
 
   /**
    * Initialize a newly created conditional expression.
+   *
    * @param condition the condition used to determine which expression is executed next
    * @param question the token used to separate the condition from the then expression
-   * @param thenExpression the expression that is executed if the condition evaluates to{@code true}
+   * @param thenExpression the expression that is executed if the condition evaluates to
+   *          `true`
    * @param colon the token used to separate the then expression from the else expression
-   * @param elseExpression the expression that is executed if the condition evaluates to{@code false}
+   * @param elseExpression the expression that is executed if the condition evaluates to
+   *          `false`
    */
   ConditionalExpression.full(Expression condition, Token question, Expression thenExpression, Token colon, Expression elseExpression) {
     this._condition = becomeParentOf(condition);
@@ -3175,11 +3557,14 @@ class ConditionalExpression extends Expression {
 
   /**
    * Initialize a newly created conditional expression.
+   *
    * @param condition the condition used to determine which expression is executed next
    * @param question the token used to separate the condition from the then expression
-   * @param thenExpression the expression that is executed if the condition evaluates to{@code true}
+   * @param thenExpression the expression that is executed if the condition evaluates to
+   *          `true`
    * @param colon the token used to separate the then expression from the else expression
-   * @param elseExpression the expression that is executed if the condition evaluates to{@code false}
+   * @param elseExpression the expression that is executed if the condition evaluates to
+   *          `false`
    */
   ConditionalExpression({Expression condition, Token question, Expression thenExpression, Token colon, Expression elseExpression}) : this.full(condition, question, thenExpression, colon, elseExpression);
   accept(ASTVisitor visitor) => visitor.visitConditionalExpression(this);
@@ -3187,37 +3572,43 @@ class ConditionalExpression extends Expression {
 
   /**
    * Return the token used to separate the then expression from the else expression.
+   *
    * @return the token used to separate the then expression from the else expression
    */
   Token get colon => _colon;
 
   /**
    * Return the condition used to determine which of the expressions is executed next.
+   *
    * @return the condition used to determine which expression is executed next
    */
   Expression get condition => _condition;
 
   /**
-   * Return the expression that is executed if the condition evaluates to {@code false}.
-   * @return the expression that is executed if the condition evaluates to {@code false}
+   * Return the expression that is executed if the condition evaluates to `false`.
+   *
+   * @return the expression that is executed if the condition evaluates to `false`
    */
   Expression get elseExpression => _elseExpression;
   Token get endToken => _elseExpression.endToken;
 
   /**
    * Return the token used to separate the condition from the then expression.
+   *
    * @return the token used to separate the condition from the then expression
    */
   Token get question => _question;
 
   /**
-   * Return the expression that is executed if the condition evaluates to {@code true}.
-   * @return the expression that is executed if the condition evaluates to {@code true}
+   * Return the expression that is executed if the condition evaluates to `true`.
+   *
+   * @return the expression that is executed if the condition evaluates to `true`
    */
   Expression get thenExpression => _thenExpression;
 
   /**
    * Set the token used to separate the then expression from the else expression to the given token.
+   *
    * @param colon the token used to separate the then expression from the else expression
    */
   void set colon(Token colon2) {
@@ -3227,6 +3618,7 @@ class ConditionalExpression extends Expression {
   /**
    * Set the condition used to determine which of the expressions is executed next to the given
    * expression.
+   *
    * @param expression the condition used to determine which expression is executed next
    */
   void set condition(Expression expression) {
@@ -3234,9 +3626,10 @@ class ConditionalExpression extends Expression {
   }
 
   /**
-   * Set the expression that is executed if the condition evaluates to {@code false} to the given
+   * Set the expression that is executed if the condition evaluates to `false` to the given
    * expression.
-   * @param expression the expression that is executed if the condition evaluates to {@code false}
+   *
+   * @param expression the expression that is executed if the condition evaluates to `false`
    */
   void set elseExpression(Expression expression) {
     _elseExpression = becomeParentOf(expression);
@@ -3244,6 +3637,7 @@ class ConditionalExpression extends Expression {
 
   /**
    * Set the token used to separate the condition from the then expression to the given token.
+   *
    * @param question the token used to separate the condition from the then expression
    */
   void set question(Token question2) {
@@ -3251,9 +3645,10 @@ class ConditionalExpression extends Expression {
   }
 
   /**
-   * Set the expression that is executed if the condition evaluates to {@code true} to the given
+   * Set the expression that is executed if the condition evaluates to `true` to the given
    * expression.
-   * @param expression the expression that is executed if the condition evaluates to {@code true}
+   *
+   * @param expression the expression that is executed if the condition evaluates to `true`
    */
   void set thenExpression(Expression expression) {
     _thenExpression = becomeParentOf(expression);
@@ -3265,37 +3660,45 @@ class ConditionalExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code ConstructorDeclaration} represent a constructor declaration.
+ * Instances of the class `ConstructorDeclaration` represent a constructor declaration.
+ *
  * <pre>
  * constructorDeclaration ::=
- * constructorSignature {@link FunctionBody body}?
- * | constructorName formalParameterList ':' 'this' ('.' {@link SimpleIdentifier name})? arguments
+ *     constructorSignature [FunctionBody]?
+ *   | constructorName formalParameterList ':' 'this' ('.' [SimpleIdentifier])? arguments
+ *
  * constructorSignature ::=
- * 'external'? constructorName formalParameterList initializerList?
- * | 'external'? 'factory' factoryName formalParameterList initializerList?
- * | 'external'? 'const'  constructorName formalParameterList initializerList?
- * constructorName ::={@link SimpleIdentifier returnType} ('.' {@link SimpleIdentifier name})?
- * factoryName ::={@link Identifier returnType} ('.' {@link SimpleIdentifier name})?
+ *     'external'? constructorName formalParameterList initializerList?
+ *   | 'external'? 'factory' factoryName formalParameterList initializerList?
+ *   | 'external'? 'const'  constructorName formalParameterList initializerList?
+ *
+ * constructorName ::=
+ *     [SimpleIdentifier] ('.' [SimpleIdentifier])?
+ *
+ * factoryName ::=
+ *     [Identifier] ('.' [SimpleIdentifier])?
+ *
  * initializerList ::=
- * ':' {@link ConstructorInitializer initializer} (',' {@link ConstructorInitializer initializer})
+ *     ':' [ConstructorInitializer] (',' [ConstructorInitializer])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ConstructorDeclaration extends ClassMember {
 
   /**
-   * The token for the 'external' keyword, or {@code null} if the constructor is not external.
+   * The token for the 'external' keyword, or `null` if the constructor is not external.
    */
   Token _externalKeyword;
 
   /**
-   * The token for the 'const' keyword, or {@code null} if the constructor is not a const
+   * The token for the 'const' keyword, or `null` if the constructor is not a const
    * constructor.
    */
   Token _constKeyword;
 
   /**
-   * The token for the 'factory' keyword, or {@code null} if the constructor is not a factory
+   * The token for the 'factory' keyword, or `null` if the constructor is not a factory
    * constructor.
    */
   Token _factoryKeyword;
@@ -3307,18 +3710,18 @@ class ConstructorDeclaration extends ClassMember {
   Identifier _returnType;
 
   /**
-   * The token for the period before the constructor name, or {@code null} if the constructor being
+   * The token for the period before the constructor name, or `null` if the constructor being
    * declared is unnamed.
    */
   Token _period;
 
   /**
-   * The name of the constructor, or {@code null} if the constructor being declared is unnamed.
+   * The name of the constructor, or `null` if the constructor being declared is unnamed.
    */
   SimpleIdentifier _name;
 
   /**
-   * The element associated with this constructor, or {@code null} if the AST structure has not been
+   * The element associated with this constructor, or `null` if the AST structure has not been
    * resolved or if this constructor could not be resolved.
    */
   ConstructorElement _element;
@@ -3329,7 +3732,7 @@ class ConstructorDeclaration extends ClassMember {
   FormalParameterList _parameters;
 
   /**
-   * The token for the separator (colon or equals) before the initializers, or {@code null} if there
+   * The token for the separator (colon or equals) before the initializers, or `null` if there
    * are no initializers.
    */
   Token _separator;
@@ -3340,18 +3743,19 @@ class ConstructorDeclaration extends ClassMember {
   NodeList<ConstructorInitializer> _initializers;
 
   /**
-   * The name of the constructor to which this constructor will be redirected, or {@code null} if
+   * The name of the constructor to which this constructor will be redirected, or `null` if
    * this is not a redirecting factory constructor.
    */
   ConstructorName _redirectedConstructor;
 
   /**
-   * The body of the constructor, or {@code null} if the constructor does not have a body.
+   * The body of the constructor, or `null` if the constructor does not have a body.
    */
   FunctionBody _body;
 
   /**
    * Initialize a newly created constructor declaration.
+   *
    * @param externalKeyword the token for the 'external' keyword
    * @param comment the documentation comment associated with this constructor
    * @param metadata the annotations associated with this constructor
@@ -3364,7 +3768,7 @@ class ConstructorDeclaration extends ClassMember {
    * @param separator the token for the colon or equals before the initializers
    * @param initializers the initializers associated with the constructor
    * @param redirectedConstructor the name of the constructor to which this constructor will be
-   * redirected
+   *          redirected
    * @param body the body of the constructor
    */
   ConstructorDeclaration.full(Comment comment, List<Annotation> metadata, Token externalKeyword, Token constKeyword, Token factoryKeyword, Identifier returnType, Token period, SimpleIdentifier name, FormalParameterList parameters, Token separator, List<ConstructorInitializer> initializers, ConstructorName redirectedConstructor, FunctionBody body) : super.full(comment, metadata) {
@@ -3384,6 +3788,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Initialize a newly created constructor declaration.
+   *
    * @param externalKeyword the token for the 'external' keyword
    * @param comment the documentation comment associated with this constructor
    * @param metadata the annotations associated with this constructor
@@ -3396,20 +3801,22 @@ class ConstructorDeclaration extends ClassMember {
    * @param separator the token for the colon or equals before the initializers
    * @param initializers the initializers associated with the constructor
    * @param redirectedConstructor the name of the constructor to which this constructor will be
-   * redirected
+   *          redirected
    * @param body the body of the constructor
    */
   ConstructorDeclaration({Comment comment, List<Annotation> metadata, Token externalKeyword, Token constKeyword, Token factoryKeyword, Identifier returnType, Token period, SimpleIdentifier name, FormalParameterList parameters, Token separator, List<ConstructorInitializer> initializers, ConstructorName redirectedConstructor, FunctionBody body}) : this.full(comment, metadata, externalKeyword, constKeyword, factoryKeyword, returnType, period, name, parameters, separator, initializers, redirectedConstructor, body);
   accept(ASTVisitor visitor) => visitor.visitConstructorDeclaration(this);
 
   /**
-   * Return the body of the constructor, or {@code null} if the constructor does not have a body.
+   * Return the body of the constructor, or `null` if the constructor does not have a body.
+   *
    * @return the body of the constructor
    */
   FunctionBody get body => _body;
 
   /**
    * Return the token for the 'const' keyword.
+   *
    * @return the token for the 'const' keyword
    */
   Token get constKeyword => _constKeyword;
@@ -3424,46 +3831,54 @@ class ConstructorDeclaration extends ClassMember {
   }
 
   /**
-   * Return the token for the 'external' keyword, or {@code null} if the constructor is not
+   * Return the token for the 'external' keyword, or `null` if the constructor is not
    * external.
+   *
    * @return the token for the 'external' keyword
    */
   Token get externalKeyword => _externalKeyword;
 
   /**
    * Return the token for the 'factory' keyword.
+   *
    * @return the token for the 'factory' keyword
    */
   Token get factoryKeyword => _factoryKeyword;
 
   /**
    * Return the initializers associated with the constructor.
+   *
    * @return the initializers associated with the constructor
    */
   NodeList<ConstructorInitializer> get initializers => _initializers;
 
   /**
-   * Return the name of the constructor, or {@code null} if the constructor being declared is
+   * Return the name of the constructor, or `null` if the constructor being declared is
    * unnamed.
+   *
    * @return the name of the constructor
    */
   SimpleIdentifier get name => _name;
 
   /**
    * Return the parameters associated with the constructor.
+   *
    * @return the parameters associated with the constructor
    */
   FormalParameterList get parameters => _parameters;
 
   /**
-   * Return the token for the period before the constructor name, or {@code null} if the constructor
+   * Return the token for the period before the constructor name, or `null` if the constructor
    * being declared is unnamed.
+   *
    * @return the token for the period before the constructor name
    */
   Token get period => _period;
 
   /**
-   * Return the name of the constructor to which this constructor will be redirected, or{@code null} if this is not a redirecting factory constructor.
+   * Return the name of the constructor to which this constructor will be redirected, or
+   * `null` if this is not a redirecting factory constructor.
+   *
    * @return the name of the constructor to which this constructor will be redirected
    */
   ConstructorName get redirectedConstructor => _redirectedConstructor;
@@ -3472,18 +3887,22 @@ class ConstructorDeclaration extends ClassMember {
    * Return the type of object being created. This can be different than the type in which the
    * constructor is being declared if the constructor is the implementation of a factory
    * constructor.
+   *
    * @return the type of object being created
    */
   Identifier get returnType => _returnType;
 
   /**
-   * Return the token for the separator (colon or equals) before the initializers, or {@code null}if there are no initializers.
+   * Return the token for the separator (colon or equals) before the initializers, or `null`
+   * if there are no initializers.
+   *
    * @return the token for the separator (colon or equals) before the initializers
    */
   Token get separator => _separator;
 
   /**
    * Set the body of the constructor to the given function body.
+   *
    * @param functionBody the body of the constructor
    */
   void set body(FunctionBody functionBody) {
@@ -3492,6 +3911,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the token for the 'const' keyword to the given token.
+   *
    * @param constKeyword the token for the 'const' keyword
    */
   void set constKeyword(Token constKeyword2) {
@@ -3500,6 +3920,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the element associated with this constructor to the given element.
+   *
    * @param element the element associated with this constructor
    */
   void set element(ConstructorElement element2) {
@@ -3508,6 +3929,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the token for the 'external' keyword to the given token.
+   *
    * @param externalKeyword the token for the 'external' keyword
    */
   void set externalKeyword(Token externalKeyword2) {
@@ -3516,6 +3938,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the token for the 'factory' keyword to the given token.
+   *
    * @param factoryKeyword the token for the 'factory' keyword
    */
   void set factoryKeyword(Token factoryKeyword2) {
@@ -3524,6 +3947,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the name of the constructor to the given identifier.
+   *
    * @param identifier the name of the constructor
    */
   void set name(SimpleIdentifier identifier) {
@@ -3532,6 +3956,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the parameters associated with the constructor to the given list of parameters.
+   *
    * @param parameters the parameters associated with the constructor
    */
   void set parameters(FormalParameterList parameters2) {
@@ -3540,6 +3965,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the token for the period before the constructor name to the given token.
+   *
    * @param period the token for the period before the constructor name
    */
   void set period(Token period2) {
@@ -3549,8 +3975,9 @@ class ConstructorDeclaration extends ClassMember {
   /**
    * Set the name of the constructor to which this constructor will be redirected to the given
    * constructor name.
+   *
    * @param redirectedConstructor the name of the constructor to which this constructor will be
-   * redirected
+   *          redirected
    */
   void set redirectedConstructor(ConstructorName redirectedConstructor2) {
     this._redirectedConstructor = becomeParentOf(redirectedConstructor2);
@@ -3558,6 +3985,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the type of object being created to the given type name.
+   *
    * @param typeName the type of object being created
    */
   void set returnType(Identifier typeName) {
@@ -3566,6 +3994,7 @@ class ConstructorDeclaration extends ClassMember {
 
   /**
    * Set the token for the separator (colon or equals) before the initializers to the given token.
+   *
    * @param separator the token for the separator (colon or equals) before the initializers
    */
   void set separator(Token separator2) {
@@ -3589,8 +4018,9 @@ class ConstructorDeclaration extends ClassMember {
   }
 
   /**
-   * Return the left-most of the given tokens, or {@code null} if there are no tokens given or if
-   * all of the given tokens are {@code null}.
+   * Return the left-most of the given tokens, or `null` if there are no tokens given or if
+   * all of the given tokens are `null`.
+   *
    * @param tokens the tokens being compared to find the left-most token
    * @return the left-most of the given tokens
    */
@@ -3606,22 +4036,25 @@ class ConstructorDeclaration extends ClassMember {
   }
 }
 /**
- * Instances of the class {@code ConstructorFieldInitializer} represent the initialization of a
+ * Instances of the class `ConstructorFieldInitializer` represent the initialization of a
  * field within a constructor's initialization list.
+ *
  * <pre>
  * fieldInitializer ::=
- * ('this' '.')? {@link SimpleIdentifier fieldName} '=' {@link Expression conditionalExpression cascadeSection*}</pre>
+ *     ('this' '.')? [SimpleIdentifier] '=' [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ConstructorFieldInitializer extends ConstructorInitializer {
 
   /**
-   * The token for the 'this' keyword, or {@code null} if there is no 'this' keyword.
+   * The token for the 'this' keyword, or `null` if there is no 'this' keyword.
    */
   Token _keyword;
 
   /**
-   * The token for the period after the 'this' keyword, or {@code null} if there is no 'this'
+   * The token for the period after the 'this' keyword, or `null` if there is no 'this'
    * keyword.
    */
   Token _period;
@@ -3644,6 +4077,7 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
   /**
    * Initialize a newly created field initializer to initialize the field with the given name to the
    * value of the given expression.
+   *
    * @param keyword the token for the 'this' keyword
    * @param period the token for the period after the 'this' keyword
    * @param fieldName the name of the field being initialized
@@ -3661,6 +4095,7 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
   /**
    * Initialize a newly created field initializer to initialize the field with the given name to the
    * value of the given expression.
+   *
    * @param keyword the token for the 'this' keyword
    * @param period the token for the period after the 'this' keyword
    * @param fieldName the name of the field being initialized
@@ -3679,37 +4114,43 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
 
   /**
    * Return the token for the equal sign between the field name and the expression.
+   *
    * @return the token for the equal sign between the field name and the expression
    */
   Token get equals => _equals;
 
   /**
    * Return the expression computing the value to which the field will be initialized.
+   *
    * @return the expression computing the value to which the field will be initialized
    */
   Expression get expression => _expression;
 
   /**
    * Return the name of the field being initialized.
+   *
    * @return the name of the field being initialized
    */
   SimpleIdentifier get fieldName => _fieldName;
 
   /**
-   * Return the token for the 'this' keyword, or {@code null} if there is no 'this' keyword.
+   * Return the token for the 'this' keyword, or `null` if there is no 'this' keyword.
+   *
    * @return the token for the 'this' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the token for the period after the 'this' keyword, or {@code null} if there is no 'this'
+   * Return the token for the period after the 'this' keyword, or `null` if there is no 'this'
    * keyword.
+   *
    * @return the token for the period after the 'this' keyword
    */
   Token get period => _period;
 
   /**
    * Set the token for the equal sign between the field name and the expression to the given token.
+   *
    * @param equals the token for the equal sign between the field name and the expression
    */
   void set equals(Token equals2) {
@@ -3719,6 +4160,7 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
   /**
    * Set the expression computing the value to which the field will be initialized to the given
    * expression.
+   *
    * @param expression the expression computing the value to which the field will be initialized
    */
   void set expression(Expression expression2) {
@@ -3727,6 +4169,7 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
 
   /**
    * Set the name of the field being initialized to the given identifier.
+   *
    * @param identifier the name of the field being initialized
    */
   void set fieldName(SimpleIdentifier identifier) {
@@ -3735,6 +4178,7 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
 
   /**
    * Set the token for the 'this' keyword to the given token.
+   *
    * @param keyword the token for the 'this' keyword
    */
   void set keyword(Token keyword2) {
@@ -3743,6 +4187,7 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
 
   /**
    * Set the token for the period after the 'this' keyword to the given token.
+   *
    * @param period the token for the period after the 'this' keyword
    */
   void set period(Token period2) {
@@ -3754,20 +4199,27 @@ class ConstructorFieldInitializer extends ConstructorInitializer {
   }
 }
 /**
- * Instances of the class {@code ConstructorInitializer} defines the behavior of nodes that can
+ * Instances of the class `ConstructorInitializer` defines the behavior of nodes that can
  * occur in the initializer list of a constructor declaration.
+ *
  * <pre>
- * constructorInitializer ::={@link SuperConstructorInvocation superInvocation}| {@link ConstructorFieldInitializer fieldInitializer}</pre>
+ * constructorInitializer ::=
+ *     [SuperConstructorInvocation]
+ *   | [ConstructorFieldInitializer]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class ConstructorInitializer extends ASTNode {
 }
 /**
- * Instances of the class {@code ConstructorName} represent the name of the constructor.
+ * Instances of the class `ConstructorName` represent the name of the constructor.
+ *
  * <pre>
  * constructorName:
- * type ('.' identifier)?
+ *     type ('.' identifier)?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ConstructorName extends ASTNode {
@@ -3778,31 +4230,34 @@ class ConstructorName extends ASTNode {
   TypeName _type;
 
   /**
-   * The token for the period before the constructor name, or {@code null} if the specified
+   * The token for the period before the constructor name, or `null` if the specified
    * constructor is the unnamed constructor.
    */
   Token _period;
 
   /**
-   * The name of the constructor, or {@code null} if the specified constructor is the unnamed
+   * The name of the constructor, or `null` if the specified constructor is the unnamed
    * constructor.
    */
   SimpleIdentifier _name;
 
   /**
-   * The element associated with this constructor name based on static type information, or{@code null} if the AST structure has not been resolved or if this constructor name could not
+   * The element associated with this constructor name based on static type information, or
+   * `null` if the AST structure has not been resolved or if this constructor name could not
    * be resolved.
    */
   ConstructorElement _staticElement;
 
   /**
-   * The element associated with this constructor name based on propagated type information, or{@code null} if the AST structure has not been resolved or if this constructor name could not
+   * The element associated with this constructor name based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if this constructor name could not
    * be resolved.
    */
   ConstructorElement _propagatedElement;
 
   /**
    * Initialize a newly created constructor name.
+   *
    * @param type the name of the type defining the constructor
    * @param period the token for the period before the constructor name
    * @param name the name of the constructor
@@ -3815,6 +4270,7 @@ class ConstructorName extends ASTNode {
 
   /**
    * Initialize a newly created constructor name.
+   *
    * @param type the name of the type defining the constructor
    * @param period the token for the period before the constructor name
    * @param name the name of the constructor
@@ -3825,8 +4281,9 @@ class ConstructorName extends ASTNode {
 
   /**
    * Return the element associated with this constructor name based on propagated type information,
-   * or {@code null} if the AST structure has not been resolved or if this constructor name could
+   * or `null` if the AST structure has not been resolved or if this constructor name could
    * not be resolved.
+   *
    * @return the element associated with this constructor name
    */
   ConstructorElement get element => _propagatedElement;
@@ -3838,28 +4295,33 @@ class ConstructorName extends ASTNode {
   }
 
   /**
-   * Return the name of the constructor, or {@code null} if the specified constructor is the unnamed
+   * Return the name of the constructor, or `null` if the specified constructor is the unnamed
    * constructor.
+   *
    * @return the name of the constructor
    */
   SimpleIdentifier get name => _name;
 
   /**
-   * Return the token for the period before the constructor name, or {@code null} if the specified
+   * Return the token for the period before the constructor name, or `null` if the specified
    * constructor is the unnamed constructor.
+   *
    * @return the token for the period before the constructor name
    */
   Token get period => _period;
 
   /**
-   * Return the element associated with this constructor name based on static type information, or{@code null} if the AST structure has not been resolved or if this constructor name could not
+   * Return the element associated with this constructor name based on static type information, or
+   * `null` if the AST structure has not been resolved or if this constructor name could not
    * be resolved.
+   *
    * @return the element associated with this constructor name
    */
   ConstructorElement get staticElement => _staticElement;
 
   /**
    * Return the name of the type defining the constructor.
+   *
    * @return the name of the type defining the constructor
    */
   TypeName get type => _type;
@@ -3867,6 +4329,7 @@ class ConstructorName extends ASTNode {
   /**
    * Set the element associated with this constructor name based on propagated type information to
    * the given element.
+   *
    * @param element the element to be associated with this constructor name
    */
   void set element(ConstructorElement element2) {
@@ -3875,6 +4338,7 @@ class ConstructorName extends ASTNode {
 
   /**
    * Set the name of the constructor to the given name.
+   *
    * @param name the name of the constructor
    */
   void set name(SimpleIdentifier name2) {
@@ -3883,6 +4347,7 @@ class ConstructorName extends ASTNode {
 
   /**
    * Return the token for the period before the constructor name to the given token.
+   *
    * @param period the token for the period before the constructor name
    */
   void set period(Token period2) {
@@ -3892,6 +4357,7 @@ class ConstructorName extends ASTNode {
   /**
    * Set the element associated with this constructor name based on static type information to the
    * given element.
+   *
    * @param element the element to be associated with this constructor name
    */
   void set staticElement(ConstructorElement element) {
@@ -3900,6 +4366,7 @@ class ConstructorName extends ASTNode {
 
   /**
    * Set the name of the type defining the constructor to the given type name.
+   *
    * @param type the name of the type defining the constructor
    */
   void set type(TypeName type2) {
@@ -3911,11 +4378,13 @@ class ConstructorName extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code ContinueStatement} represent a continue statement.
+ * Instances of the class `ContinueStatement` represent a continue statement.
+ *
  * <pre>
  * continueStatement ::=
- * 'continue' {@link SimpleIdentifier label}? ';'
+ *     'continue' [SimpleIdentifier]? ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ContinueStatement extends Statement {
@@ -3926,7 +4395,7 @@ class ContinueStatement extends Statement {
   Token _keyword;
 
   /**
-   * The label associated with the statement, or {@code null} if there is no label.
+   * The label associated with the statement, or `null` if there is no label.
    */
   SimpleIdentifier _label;
 
@@ -3937,6 +4406,7 @@ class ContinueStatement extends Statement {
 
   /**
    * Initialize a newly created continue statement.
+   *
    * @param keyword the token representing the 'continue' keyword
    * @param label the label associated with the statement
    * @param semicolon the semicolon terminating the statement
@@ -3949,6 +4419,7 @@ class ContinueStatement extends Statement {
 
   /**
    * Initialize a newly created continue statement.
+   *
    * @param keyword the token representing the 'continue' keyword
    * @param label the label associated with the statement
    * @param semicolon the semicolon terminating the statement
@@ -3960,24 +4431,28 @@ class ContinueStatement extends Statement {
 
   /**
    * Return the token representing the 'continue' keyword.
+   *
    * @return the token representing the 'continue' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the label associated with the statement, or {@code null} if there is no label.
+   * Return the label associated with the statement, or `null` if there is no label.
+   *
    * @return the label associated with the statement
    */
   SimpleIdentifier get label => _label;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the token representing the 'continue' keyword to the given token.
+   *
    * @param keyword the token representing the 'continue' keyword
    */
   void set keyword(Token keyword2) {
@@ -3986,6 +4461,7 @@ class ContinueStatement extends Statement {
 
   /**
    * Set the label associated with the statement to the given label.
+   *
    * @param identifier the label associated with the statement
    */
   void set label(SimpleIdentifier identifier) {
@@ -3994,6 +4470,7 @@ class ContinueStatement extends Statement {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -4004,52 +4481,58 @@ class ContinueStatement extends Statement {
   }
 }
 /**
- * The abstract class {@code Declaration} defines the behavior common to nodes that represent the
+ * The abstract class `Declaration` defines the behavior common to nodes that represent the
  * declaration of a name. Each declared name is visible within a name scope.
+ *
  * @coverage dart.engine.ast
  */
 abstract class Declaration extends AnnotatedNode {
 
   /**
    * Initialize a newly created declaration.
+   *
    * @param comment the documentation comment associated with this declaration
    * @param metadata the annotations associated with this declaration
    */
-  Declaration.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata) {
-  }
+  Declaration.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata);
 
   /**
    * Initialize a newly created declaration.
+   *
    * @param comment the documentation comment associated with this declaration
    * @param metadata the annotations associated with this declaration
    */
   Declaration({Comment comment, List<Annotation> metadata}) : this.full(comment, metadata);
 
   /**
-   * Return the element associated with this declaration, or {@code null} if either this node
+   * Return the element associated with this declaration, or `null` if either this node
    * corresponds to a list of declarations or if the AST structure has not been resolved.
+   *
    * @return the element associated with this declaration
    */
   Element get element;
 }
 /**
- * Instances of the class {@code DeclaredIdentifier} represent the declaration of a single
+ * Instances of the class `DeclaredIdentifier` represent the declaration of a single
  * identifier.
+ *
  * <pre>
  * declaredIdentifier ::=
- * ({@link Annotation metadata} finalConstVarOrType {@link SimpleIdentifier identifier}</pre>
+ *     ([Annotation] finalConstVarOrType [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class DeclaredIdentifier extends Declaration {
 
   /**
-   * The token representing either the 'final', 'const' or 'var' keyword, or {@code null} if no
+   * The token representing either the 'final', 'const' or 'var' keyword, or `null` if no
    * keyword was used.
    */
   Token _keyword;
 
   /**
-   * The name of the declared type of the parameter, or {@code null} if the parameter does not have
+   * The name of the declared type of the parameter, or `null` if the parameter does not have
    * a declared type.
    */
   TypeName _type;
@@ -4061,6 +4544,7 @@ class DeclaredIdentifier extends Declaration {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
@@ -4075,6 +4559,7 @@ class DeclaredIdentifier extends Declaration {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
@@ -4094,39 +4579,45 @@ class DeclaredIdentifier extends Declaration {
 
   /**
    * Return the name of the variable being declared.
+   *
    * @return the name of the variable being declared
    */
   SimpleIdentifier get identifier => _identifier;
 
   /**
    * Return the token representing either the 'final', 'const' or 'var' keyword.
+   *
    * @return the token representing either the 'final', 'const' or 'var' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the name of the declared type of the parameter, or {@code null} if the parameter does
+   * Return the name of the declared type of the parameter, or `null` if the parameter does
    * not have a declared type.
+   *
    * @return the name of the declared type of the parameter
    */
   TypeName get type => _type;
 
   /**
-   * Return {@code true} if this variable was declared with the 'const' modifier.
-   * @return {@code true} if this variable was declared with the 'const' modifier
+   * Return `true` if this variable was declared with the 'const' modifier.
+   *
+   * @return `true` if this variable was declared with the 'const' modifier
    */
-  bool isConst() => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
+  bool get isConst => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
 
   /**
-   * Return {@code true} if this variable was declared with the 'final' modifier. Variables that are
-   * declared with the 'const' modifier will return {@code false} even though they are implicitly
+   * Return `true` if this variable was declared with the 'final' modifier. Variables that are
+   * declared with the 'const' modifier will return `false` even though they are implicitly
    * final.
-   * @return {@code true} if this variable was declared with the 'final' modifier
+   *
+   * @return `true` if this variable was declared with the 'final' modifier
    */
-  bool isFinal() => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
+  bool get isFinal => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
 
   /**
    * Set the token representing either the 'final', 'const' or 'var' keyword to the given token.
+   *
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
    */
   void set keyword(Token keyword2) {
@@ -4135,6 +4626,7 @@ class DeclaredIdentifier extends Declaration {
 
   /**
    * Set the name of the declared type of the parameter to the given type name.
+   *
    * @param typeName the name of the declared type of the parameter
    */
   void set type(TypeName typeName) {
@@ -4155,13 +4647,18 @@ class DeclaredIdentifier extends Declaration {
   }
 }
 /**
- * Instances of the class {@code DefaultFormalParameter} represent a formal parameter with a default
+ * Instances of the class `DefaultFormalParameter` represent a formal parameter with a default
  * value. There are two kinds of parameters that are both represented by this class: named formal
  * parameters and positional formal parameters.
+ *
  * <pre>
- * defaultFormalParameter ::={@link NormalFormalParameter normalFormalParameter} ('=' {@link Expression defaultValue})?
- * defaultNamedParameter ::={@link NormalFormalParameter normalFormalParameter} (':' {@link Expression defaultValue})?
+ * defaultFormalParameter ::=
+ *     [NormalFormalParameter] ('=' [Expression])?
+ *
+ * defaultNamedParameter ::=
+ *     [NormalFormalParameter] (':' [Expression])?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class DefaultFormalParameter extends FormalParameter {
@@ -4177,19 +4674,20 @@ class DefaultFormalParameter extends FormalParameter {
   ParameterKind _kind;
 
   /**
-   * The token separating the parameter from the default value, or {@code null} if there is no
+   * The token separating the parameter from the default value, or `null` if there is no
    * default value.
    */
   Token _separator;
 
   /**
-   * The expression computing the default value for the parameter, or {@code null} if there is no
+   * The expression computing the default value for the parameter, or `null` if there is no
    * default value.
    */
   Expression _defaultValue;
 
   /**
    * Initialize a newly created default formal parameter.
+   *
    * @param parameter the formal parameter with which the default value is associated
    * @param kind the kind of this parameter
    * @param separator the token separating the parameter from the default value
@@ -4204,6 +4702,7 @@ class DefaultFormalParameter extends FormalParameter {
 
   /**
    * Initialize a newly created default formal parameter.
+   *
    * @param parameter the formal parameter with which the default value is associated
    * @param kind the kind of this parameter
    * @param separator the token separating the parameter from the default value
@@ -4214,8 +4713,9 @@ class DefaultFormalParameter extends FormalParameter {
   Token get beginToken => _parameter.beginToken;
 
   /**
-   * Return the expression computing the default value for the parameter, or {@code null} if there
+   * Return the expression computing the default value for the parameter, or `null` if there
    * is no default value.
+   *
    * @return the expression computing the default value for the parameter
    */
   Expression get defaultValue => _defaultValue;
@@ -4230,33 +4730,24 @@ class DefaultFormalParameter extends FormalParameter {
 
   /**
    * Return the formal parameter with which the default value is associated.
+   *
    * @return the formal parameter with which the default value is associated
    */
   NormalFormalParameter get parameter => _parameter;
 
   /**
-   * Return the token separating the parameter from the default value, or {@code null} if there is
+   * Return the token separating the parameter from the default value, or `null` if there is
    * no default value.
+   *
    * @return the token separating the parameter from the default value
    */
   Token get separator => _separator;
-
-  /**
-   * Return {@code true} if this parameter was declared with the 'const' modifier.
-   * @return {@code true} if this parameter was declared with the 'const' modifier
-   */
-  bool isConst() => _parameter != null && _parameter.isConst();
-
-  /**
-   * Return {@code true} if this parameter was declared with the 'final' modifier. Parameters that
-   * are declared with the 'const' modifier will return {@code false} even though they are
-   * implicitly final.
-   * @return {@code true} if this parameter was declared with the 'final' modifier
-   */
-  bool isFinal() => _parameter != null && _parameter.isFinal();
+  bool get isConst => _parameter != null && _parameter.isConst;
+  bool get isFinal => _parameter != null && _parameter.isFinal;
 
   /**
    * Set the expression computing the default value for the parameter to the given expression.
+   *
    * @param expression the expression computing the default value for the parameter
    */
   void set defaultValue(Expression expression) {
@@ -4265,6 +4756,7 @@ class DefaultFormalParameter extends FormalParameter {
 
   /**
    * Set the kind of this parameter to the given kind.
+   *
    * @param kind the kind of this parameter
    */
   void set kind(ParameterKind kind2) {
@@ -4273,6 +4765,7 @@ class DefaultFormalParameter extends FormalParameter {
 
   /**
    * Set the formal parameter with which the default value is associated to the given parameter.
+   *
    * @param formalParameter the formal parameter with which the default value is associated
    */
   void set parameter(NormalFormalParameter formalParameter) {
@@ -4281,6 +4774,7 @@ class DefaultFormalParameter extends FormalParameter {
 
   /**
    * Set the token separating the parameter from the default value to the given token.
+   *
    * @param separator the token separating the parameter from the default value
    */
   void set separator(Token separator2) {
@@ -4292,39 +4786,49 @@ class DefaultFormalParameter extends FormalParameter {
   }
 }
 /**
- * The abstract class {@code Directive} defines the behavior common to nodes that represent a
+ * The abstract class `Directive` defines the behavior common to nodes that represent a
  * directive.
+ *
  * <pre>
- * directive ::={@link ExportDirective exportDirective}| {@link ImportDirective importDirective}| {@link LibraryDirective libraryDirective}| {@link PartDirective partDirective}| {@link PartOfDirective partOfDirective}</pre>
+ * directive ::=
+ *     [ExportDirective]
+ *   | [ImportDirective]
+ *   | [LibraryDirective]
+ *   | [PartDirective]
+ *   | [PartOfDirective]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class Directive extends AnnotatedNode {
 
   /**
-   * The element associated with this directive, or {@code null} if the AST structure has not been
+   * The element associated with this directive, or `null` if the AST structure has not been
    * resolved or if this directive could not be resolved.
    */
   Element _element;
 
   /**
    * Initialize a newly create directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    */
-  Directive.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata) {
-  }
+  Directive.full(Comment comment, List<Annotation> metadata) : super.full(comment, metadata);
 
   /**
    * Initialize a newly create directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    */
   Directive({Comment comment, List<Annotation> metadata}) : this.full(comment, metadata);
 
   /**
-   * Return the element associated with this directive, or {@code null} if the AST structure has not
+   * Return the element associated with this directive, or `null` if the AST structure has not
    * been resolved or if this directive could not be resolved. Examples of the latter case include a
    * directive that contains an invalid URL or a URL that does not exist.
+   *
    * @return the element associated with this directive
    */
   Element get element => _element;
@@ -4332,12 +4836,14 @@ abstract class Directive extends AnnotatedNode {
   /**
    * Return the token representing the keyword that introduces this directive ('import', 'export',
    * 'library' or 'part').
+   *
    * @return the token representing the keyword that introduces this directive
    */
   Token get keyword;
 
   /**
    * Set the element associated with this directive to the given element.
+   *
    * @param element the element associated with this directive
    */
   void set element(Element element2) {
@@ -4345,11 +4851,13 @@ abstract class Directive extends AnnotatedNode {
   }
 }
 /**
- * Instances of the class {@code DoStatement} represent a do statement.
+ * Instances of the class `DoStatement` represent a do statement.
+ *
  * <pre>
  * doStatement ::=
- * 'do' {@link Statement body} 'while' '(' {@link Expression condition} ')' ';'
+ *     'do' [Statement] 'while' '(' [Expression] ')' ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class DoStatement extends Statement {
@@ -4391,6 +4899,7 @@ class DoStatement extends Statement {
 
   /**
    * Initialize a newly created do loop.
+   *
    * @param doKeyword the token representing the 'do' keyword
    * @param body the body of the loop
    * @param whileKeyword the token representing the 'while' keyword
@@ -4411,6 +4920,7 @@ class DoStatement extends Statement {
 
   /**
    * Initialize a newly created do loop.
+   *
    * @param doKeyword the token representing the 'do' keyword
    * @param body the body of the loop
    * @param whileKeyword the token representing the 'while' keyword
@@ -4425,18 +4935,21 @@ class DoStatement extends Statement {
 
   /**
    * Return the body of the loop.
+   *
    * @return the body of the loop
    */
   Statement get body => _body;
 
   /**
    * Return the condition that determines when the loop will terminate.
+   *
    * @return the condition that determines when the loop will terminate
    */
   Expression get condition => _condition;
 
   /**
    * Return the token representing the 'do' keyword.
+   *
    * @return the token representing the 'do' keyword
    */
   Token get doKeyword => _doKeyword;
@@ -4444,30 +4957,35 @@ class DoStatement extends Statement {
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Return the token representing the 'while' keyword.
+   *
    * @return the token representing the 'while' keyword
    */
   Token get whileKeyword => _whileKeyword;
 
   /**
    * Set the body of the loop to the given statement.
+   *
    * @param statement the body of the loop
    */
   void set body(Statement statement) {
@@ -4476,6 +4994,7 @@ class DoStatement extends Statement {
 
   /**
    * Set the condition that determines when the loop will terminate to the given expression.
+   *
    * @param expression the condition that determines when the loop will terminate
    */
   void set condition(Expression expression) {
@@ -4484,6 +5003,7 @@ class DoStatement extends Statement {
 
   /**
    * Set the token representing the 'do' keyword to the given token.
+   *
    * @param doKeyword the token representing the 'do' keyword
    */
   void set doKeyword(Token doKeyword2) {
@@ -4492,6 +5012,7 @@ class DoStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param parenthesis the left parenthesis
    */
   void set leftParenthesis(Token parenthesis) {
@@ -4500,6 +5021,7 @@ class DoStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param parenthesis the right parenthesis
    */
   void set rightParenthesis(Token parenthesis) {
@@ -4508,6 +5030,7 @@ class DoStatement extends Statement {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -4516,6 +5039,7 @@ class DoStatement extends Statement {
 
   /**
    * Set the token representing the 'while' keyword to the given token.
+   *
    * @param whileKeyword the token representing the 'while' keyword
    */
   void set whileKeyword(Token whileKeyword2) {
@@ -4527,14 +5051,17 @@ class DoStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code DoubleLiteral} represent a floating point literal expression.
+ * Instances of the class `DoubleLiteral` represent a floating point literal expression.
+ *
  * <pre>
  * doubleLiteral ::=
- * decimalDigit+ ('.' decimalDigit*)? exponent?
- * | '.' decimalDigit+ exponent?
+ *     decimalDigit+ ('.' decimalDigit*)? exponent?
+ *   | '.' decimalDigit+ exponent?
+ *
  * exponent ::=
- * ('e' | 'E') ('+' | '-')? decimalDigit+
+ *     ('e' | 'E') ('+' | '-')? decimalDigit+
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class DoubleLiteral extends Literal {
@@ -4551,6 +5078,7 @@ class DoubleLiteral extends Literal {
 
   /**
    * Initialize a newly created floating point literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -4561,6 +5089,7 @@ class DoubleLiteral extends Literal {
 
   /**
    * Initialize a newly created floating point literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -4571,18 +5100,21 @@ class DoubleLiteral extends Literal {
 
   /**
    * Return the token representing the literal.
+   *
    * @return the token representing the literal
    */
   Token get literal => _literal;
 
   /**
    * Return the value of the literal.
+   *
    * @return the value of the literal
    */
   double get value => _value;
 
   /**
    * Set the token representing the literal to the given token.
+   *
    * @param literal the token representing the literal
    */
   void set literal(Token literal2) {
@@ -4591,6 +5123,7 @@ class DoubleLiteral extends Literal {
 
   /**
    * Set the value of the literal to the given value.
+   *
    * @param value the value of the literal
    */
   void set value(double value2) {
@@ -4600,12 +5133,14 @@ class DoubleLiteral extends Literal {
   }
 }
 /**
- * Instances of the class {@code EmptyFunctionBody} represent an empty function body, which can only
+ * Instances of the class `EmptyFunctionBody` represent an empty function body, which can only
  * appear in constructors or abstract methods.
+ *
  * <pre>
  * emptyFunctionBody ::=
- * ';'
+ *     ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class EmptyFunctionBody extends FunctionBody {
@@ -4617,6 +5152,7 @@ class EmptyFunctionBody extends FunctionBody {
 
   /**
    * Initialize a newly created function body.
+   *
    * @param semicolon the token representing the semicolon that marks the end of the function body
    */
   EmptyFunctionBody.full(Token semicolon) {
@@ -4625,6 +5161,7 @@ class EmptyFunctionBody extends FunctionBody {
 
   /**
    * Initialize a newly created function body.
+   *
    * @param semicolon the token representing the semicolon that marks the end of the function body
    */
   EmptyFunctionBody({Token semicolon}) : this.full(semicolon);
@@ -4634,6 +5171,7 @@ class EmptyFunctionBody extends FunctionBody {
 
   /**
    * Return the token representing the semicolon that marks the end of the function body.
+   *
    * @return the token representing the semicolon that marks the end of the function body
    */
   Token get semicolon => _semicolon;
@@ -4641,6 +5179,7 @@ class EmptyFunctionBody extends FunctionBody {
   /**
    * Set the token representing the semicolon that marks the end of the function body to the given
    * token.
+   *
    * @param semicolon the token representing the semicolon that marks the end of the function body
    */
   void set semicolon(Token semicolon2) {
@@ -4650,11 +5189,13 @@ class EmptyFunctionBody extends FunctionBody {
   }
 }
 /**
- * Instances of the class {@code EmptyStatement} represent an empty statement.
+ * Instances of the class `EmptyStatement` represent an empty statement.
+ *
  * <pre>
  * emptyStatement ::=
- * ';'
+ *     ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class EmptyStatement extends Statement {
@@ -4666,6 +5207,7 @@ class EmptyStatement extends Statement {
 
   /**
    * Initialize a newly created empty statement.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   EmptyStatement.full(Token semicolon) {
@@ -4674,6 +5216,7 @@ class EmptyStatement extends Statement {
 
   /**
    * Initialize a newly created empty statement.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   EmptyStatement({Token semicolon}) : this.full(semicolon);
@@ -4683,12 +5226,14 @@ class EmptyStatement extends Statement {
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -4699,6 +5244,7 @@ class EmptyStatement extends Statement {
 }
 /**
  * Ephemeral identifiers are created as needed to mimic the presence of an empty identifier.
+ *
  * @coverage dart.engine.ast
  */
 class EphemeralIdentifier extends SimpleIdentifier {
@@ -4708,16 +5254,20 @@ class EphemeralIdentifier extends SimpleIdentifier {
   EphemeralIdentifier({ASTNode parent, int location}) : this.full(parent, location);
 }
 /**
- * Instances of the class {@code ExportDirective} represent an export directive.
+ * Instances of the class `ExportDirective` represent an export directive.
+ *
  * <pre>
- * exportDirective ::={@link Annotation metadata} 'export' {@link StringLiteral libraryUri} {@link Combinator combinator}* ';'
+ * exportDirective ::=
+ *     [Annotation] 'export' [StringLiteral] [Combinator]* ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ExportDirective extends NamespaceDirective {
 
   /**
    * Initialize a newly created export directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param keyword the token representing the 'export' keyword
@@ -4725,11 +5275,11 @@ class ExportDirective extends NamespaceDirective {
    * @param combinators the combinators used to control which names are exported
    * @param semicolon the semicolon terminating the directive
    */
-  ExportDirective.full(Comment comment, List<Annotation> metadata, Token keyword, StringLiteral libraryUri, List<Combinator> combinators, Token semicolon) : super.full(comment, metadata, keyword, libraryUri, combinators, semicolon) {
-  }
+  ExportDirective.full(Comment comment, List<Annotation> metadata, Token keyword, StringLiteral libraryUri, List<Combinator> combinators, Token semicolon) : super.full(comment, metadata, keyword, libraryUri, combinators, semicolon);
 
   /**
    * Initialize a newly created export directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param keyword the token representing the 'export' keyword
@@ -4752,22 +5302,27 @@ class ExportDirective extends NamespaceDirective {
   }
 }
 /**
- * Instances of the class {@code Expression} defines the behavior common to nodes that represent an
+ * Instances of the class `Expression` defines the behavior common to nodes that represent an
  * expression.
+ *
  * <pre>
- * expression ::={@link AssignmentExpression assignmentExpression}| {@link ConditionalExpression conditionalExpression} cascadeSection
- * | {@link ThrowExpression throwExpression}</pre>
+ * expression ::=
+ *     [AssignmentExpression]
+ *   | [ConditionalExpression] cascadeSection*
+ *   | [ThrowExpression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class Expression extends ASTNode {
 
   /**
-   * The static type of this expression, or {@code null} if the AST structure has not been resolved.
+   * The static type of this expression, or `null` if the AST structure has not been resolved.
    */
   Type2 _staticType;
 
   /**
-   * The propagated type of this expression, or {@code null} if type propagation has not been
+   * The propagated type of this expression, or `null` if type propagation has not been
    * performed on the AST structure.
    */
   Type2 _propagatedType;
@@ -4777,9 +5332,10 @@ abstract class Expression extends ASTNode {
    * and the function being invoked is known based on propagated type information, and this
    * expression corresponds to one of the parameters of the function being invoked, then return the
    * parameter element representing the parameter to which the value of this expression will be
-   * bound. Otherwise, return {@code null}.
+   * bound. Otherwise, return `null`.
+   *
    * @return the parameter element representing the parameter to which the value of this expression
-   * will be bound
+   *         will be bound
    */
   ParameterElement get parameterElement {
     ASTNode parent = this.parent;
@@ -4804,8 +5360,9 @@ abstract class Expression extends ASTNode {
   }
 
   /**
-   * Return the propagated type of this expression, or {@code null} if type propagation has not been
+   * Return the propagated type of this expression, or `null` if type propagation has not been
    * performed on the AST structure.
+   *
    * @return the propagated type of this expression
    */
   Type2 get propagatedType => _propagatedType;
@@ -4815,9 +5372,10 @@ abstract class Expression extends ASTNode {
    * and the function being invoked is known based on static type information, and this expression
    * corresponds to one of the parameters of the function being invoked, then return the parameter
    * element representing the parameter to which the value of this expression will be bound.
-   * Otherwise, return {@code null}.
+   * Otherwise, return `null`.
+   *
    * @return the parameter element representing the parameter to which the value of this expression
-   * will be bound
+   *         will be bound
    */
   ParameterElement get staticParameterElement {
     ASTNode parent = this.parent;
@@ -4842,20 +5400,24 @@ abstract class Expression extends ASTNode {
   }
 
   /**
-   * Return the static type of this expression, or {@code null} if the AST structure has not been
+   * Return the static type of this expression, or `null` if the AST structure has not been
    * resolved.
+   *
    * @return the static type of this expression
    */
   Type2 get staticType => _staticType;
 
   /**
-   * Return {@code true} if this expression is syntactically valid for the LHS of an{@link AssignmentExpression assignment expression}.
-   * @return {@code true} if this expression matches the {@code assignableExpression} production
+   * Return `true` if this expression is syntactically valid for the LHS of an
+   * [AssignmentExpression].
+   *
+   * @return `true` if this expression matches the `assignableExpression` production
    */
-  bool isAssignable() => false;
+  bool get isAssignable => false;
 
   /**
    * Set the propagated type of this expression to the given type.
+   *
    * @param propagatedType the propagated type of this expression
    */
   void set propagatedType(Type2 propagatedType2) {
@@ -4864,6 +5426,7 @@ abstract class Expression extends ASTNode {
 
   /**
    * Set the static type of this expression to the given type.
+   *
    * @param staticType the static type of this expression
    */
   void set staticType(Type2 staticType2) {
@@ -4871,12 +5434,14 @@ abstract class Expression extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code ExpressionFunctionBody} represent a function body consisting of a
+ * Instances of the class `ExpressionFunctionBody` represent a function body consisting of a
  * single expression.
+ *
  * <pre>
  * expressionFunctionBody ::=
- * '=>' {@link Expression expression} ';'
+ *     '=>' [Expression] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ExpressionFunctionBody extends FunctionBody {
@@ -4898,8 +5463,9 @@ class ExpressionFunctionBody extends FunctionBody {
 
   /**
    * Initialize a newly created function body consisting of a block of statements.
+   *
    * @param functionDefinition the token introducing the expression that represents the body of the
-   * function
+   *          function
    * @param expression the expression representing the body of the function
    * @param semicolon the semicolon terminating the statement
    */
@@ -4911,8 +5477,9 @@ class ExpressionFunctionBody extends FunctionBody {
 
   /**
    * Initialize a newly created function body consisting of a block of statements.
+   *
    * @param functionDefinition the token introducing the expression that represents the body of the
-   * function
+   *          function
    * @param expression the expression representing the body of the function
    * @param semicolon the semicolon terminating the statement
    */
@@ -4928,24 +5495,28 @@ class ExpressionFunctionBody extends FunctionBody {
 
   /**
    * Return the expression representing the body of the function.
+   *
    * @return the expression representing the body of the function
    */
   Expression get expression => _expression;
 
   /**
    * Return the token introducing the expression that represents the body of the function.
+   *
    * @return the function definition token
    */
   Token get functionDefinition => _functionDefinition;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the expression representing the body of the function to the given expression.
+   *
    * @param expression the expression representing the body of the function
    */
   void set expression(Expression expression2) {
@@ -4955,6 +5526,7 @@ class ExpressionFunctionBody extends FunctionBody {
   /**
    * Set the token introducing the expression that represents the body of the function to the given
    * token.
+   *
    * @param functionDefinition the function definition token
    */
   void set functionDefinition(Token functionDefinition2) {
@@ -4963,6 +5535,7 @@ class ExpressionFunctionBody extends FunctionBody {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -4973,10 +5546,13 @@ class ExpressionFunctionBody extends FunctionBody {
   }
 }
 /**
- * Instances of the class {@code ExpressionStatement} wrap an expression as a statement.
+ * Instances of the class `ExpressionStatement` wrap an expression as a statement.
+ *
  * <pre>
- * expressionStatement ::={@link Expression expression}? ';'
+ * expressionStatement ::=
+ *     [Expression]? ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ExpressionStatement extends Statement {
@@ -4987,13 +5563,14 @@ class ExpressionStatement extends Statement {
   Expression _expression;
 
   /**
-   * The semicolon terminating the statement, or {@code null} if the expression is a function
+   * The semicolon terminating the statement, or `null` if the expression is a function
    * expression and isn't followed by a semicolon.
    */
   Token _semicolon;
 
   /**
    * Initialize a newly created expression statement.
+   *
    * @param expression the expression that comprises the statement
    * @param semicolon the semicolon terminating the statement
    */
@@ -5004,6 +5581,7 @@ class ExpressionStatement extends Statement {
 
   /**
    * Initialize a newly created expression statement.
+   *
    * @param expression the expression that comprises the statement
    * @param semicolon the semicolon terminating the statement
    */
@@ -5019,19 +5597,22 @@ class ExpressionStatement extends Statement {
 
   /**
    * Return the expression that comprises the statement.
+   *
    * @return the expression that comprises the statement
    */
   Expression get expression => _expression;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
-  bool isSynthetic() => _expression.isSynthetic() && _semicolon.isSynthetic();
+  bool get isSynthetic => _expression.isSynthetic && _semicolon.isSynthetic;
 
   /**
    * Set the expression that comprises the statement to the given expression.
+   *
    * @param expression the expression that comprises the statement
    */
   void set expression(Expression expression2) {
@@ -5040,6 +5621,7 @@ class ExpressionStatement extends Statement {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -5050,11 +5632,14 @@ class ExpressionStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code ExtendsClause} represent the "extends" clause in a class
+ * Instances of the class `ExtendsClause` represent the "extends" clause in a class
  * declaration.
+ *
  * <pre>
  * extendsClause ::=
- * 'extends' {@link TypeName superclass}</pre>
+ *     'extends' [TypeName]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ExtendsClause extends ASTNode {
@@ -5071,6 +5656,7 @@ class ExtendsClause extends ASTNode {
 
   /**
    * Initialize a newly created extends clause.
+   *
    * @param keyword the token representing the 'extends' keyword
    * @param superclass the name of the class that is being extended
    */
@@ -5081,6 +5667,7 @@ class ExtendsClause extends ASTNode {
 
   /**
    * Initialize a newly created extends clause.
+   *
    * @param keyword the token representing the 'extends' keyword
    * @param superclass the name of the class that is being extended
    */
@@ -5091,18 +5678,21 @@ class ExtendsClause extends ASTNode {
 
   /**
    * Return the token representing the 'extends' keyword.
+   *
    * @return the token representing the 'extends' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the name of the class that is being extended.
+   *
    * @return the name of the class that is being extended
    */
   TypeName get superclass => _superclass;
 
   /**
    * Set the token representing the 'extends' keyword to the given token.
+   *
    * @param keyword the token representing the 'extends' keyword
    */
   void set keyword(Token keyword2) {
@@ -5111,6 +5701,7 @@ class ExtendsClause extends ASTNode {
 
   /**
    * Set the name of the class that is being extended to the given name.
+   *
    * @param name the name of the class that is being extended
    */
   void set superclass(TypeName name) {
@@ -5121,18 +5712,20 @@ class ExtendsClause extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code FieldDeclaration} represent the declaration of one or more fields
+ * Instances of the class `FieldDeclaration` represent the declaration of one or more fields
  * of the same type.
+ *
  * <pre>
  * fieldDeclaration ::=
- * 'static'? {@link VariableDeclarationList fieldList} ';'
+ *     'static'? [VariableDeclarationList] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FieldDeclaration extends ClassMember {
 
   /**
-   * The token representing the 'static' keyword, or {@code null} if the fields are not static.
+   * The token representing the 'static' keyword, or `null` if the fields are not static.
    */
   Token _keyword;
 
@@ -5148,6 +5741,7 @@ class FieldDeclaration extends ClassMember {
 
   /**
    * Initialize a newly created field declaration.
+   *
    * @param comment the documentation comment associated with this field
    * @param metadata the annotations associated with this field
    * @param keyword the token representing the 'static' keyword
@@ -5162,6 +5756,7 @@ class FieldDeclaration extends ClassMember {
 
   /**
    * Initialize a newly created field declaration.
+   *
    * @param comment the documentation comment associated with this field
    * @param metadata the annotations associated with this field
    * @param keyword the token representing the 'static' keyword
@@ -5175,31 +5770,36 @@ class FieldDeclaration extends ClassMember {
 
   /**
    * Return the fields being declared.
+   *
    * @return the fields being declared
    */
   VariableDeclarationList get fields => _fieldList;
 
   /**
-   * Return the token representing the 'static' keyword, or {@code null} if the fields are not
+   * Return the token representing the 'static' keyword, or `null` if the fields are not
    * static.
+   *
    * @return the token representing the 'static' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the semicolon terminating the declaration.
+   *
    * @return the semicolon terminating the declaration
    */
   Token get semicolon => _semicolon;
 
   /**
-   * Return {@code true} if the fields are static.
-   * @return {@code true} if the fields are declared to be static
+   * Return `true` if the fields are static.
+   *
+   * @return `true` if the fields are declared to be static
    */
-  bool isStatic() => _keyword != null;
+  bool get isStatic => _keyword != null;
 
   /**
    * Set the fields being declared to the given list of variables.
+   *
    * @param fieldList the fields being declared
    */
   void set fields(VariableDeclarationList fieldList) {
@@ -5208,6 +5808,7 @@ class FieldDeclaration extends ClassMember {
 
   /**
    * Set the token representing the 'static' keyword to the given token.
+   *
    * @param keyword the token representing the 'static' keyword
    */
   void set keyword(Token keyword2) {
@@ -5216,6 +5817,7 @@ class FieldDeclaration extends ClassMember {
 
   /**
    * Set the semicolon terminating the declaration to the given token.
+   *
    * @param semicolon the semicolon terminating the declaration
    */
   void set semicolon(Token semicolon2) {
@@ -5233,22 +5835,25 @@ class FieldDeclaration extends ClassMember {
   }
 }
 /**
- * Instances of the class {@code FieldFormalParameter} represent a field formal parameter.
+ * Instances of the class `FieldFormalParameter` represent a field formal parameter.
+ *
  * <pre>
  * fieldFormalParameter ::=
- * ('final' {@link TypeName type} | 'const' {@link TypeName type} | 'var' | {@link TypeName type})? 'this' '.' {@link SimpleIdentifier identifier}</pre>
+ *     ('final' [TypeName] | 'const' [TypeName] | 'var' | [TypeName])? 'this' '.' [SimpleIdentifier] [FormalParameterList]?
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FieldFormalParameter extends NormalFormalParameter {
 
   /**
-   * The token representing either the 'final', 'const' or 'var' keyword, or {@code null} if no
+   * The token representing either the 'final', 'const' or 'var' keyword, or `null` if no
    * keyword was used.
    */
   Token _keyword;
 
   /**
-   * The name of the declared type of the parameter, or {@code null} if the parameter does not have
+   * The name of the declared type of the parameter, or `null` if the parameter does not have
    * a declared type.
    */
   TypeName _type;
@@ -5264,7 +5869,13 @@ class FieldFormalParameter extends NormalFormalParameter {
   Token _period;
 
   /**
+   * The parameters of the function-typed parameter.
+   */
+  FormalParameterList _parameters;
+
+  /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
@@ -5272,16 +5883,20 @@ class FieldFormalParameter extends NormalFormalParameter {
    * @param thisToken the token representing the 'this' keyword
    * @param period the token representing the period
    * @param identifier the name of the parameter being declared
+   * @param parameters the parameters of the function-typed parameter, or `null` if this is
+   *          not a function-typed field formal parameter
    */
-  FieldFormalParameter.full(Comment comment, List<Annotation> metadata, Token keyword, TypeName type, Token thisToken, Token period, SimpleIdentifier identifier) : super.full(comment, metadata, identifier) {
+  FieldFormalParameter.full(Comment comment, List<Annotation> metadata, Token keyword, TypeName type, Token thisToken, Token period, SimpleIdentifier identifier, FormalParameterList parameters) : super.full(comment, metadata, identifier) {
     this._keyword = keyword;
     this._type = becomeParentOf(type);
     this._thisToken = thisToken;
     this._period = period;
+    this._parameters = becomeParentOf(parameters);
   }
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
@@ -5289,8 +5904,10 @@ class FieldFormalParameter extends NormalFormalParameter {
    * @param thisToken the token representing the 'this' keyword
    * @param period the token representing the period
    * @param identifier the name of the parameter being declared
+   * @param parameters the parameters of the function-typed parameter, or `null` if this is
+   *          not a function-typed field formal parameter
    */
-  FieldFormalParameter({Comment comment, List<Annotation> metadata, Token keyword, TypeName type, Token thisToken, Token period, SimpleIdentifier identifier}) : this.full(comment, metadata, keyword, type, thisToken, period, identifier);
+  FieldFormalParameter({Comment comment, List<Annotation> metadata, Token keyword, TypeName type, Token thisToken, Token period, SimpleIdentifier identifier, FormalParameterList parameters}) : this.full(comment, metadata, keyword, type, thisToken, period, identifier, parameters);
   accept(ASTVisitor visitor) => visitor.visitFieldFormalParameter(this);
   Token get beginToken {
     if (_keyword != null) {
@@ -5304,33 +5921,47 @@ class FieldFormalParameter extends NormalFormalParameter {
 
   /**
    * Return the token representing either the 'final', 'const' or 'var' keyword.
+   *
    * @return the token representing either the 'final', 'const' or 'var' keyword
    */
   Token get keyword => _keyword;
 
   /**
+   * Return the parameters of the function-typed parameter, or `null` if this is not a
+   * function-typed field formal parameter.
+   *
+   * @return the parameters of the function-typed parameter
+   */
+  FormalParameterList get parameters => _parameters;
+
+  /**
    * Return the token representing the period.
+   *
    * @return the token representing the period
    */
   Token get period => _period;
 
   /**
    * Return the token representing the 'this' keyword.
+   *
    * @return the token representing the 'this' keyword
    */
   Token get thisToken => _thisToken;
 
   /**
-   * Return the name of the declared type of the parameter, or {@code null} if the parameter does
-   * not have a declared type.
+   * Return the name of the declared type of the parameter, or `null` if the parameter does
+   * not have a declared type. Note that if this is a function-typed field formal parameter this is
+   * the return type of the function.
+   *
    * @return the name of the declared type of the parameter
    */
   TypeName get type => _type;
-  bool isConst() => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
-  bool isFinal() => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
+  bool get isConst => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
+  bool get isFinal => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
 
   /**
    * Set the token representing either the 'final', 'const' or 'var' keyword to the given token.
+   *
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
    */
   void set keyword(Token keyword2) {
@@ -5338,7 +5969,17 @@ class FieldFormalParameter extends NormalFormalParameter {
   }
 
   /**
+   * Set the parameters of the function-typed parameter to the given parameters.
+   *
+   * @param parameters the parameters of the function-typed parameter
+   */
+  void set parameters(FormalParameterList parameters2) {
+    this._parameters = becomeParentOf(parameters2);
+  }
+
+  /**
    * Set the token representing the period to the given token.
+   *
    * @param period the token representing the period
    */
   void set period(Token period2) {
@@ -5347,6 +5988,7 @@ class FieldFormalParameter extends NormalFormalParameter {
 
   /**
    * Set the token representing the 'this' keyword to the given token.
+   *
    * @param thisToken the token representing the 'this' keyword
    */
   void set thisToken(Token thisToken2) {
@@ -5355,6 +5997,7 @@ class FieldFormalParameter extends NormalFormalParameter {
 
   /**
    * Set the name of the declared type of the parameter to the given type name.
+   *
    * @param typeName the name of the declared type of the parameter
    */
   void set type(TypeName typeName) {
@@ -5364,13 +6007,17 @@ class FieldFormalParameter extends NormalFormalParameter {
     super.visitChildren(visitor);
     safelyVisitChild(_type, visitor);
     safelyVisitChild(identifier, visitor);
+    safelyVisitChild(_parameters, visitor);
   }
 }
 /**
- * Instances of the class {@code ForEachStatement} represent a for-each statement.
+ * Instances of the class `ForEachStatement` represent a for-each statement.
+ *
  * <pre>
  * forEachStatement ::=
- * 'for' '(' {@link SimpleFormalParameter loopParameter} 'in' {@link Expression iterator} ')' {@link Block body}</pre>
+ *     'for' '(' [SimpleFormalParameter] 'in' [Expression] ')' [Block]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ForEachStatement extends Statement {
@@ -5412,6 +6059,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Initialize a newly created for-each statement.
+   *
    * @param forKeyword the token representing the 'for' keyword
    * @param leftParenthesis the left parenthesis
    * @param loopVariable the declaration of the loop variable
@@ -5431,6 +6079,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Initialize a newly created for-each statement.
+   *
    * @param forKeyword the token representing the 'for' keyword
    * @param leftParenthesis the left parenthesis
    * @param loopVariable the declaration of the loop variable
@@ -5444,6 +6093,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Return the body of the loop.
+   *
    * @return the body of the loop
    */
   Statement get body => _body;
@@ -5451,42 +6101,49 @@ class ForEachStatement extends Statement {
 
   /**
    * Return the token representing the 'for' keyword.
+   *
    * @return the token representing the 'for' keyword
    */
   Token get forKeyword => _forKeyword;
 
   /**
    * Return the token representing the 'in' keyword.
+   *
    * @return the token representing the 'in' keyword
    */
   Token get inKeyword => _inKeyword;
 
   /**
    * Return the expression evaluated to produce the iterator.
+   *
    * @return the expression evaluated to produce the iterator
    */
   Expression get iterator => _iterator;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the declaration of the loop variable.
+   *
    * @return the declaration of the loop variable
    */
   DeclaredIdentifier get loopVariable => _loopVariable;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Set the body of the loop to the given block.
+   *
    * @param body the body of the loop
    */
   void set body(Statement body2) {
@@ -5495,6 +6152,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Set the token representing the 'for' keyword to the given token.
+   *
    * @param forKeyword the token representing the 'for' keyword
    */
   void set forKeyword(Token forKeyword2) {
@@ -5503,6 +6161,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Set the token representing the 'in' keyword to the given token.
+   *
    * @param inKeyword the token representing the 'in' keyword
    */
   void set inKeyword(Token inKeyword2) {
@@ -5511,6 +6170,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Set the expression evaluated to produce the iterator to the given expression.
+   *
    * @param expression the expression evaluated to produce the iterator
    */
   void set iterator(Expression expression) {
@@ -5519,6 +6179,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param leftParenthesis the left parenthesis
    */
   void set leftParenthesis(Token leftParenthesis2) {
@@ -5527,6 +6188,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Set the declaration of the loop variable to the given variable.
+   *
    * @param variable the declaration of the loop variable
    */
   void set loopVariable(DeclaredIdentifier variable) {
@@ -5535,6 +6197,7 @@ class ForEachStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param rightParenthesis the right parenthesis
    */
   void set rightParenthesis(Token rightParenthesis2) {
@@ -5547,13 +6210,20 @@ class ForEachStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code ForStatement} represent a for statement.
+ * Instances of the class `ForStatement` represent a for statement.
+ *
  * <pre>
  * forStatement ::=
- * 'for' '(' forLoopParts ')' {@link Statement statement}forLoopParts ::=
- * forInitializerStatement ';' {@link Expression expression}? ';' {@link Expression expressionList}?
- * forInitializerStatement ::={@link DefaultFormalParameter initializedVariableDeclaration}| {@link Expression expression}?
+ *     'for' '(' forLoopParts ')' [Statement]
+ *
+ * forLoopParts ::=
+ *     forInitializerStatement ';' [Expression]? ';' [Expression]?
+ *
+ * forInitializerStatement ::=
+ *     [DefaultFormalParameter]
+ *   | [Expression]?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ForStatement extends Statement {
@@ -5569,14 +6239,14 @@ class ForStatement extends Statement {
   Token _leftParenthesis;
 
   /**
-   * The declaration of the loop variables, or {@code null} if there are no variables. Note that a
+   * The declaration of the loop variables, or `null` if there are no variables. Note that a
    * for statement cannot have both a variable list and an initialization expression, but can
    * validly have neither.
    */
   VariableDeclarationList _variableList;
 
   /**
-   * The initialization expression, or {@code null} if there is no initialization expression. Note
+   * The initialization expression, or `null` if there is no initialization expression. Note
    * that a for statement cannot have both a variable list and an initialization expression, but can
    * validly have neither.
    */
@@ -5614,6 +6284,7 @@ class ForStatement extends Statement {
 
   /**
    * Initialize a newly created for statement.
+   *
    * @param forKeyword the token representing the 'for' keyword
    * @param leftParenthesis the left parenthesis
    * @param variableList the declaration of the loop variables
@@ -5641,6 +6312,7 @@ class ForStatement extends Statement {
 
   /**
    * Initialize a newly created for statement.
+   *
    * @param forKeyword the token representing the 'for' keyword
    * @param leftParenthesis the left parenthesis
    * @param variableList the declaration of the loop variables
@@ -5658,12 +6330,14 @@ class ForStatement extends Statement {
 
   /**
    * Return the body of the loop.
+   *
    * @return the body of the loop
    */
   Statement get body => _body;
 
   /**
    * Return the condition used to determine when to terminate the loop.
+   *
    * @return the condition used to determine when to terminate the loop
    */
   Expression get condition => _condition;
@@ -5671,54 +6345,63 @@ class ForStatement extends Statement {
 
   /**
    * Return the token representing the 'for' keyword.
+   *
    * @return the token representing the 'for' keyword
    */
   Token get forKeyword => _forKeyword;
 
   /**
-   * Return the initialization expression, or {@code null} if there is no initialization expression.
+   * Return the initialization expression, or `null` if there is no initialization expression.
+   *
    * @return the initialization expression
    */
   Expression get initialization => _initialization;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the semicolon separating the initializer and the condition.
+   *
    * @return the semicolon separating the initializer and the condition
    */
   Token get leftSeparator => _leftSeparator;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Return the semicolon separating the condition and the updater.
+   *
    * @return the semicolon separating the condition and the updater
    */
   Token get rightSeparator => _rightSeparator;
 
   /**
    * Return the list of expressions run after each execution of the loop body.
+   *
    * @return the list of expressions run after each execution of the loop body
    */
   NodeList<Expression> get updaters => _updaters;
 
   /**
-   * Return the declaration of the loop variables, or {@code null} if there are no variables.
-   * @return the declaration of the loop variables, or {@code null} if there are no variables
+   * Return the declaration of the loop variables, or `null` if there are no variables.
+   *
+   * @return the declaration of the loop variables, or `null` if there are no variables
    */
   VariableDeclarationList get variables => _variableList;
 
   /**
    * Set the body of the loop to the given statement.
+   *
    * @param body the body of the loop
    */
   void set body(Statement body2) {
@@ -5727,6 +6410,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the condition used to determine when to terminate the loop to the given expression.
+   *
    * @param expression the condition used to determine when to terminate the loop
    */
   void set condition(Expression expression) {
@@ -5735,6 +6419,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the token representing the 'for' keyword to the given token.
+   *
    * @param forKeyword the token representing the 'for' keyword
    */
   void set forKeyword(Token forKeyword2) {
@@ -5743,6 +6428,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the initialization expression to the given expression.
+   *
    * @param initialization the initialization expression
    */
   void set initialization(Expression initialization2) {
@@ -5751,6 +6437,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param leftParenthesis the left parenthesis
    */
   void set leftParenthesis(Token leftParenthesis2) {
@@ -5759,6 +6446,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the semicolon separating the initializer and the condition to the given token.
+   *
    * @param leftSeparator the semicolon separating the initializer and the condition
    */
   void set leftSeparator(Token leftSeparator2) {
@@ -5767,6 +6455,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param rightParenthesis the right parenthesis
    */
   void set rightParenthesis(Token rightParenthesis2) {
@@ -5775,6 +6464,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the semicolon separating the condition and the updater to the given token.
+   *
    * @param rightSeparator the semicolon separating the condition and the updater
    */
   void set rightSeparator(Token rightSeparator2) {
@@ -5783,6 +6473,7 @@ class ForStatement extends Statement {
 
   /**
    * Set the declaration of the loop variables to the given parameter.
+   *
    * @param variableList the declaration of the loop variables
    */
   void set variables(VariableDeclarationList variableList) {
@@ -5797,17 +6488,24 @@ class ForStatement extends Statement {
   }
 }
 /**
- * The abstract class {@code FormalParameter} defines the behavior of objects representing a
+ * The abstract class `FormalParameter` defines the behavior of objects representing a
  * parameter to a function.
+ *
  * <pre>
- * formalParameter ::={@link NormalFormalParameter normalFormalParameter}| {@link DefaultFormalParameter namedFormalParameter}| {@link DefaultFormalParameter optionalFormalParameter}</pre>
+ * formalParameter ::=
+ *     [NormalFormalParameter]
+ *   | [DefaultFormalParameter]
+ *   | [DefaultFormalParameter]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class FormalParameter extends ASTNode {
 
   /**
-   * Return the element representing this parameter, or {@code null} if this parameter has not been
+   * Return the element representing this parameter, or `null` if this parameter has not been
    * resolved.
+   *
    * @return the element representing this parameter
    */
   ParameterElement get element {
@@ -5820,38 +6518,63 @@ abstract class FormalParameter extends ASTNode {
 
   /**
    * Return the name of the parameter being declared.
+   *
    * @return the name of the parameter being declared
    */
   SimpleIdentifier get identifier;
 
   /**
    * Return the kind of this parameter.
+   *
    * @return the kind of this parameter
    */
   ParameterKind get kind;
+
+  /**
+   * Return `true` if this parameter was declared with the 'const' modifier.
+   *
+   * @return `true` if this parameter was declared with the 'const' modifier
+   */
+  bool get isConst;
+
+  /**
+   * Return `true` if this parameter was declared with the 'final' modifier. Parameters that
+   * are declared with the 'const' modifier will return `false` even though they are
+   * implicitly final.
+   *
+   * @return `true` if this parameter was declared with the 'final' modifier
+   */
+  bool get isFinal;
 }
 /**
- * Instances of the class {@code FormalParameterList} represent the formal parameter list of a
+ * Instances of the class `FormalParameterList` represent the formal parameter list of a
  * method declaration, function declaration, or function type alias.
- * <p>
+ *
  * While the grammar requires all optional formal parameters to follow all of the normal formal
  * parameters and at most one grouping of optional formal parameters, this class does not enforce
  * those constraints. All parameters are flattened into a single list, which can have any or all
  * kinds of parameters (normal, named, and positional) in any order.
+ *
  * <pre>
  * formalParameterList ::=
- * '(' ')'
- * | '(' normalFormalParameters (',' optionalFormalParameters)? ')'
- * | '(' optionalFormalParameters ')'
- * normalFormalParameters ::={@link NormalFormalParameter normalFormalParameter} (',' {@link NormalFormalParameter normalFormalParameter})
+ *     '(' ')'
+ *   | '(' normalFormalParameters (',' optionalFormalParameters)? ')'
+ *   | '(' optionalFormalParameters ')'
+ *
+ * normalFormalParameters ::=
+ *     [NormalFormalParameter] (',' [NormalFormalParameter])*
+ *
  * optionalFormalParameters ::=
- * optionalPositionalFormalParameters
- * | namedFormalParameters
+ *     optionalPositionalFormalParameters
+ *   | namedFormalParameters
+ *
  * optionalPositionalFormalParameters ::=
- * '\[' {@link DefaultFormalParameter positionalFormalParameter} (',' {@link DefaultFormalParameter positionalFormalParameter})* '\]'
+ *     '[' [DefaultFormalParameter] (',' [DefaultFormalParameter])* ']'
+ *
  * namedFormalParameters ::=
- * '{' {@link DefaultFormalParameter namedFormalParameter} (',' {@link DefaultFormalParameter namedFormalParameter})* '}'
+ *     '{' [DefaultFormalParameter] (',' [DefaultFormalParameter])* '}'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FormalParameterList extends ASTNode {
@@ -5867,12 +6590,12 @@ class FormalParameterList extends ASTNode {
   NodeList<FormalParameter> _parameters;
 
   /**
-   * The left square bracket ('\[') or left curly brace ('{') introducing the optional parameters.
+   * The left square bracket ('[') or left curly brace ('{') introducing the optional parameters.
    */
   Token _leftDelimiter;
 
   /**
-   * The right square bracket ('\]') or right curly brace ('}') introducing the optional parameters.
+   * The right square bracket (']') or right curly brace ('}') introducing the optional parameters.
    */
   Token _rightDelimiter;
 
@@ -5883,6 +6606,7 @@ class FormalParameterList extends ASTNode {
 
   /**
    * Initialize a newly created parameter list.
+   *
    * @param leftParenthesis the left parenthesis
    * @param parameters the parameters associated with the method
    * @param leftDelimiter the left delimiter introducing the optional parameters
@@ -5900,6 +6624,7 @@ class FormalParameterList extends ASTNode {
 
   /**
    * Initialize a newly created parameter list.
+   *
    * @param leftParenthesis the left parenthesis
    * @param parameters the parameters associated with the method
    * @param leftDelimiter the left delimiter introducing the optional parameters
@@ -5912,7 +6637,8 @@ class FormalParameterList extends ASTNode {
 
   /**
    * Return an array containing the elements representing the parameters in this list. The array
-   * will contain {@code null}s if the parameters in this list have not been resolved.
+   * will contain `null`s if the parameters in this list have not been resolved.
+   *
    * @return the elements representing the parameters in this list
    */
   List<ParameterElement> get elements {
@@ -5926,42 +6652,48 @@ class FormalParameterList extends ASTNode {
   Token get endToken => _rightParenthesis;
 
   /**
-   * Return the left square bracket ('\[') or left curly brace ('{') introducing the optional
+   * Return the left square bracket ('[') or left curly brace ('{') introducing the optional
    * parameters.
-   * @return the left square bracket ('\[') or left curly brace ('{') introducing the optional
-   * parameters
+   *
+   * @return the left square bracket ('[') or left curly brace ('{') introducing the optional
+   *         parameters
    */
   Token get leftDelimiter => _leftDelimiter;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the parameters associated with the method.
+   *
    * @return the parameters associated with the method
    */
   NodeList<FormalParameter> get parameters => _parameters;
 
   /**
-   * Return the right square bracket ('\]') or right curly brace ('}') introducing the optional
+   * Return the right square bracket (']') or right curly brace ('}') introducing the optional
    * parameters.
-   * @return the right square bracket ('\]') or right curly brace ('}') introducing the optional
-   * parameters
+   *
+   * @return the right square bracket (']') or right curly brace ('}') introducing the optional
+   *         parameters
    */
   Token get rightDelimiter => _rightDelimiter;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
-   * Set the left square bracket ('\[') or left curly brace ('{') introducing the optional parameters
+   * Set the left square bracket ('[') or left curly brace ('{') introducing the optional parameters
    * to the given token.
+   *
    * @param bracket the left delimiter introducing the optional parameters
    */
   void set leftDelimiter(Token bracket) {
@@ -5970,6 +6702,7 @@ class FormalParameterList extends ASTNode {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param parenthesis the left parenthesis
    */
   void set leftParenthesis(Token parenthesis) {
@@ -5977,8 +6710,9 @@ class FormalParameterList extends ASTNode {
   }
 
   /**
-   * Set the right square bracket ('\]') or right curly brace ('}') introducing the optional
+   * Set the right square bracket (']') or right curly brace ('}') introducing the optional
    * parameters to the given token.
+   *
    * @param bracket the right delimiter introducing the optional parameters
    */
   void set rightDelimiter(Token bracket) {
@@ -5987,6 +6721,7 @@ class FormalParameterList extends ASTNode {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param parenthesis the right parenthesis
    */
   void set rightParenthesis(Token parenthesis) {
@@ -5997,44 +6732,55 @@ class FormalParameterList extends ASTNode {
   }
 }
 /**
- * The abstract class {@code FunctionBody} defines the behavior common to objects representing the
+ * The abstract class `FunctionBody` defines the behavior common to objects representing the
  * body of a function or method.
+ *
  * <pre>
- * functionBody ::={@link BlockFunctionBody blockFunctionBody}| {@link EmptyFunctionBody emptyFunctionBody}| {@link ExpressionFunctionBody expressionFunctionBody}</pre>
+ * functionBody ::=
+ *     [BlockFunctionBody]
+ *   | [EmptyFunctionBody]
+ *   | [ExpressionFunctionBody]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class FunctionBody extends ASTNode {
 }
 /**
- * Instances of the class {@code FunctionDeclaration} wrap a {@link FunctionExpression function
- * expression} as a top-level declaration.
+ * Instances of the class `FunctionDeclaration` wrap a [FunctionExpression] as a top-level declaration.
+ *
  * <pre>
  * functionDeclaration ::=
- * 'external' functionSignature
- * | functionSignature {@link FunctionBody functionBody}functionSignature ::={@link Type returnType}? ('get' | 'set')? {@link SimpleIdentifier functionName} {@link FormalParameterList formalParameterList}</pre>
+ *     'external' functionSignature
+ *   | functionSignature [FunctionBody]
+ *
+ * functionSignature ::=
+ *     [Type]? ('get' | 'set')? [SimpleIdentifier] [FormalParameterList]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FunctionDeclaration extends CompilationUnitMember {
 
   /**
-   * The token representing the 'external' keyword, or {@code null} if this is not an external
+   * The token representing the 'external' keyword, or `null` if this is not an external
    * function.
    */
   Token _externalKeyword;
 
   /**
-   * The return type of the function, or {@code null} if no return type was declared.
+   * The return type of the function, or `null` if no return type was declared.
    */
   TypeName _returnType;
 
   /**
-   * The token representing the 'get' or 'set' keyword, or {@code null} if this is a function
+   * The token representing the 'get' or 'set' keyword, or `null` if this is a function
    * declaration rather than a property declaration.
    */
   Token _propertyKeyword;
 
   /**
-   * The name of the function, or {@code null} if the function is not named.
+   * The name of the function, or `null` if the function is not named.
    */
   SimpleIdentifier _name;
 
@@ -6045,6 +6791,7 @@ class FunctionDeclaration extends CompilationUnitMember {
 
   /**
    * Initialize a newly created function declaration.
+   *
    * @param comment the documentation comment associated with this function
    * @param metadata the annotations associated with this function
    * @param externalKeyword the token representing the 'external' keyword
@@ -6063,6 +6810,7 @@ class FunctionDeclaration extends CompilationUnitMember {
 
   /**
    * Initialize a newly created function declaration.
+   *
    * @param comment the documentation comment associated with this function
    * @param metadata the annotations associated with this function
    * @param externalKeyword the token representing the 'external' keyword
@@ -6077,51 +6825,59 @@ class FunctionDeclaration extends CompilationUnitMember {
   Token get endToken => _functionExpression.endToken;
 
   /**
-   * Return the token representing the 'external' keyword, or {@code null} if this is not an
+   * Return the token representing the 'external' keyword, or `null` if this is not an
    * external function.
+   *
    * @return the token representing the 'external' keyword
    */
   Token get externalKeyword => _externalKeyword;
 
   /**
    * Return the function expression being wrapped.
+   *
    * @return the function expression being wrapped
    */
   FunctionExpression get functionExpression => _functionExpression;
 
   /**
-   * Return the name of the function, or {@code null} if the function is not named.
+   * Return the name of the function, or `null` if the function is not named.
+   *
    * @return the name of the function
    */
   SimpleIdentifier get name => _name;
 
   /**
-   * Return the token representing the 'get' or 'set' keyword, or {@code null} if this is a function
+   * Return the token representing the 'get' or 'set' keyword, or `null` if this is a function
    * declaration rather than a property declaration.
+   *
    * @return the token representing the 'get' or 'set' keyword
    */
   Token get propertyKeyword => _propertyKeyword;
 
   /**
-   * Return the return type of the function, or {@code null} if no return type was declared.
+   * Return the return type of the function, or `null` if no return type was declared.
+   *
    * @return the return type of the function
    */
   TypeName get returnType => _returnType;
 
   /**
-   * Return {@code true} if this function declares a getter.
-   * @return {@code true} if this function declares a getter
+   * Return `true` if this function declares a getter.
+   *
+   * @return `true` if this function declares a getter
    */
-  bool isGetter() => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.GET);
+  bool get isGetter => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.GET);
 
   /**
-   * Return {@code true} if this function declares a setter.
-   * @return {@code true} if this function declares a setter
+   * Return `true` if this function declares a setter.
+   *
+   * @return `true` if this function declares a setter
    */
-  bool isSetter() => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.SET);
+  bool get isSetter => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.SET);
 
   /**
    * Set the token representing the 'external' keyword to the given token.
+   *
    * @param externalKeyword the token representing the 'external' keyword
    */
   void set externalKeyword(Token externalKeyword2) {
@@ -6130,6 +6886,7 @@ class FunctionDeclaration extends CompilationUnitMember {
 
   /**
    * Set the function expression being wrapped to the given function expression.
+   *
    * @param functionExpression the function expression being wrapped
    */
   void set functionExpression(FunctionExpression functionExpression2) {
@@ -6138,6 +6895,7 @@ class FunctionDeclaration extends CompilationUnitMember {
 
   /**
    * Set the name of the function to the given identifier.
+   *
    * @param identifier the name of the function
    */
   void set name(SimpleIdentifier identifier) {
@@ -6146,6 +6904,7 @@ class FunctionDeclaration extends CompilationUnitMember {
 
   /**
    * Set the token representing the 'get' or 'set' keyword to the given token.
+   *
    * @param propertyKeyword the token representing the 'get' or 'set' keyword
    */
   void set propertyKeyword(Token propertyKeyword2) {
@@ -6154,6 +6913,7 @@ class FunctionDeclaration extends CompilationUnitMember {
 
   /**
    * Set the return type of the function to the given name.
+   *
    * @param name the return type of the function
    */
   void set returnType(TypeName name) {
@@ -6180,7 +6940,9 @@ class FunctionDeclaration extends CompilationUnitMember {
   }
 }
 /**
- * Instances of the class {@code FunctionDeclarationStatement} wrap a {@link FunctionDeclarationfunction declaration} as a statement.
+ * Instances of the class `FunctionDeclarationStatement` wrap a [FunctionDeclaration
+ ] as a statement.
+ *
  * @coverage dart.engine.ast
  */
 class FunctionDeclarationStatement extends Statement {
@@ -6192,6 +6954,7 @@ class FunctionDeclarationStatement extends Statement {
 
   /**
    * Initialize a newly created function declaration statement.
+   *
    * @param functionDeclaration the the function declaration being wrapped
    */
   FunctionDeclarationStatement.full(FunctionDeclaration functionDeclaration) {
@@ -6200,6 +6963,7 @@ class FunctionDeclarationStatement extends Statement {
 
   /**
    * Initialize a newly created function declaration statement.
+   *
    * @param functionDeclaration the the function declaration being wrapped
    */
   FunctionDeclarationStatement({FunctionDeclaration functionDeclaration}) : this.full(functionDeclaration);
@@ -6209,12 +6973,14 @@ class FunctionDeclarationStatement extends Statement {
 
   /**
    * Return the function declaration being wrapped.
+   *
    * @return the function declaration being wrapped
    */
   FunctionDeclaration get functionDeclaration => _functionDeclaration;
 
   /**
    * Set the function declaration being wrapped to the given function declaration.
+   *
    * @param functionDeclaration the function declaration being wrapped
    */
   void set functionExpression(FunctionDeclaration functionDeclaration2) {
@@ -6225,9 +6991,13 @@ class FunctionDeclarationStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code FunctionExpression} represent a function expression.
+ * Instances of the class `FunctionExpression` represent a function expression.
+ *
  * <pre>
- * functionExpression ::={@link FormalParameterList formalParameterList} {@link FunctionBody functionBody}</pre>
+ * functionExpression ::=
+ *     [FormalParameterList] [FunctionBody]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FunctionExpression extends Expression {
@@ -6238,18 +7008,19 @@ class FunctionExpression extends Expression {
   FormalParameterList _parameters;
 
   /**
-   * The body of the function, or {@code null} if this is an external function.
+   * The body of the function, or `null` if this is an external function.
    */
   FunctionBody _body;
 
   /**
-   * The element associated with the function, or {@code null} if the AST structure has not been
+   * The element associated with the function, or `null` if the AST structure has not been
    * resolved.
    */
   ExecutableElement _element;
 
   /**
    * Initialize a newly created function declaration.
+   *
    * @param parameters the parameters associated with the function
    * @param body the body of the function
    */
@@ -6260,6 +7031,7 @@ class FunctionExpression extends Expression {
 
   /**
    * Initialize a newly created function declaration.
+   *
    * @param parameters the parameters associated with the function
    * @param body the body of the function
    */
@@ -6275,14 +7047,16 @@ class FunctionExpression extends Expression {
   }
 
   /**
-   * Return the body of the function, or {@code null} if this is an external function.
+   * Return the body of the function, or `null` if this is an external function.
+   *
    * @return the body of the function
    */
   FunctionBody get body => _body;
 
   /**
-   * Return the element associated with this function, or {@code null} if the AST structure has not
+   * Return the element associated with this function, or `null` if the AST structure has not
    * been resolved.
+   *
    * @return the element associated with this function
    */
   ExecutableElement get element => _element;
@@ -6297,12 +7071,14 @@ class FunctionExpression extends Expression {
 
   /**
    * Return the parameters associated with the function.
+   *
    * @return the parameters associated with the function
    */
   FormalParameterList get parameters => _parameters;
 
   /**
    * Set the body of the function to the given function body.
+   *
    * @param functionBody the body of the function
    */
   void set body(FunctionBody functionBody) {
@@ -6311,6 +7087,7 @@ class FunctionExpression extends Expression {
 
   /**
    * Set the element associated with this function to the given element.
+   *
    * @param element the element associated with this function
    */
   void set element(ExecutableElement element2) {
@@ -6319,6 +7096,7 @@ class FunctionExpression extends Expression {
 
   /**
    * Set the parameters associated with the function to the given list of parameters.
+   *
    * @param parameters the parameters associated with the function
    */
   void set parameters(FormalParameterList parameters2) {
@@ -6330,12 +7108,17 @@ class FunctionExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code FunctionExpressionInvocation} represent the invocation of a
+ * Instances of the class `FunctionExpressionInvocation` represent the invocation of a
  * function resulting from evaluating an expression. Invocations of methods and other forms of
- * functions are represented by {@link MethodInvocation method invocation} nodes. Invocations of
- * getters and setters are represented by either {@link PrefixedIdentifier prefixed identifier} or{@link PropertyAccess property access} nodes.
+ * functions are represented by [MethodInvocation] nodes. Invocations of
+ * getters and setters are represented by either [PrefixedIdentifier] or
+ * [PropertyAccess] nodes.
+ *
  * <pre>
- * functionExpressionInvoction ::={@link Expression function} {@link ArgumentList argumentList}</pre>
+ * functionExpressionInvoction ::=
+ *     [Expression] [ArgumentList]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FunctionExpressionInvocation extends Expression {
@@ -6351,17 +7134,20 @@ class FunctionExpressionInvocation extends Expression {
   ArgumentList _argumentList;
 
   /**
-   * The element associated with the function being invoked based on static type information, or{@code null} if the AST structure has not been resolved or the function could not be resolved.
+   * The element associated with the function being invoked based on static type information, or
+   * `null` if the AST structure has not been resolved or the function could not be resolved.
    */
   ExecutableElement _staticElement;
 
   /**
-   * The element associated with the function being invoked based on propagated type information, or{@code null} if the AST structure has not been resolved or the function could not be resolved.
+   * The element associated with the function being invoked based on propagated type information, or
+   * `null` if the AST structure has not been resolved or the function could not be resolved.
    */
   ExecutableElement _propagatedElement;
 
   /**
    * Initialize a newly created function expression invocation.
+   *
    * @param function the expression producing the function being invoked
    * @param argumentList the list of arguments to the method
    */
@@ -6372,6 +7158,7 @@ class FunctionExpressionInvocation extends Expression {
 
   /**
    * Initialize a newly created function expression invocation.
+   *
    * @param function the expression producing the function being invoked
    * @param argumentList the list of arguments to the method
    */
@@ -6380,6 +7167,7 @@ class FunctionExpressionInvocation extends Expression {
 
   /**
    * Return the list of arguments to the method.
+   *
    * @return the list of arguments to the method
    */
   ArgumentList get argumentList => _argumentList;
@@ -6387,9 +7175,10 @@ class FunctionExpressionInvocation extends Expression {
 
   /**
    * Return the element associated with the function being invoked based on propagated type
-   * information, or {@code null} if the AST structure has not been resolved or the function could
+   * information, or `null` if the AST structure has not been resolved or the function could
    * not be resolved. One common example of the latter case is an expression whose value can change
    * over time.
+   *
    * @return the element associated with the function being invoked
    */
   ExecutableElement get element => _propagatedElement;
@@ -6397,21 +7186,24 @@ class FunctionExpressionInvocation extends Expression {
 
   /**
    * Return the expression producing the function being invoked.
+   *
    * @return the expression producing the function being invoked
    */
   Expression get function => _function;
 
   /**
    * Return the element associated with the function being invoked based on static type information,
-   * or {@code null} if the AST structure has not been resolved or the function could not be
+   * or `null` if the AST structure has not been resolved or the function could not be
    * resolved. One common example of the latter case is an expression whose value can change over
    * time.
+   *
    * @return the element associated with the function
    */
   ExecutableElement get staticElement => _staticElement;
 
   /**
    * Set the list of arguments to the method to the given list.
+   *
    * @param argumentList the list of arguments to the method
    */
   void set argumentList(ArgumentList argumentList2) {
@@ -6421,6 +7213,7 @@ class FunctionExpressionInvocation extends Expression {
   /**
    * Set the element associated with the function being invoked based on propagated type information
    * to the given element.
+   *
    * @param element the element to be associated with the function being invoked
    */
   void set element(ExecutableElement element2) {
@@ -6429,6 +7222,7 @@ class FunctionExpressionInvocation extends Expression {
 
   /**
    * Set the expression producing the function being invoked to the given expression.
+   *
    * @param function the expression producing the function being invoked
    */
   void set function(Expression function2) {
@@ -6438,6 +7232,7 @@ class FunctionExpressionInvocation extends Expression {
   /**
    * Set the element associated with the function being invoked based on static type information to
    * the given element.
+   *
    * @param element the element to be associated with the function
    */
   void set staticElement(ExecutableElement element) {
@@ -6449,17 +7244,22 @@ class FunctionExpressionInvocation extends Expression {
   }
 }
 /**
- * Instances of the class {@code FunctionTypeAlias} represent a function type alias.
+ * Instances of the class `FunctionTypeAlias` represent a function type alias.
+ *
  * <pre>
  * functionTypeAlias ::=
- * functionPrefix {@link TypeParameterList typeParameterList}? {@link FormalParameterList formalParameterList} ';'
- * functionPrefix ::={@link TypeName returnType}? {@link SimpleIdentifier name}</pre>
+ *      functionPrefix [TypeParameterList]? [FormalParameterList] ';'
+ *
+ * functionPrefix ::=
+ *     [TypeName]? [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FunctionTypeAlias extends TypeAlias {
 
   /**
-   * The name of the return type of the function type being defined, or {@code null} if no return
+   * The name of the return type of the function type being defined, or `null` if no return
    * type was given.
    */
   TypeName _returnType;
@@ -6470,7 +7270,7 @@ class FunctionTypeAlias extends TypeAlias {
   SimpleIdentifier _name;
 
   /**
-   * The type parameters for the function type, or {@code null} if the function type does not have
+   * The type parameters for the function type, or `null` if the function type does not have
    * any type parameters.
    */
   TypeParameterList _typeParameters;
@@ -6482,6 +7282,7 @@ class FunctionTypeAlias extends TypeAlias {
 
   /**
    * Initialize a newly created function type alias.
+   *
    * @param comment the documentation comment associated with this type alias
    * @param metadata the annotations associated with this type alias
    * @param keyword the token representing the 'typedef' keyword
@@ -6500,6 +7301,7 @@ class FunctionTypeAlias extends TypeAlias {
 
   /**
    * Initialize a newly created function type alias.
+   *
    * @param comment the documentation comment associated with this type alias
    * @param metadata the annotations associated with this type alias
    * @param keyword the token representing the 'typedef' keyword
@@ -6515,32 +7317,37 @@ class FunctionTypeAlias extends TypeAlias {
 
   /**
    * Return the name of the function type being declared.
+   *
    * @return the name of the function type being declared
    */
   SimpleIdentifier get name => _name;
 
   /**
    * Return the parameters associated with the function type.
+   *
    * @return the parameters associated with the function type
    */
   FormalParameterList get parameters => _parameters;
 
   /**
-   * Return the name of the return type of the function type being defined, or {@code null} if no
+   * Return the name of the return type of the function type being defined, or `null` if no
    * return type was given.
+   *
    * @return the name of the return type of the function type being defined
    */
   TypeName get returnType => _returnType;
 
   /**
-   * Return the type parameters for the function type, or {@code null} if the function type does not
+   * Return the type parameters for the function type, or `null` if the function type does not
    * have any type parameters.
+   *
    * @return the type parameters for the function type
    */
   TypeParameterList get typeParameters => _typeParameters;
 
   /**
    * Set the name of the function type being declared to the given identifier.
+   *
    * @param name the name of the function type being declared
    */
   void set name(SimpleIdentifier name2) {
@@ -6549,6 +7356,7 @@ class FunctionTypeAlias extends TypeAlias {
 
   /**
    * Set the parameters associated with the function type to the given list of parameters.
+   *
    * @param parameters the parameters associated with the function type
    */
   void set parameters(FormalParameterList parameters2) {
@@ -6557,6 +7365,7 @@ class FunctionTypeAlias extends TypeAlias {
 
   /**
    * Set the name of the return type of the function type being defined to the given type name.
+   *
    * @param typeName the name of the return type of the function type being defined
    */
   void set returnType(TypeName typeName) {
@@ -6565,6 +7374,7 @@ class FunctionTypeAlias extends TypeAlias {
 
   /**
    * Set the type parameters for the function type to the given list of parameters.
+   *
    * @param typeParameters the type parameters for the function type
    */
   void set typeParameters(TypeParameterList typeParameters2) {
@@ -6579,16 +7389,20 @@ class FunctionTypeAlias extends TypeAlias {
   }
 }
 /**
- * Instances of the class {@code FunctionTypedFormalParameter} represent a function-typed formal
+ * Instances of the class `FunctionTypedFormalParameter` represent a function-typed formal
  * parameter.
+ *
  * <pre>
- * functionSignature ::={@link TypeName returnType}? {@link SimpleIdentifier identifier} {@link FormalParameterList formalParameterList}</pre>
+ * functionSignature ::=
+ *     [TypeName]? [SimpleIdentifier] [FormalParameterList]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class FunctionTypedFormalParameter extends NormalFormalParameter {
 
   /**
-   * The return type of the function, or {@code null} if the function does not have a return type.
+   * The return type of the function, or `null` if the function does not have a return type.
    */
   TypeName _returnType;
 
@@ -6599,10 +7413,11 @@ class FunctionTypedFormalParameter extends NormalFormalParameter {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
-   * @param returnType the return type of the function, or {@code null} if the function does not
-   * have a return type
+   * @param returnType the return type of the function, or `null` if the function does not
+   *          have a return type
    * @param identifier the name of the function-typed parameter
    * @param parameters the parameters of the function-typed parameter
    */
@@ -6613,10 +7428,11 @@ class FunctionTypedFormalParameter extends NormalFormalParameter {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
-   * @param returnType the return type of the function, or {@code null} if the function does not
-   * have a return type
+   * @param returnType the return type of the function, or `null` if the function does not
+   *          have a return type
    * @param identifier the name of the function-typed parameter
    * @param parameters the parameters of the function-typed parameter
    */
@@ -6632,21 +7448,24 @@ class FunctionTypedFormalParameter extends NormalFormalParameter {
 
   /**
    * Return the parameters of the function-typed parameter.
+   *
    * @return the parameters of the function-typed parameter
    */
   FormalParameterList get parameters => _parameters;
 
   /**
-   * Return the return type of the function, or {@code null} if the function does not have a return
+   * Return the return type of the function, or `null` if the function does not have a return
    * type.
+   *
    * @return the return type of the function
    */
   TypeName get returnType => _returnType;
-  bool isConst() => false;
-  bool isFinal() => false;
+  bool get isConst => false;
+  bool get isFinal => false;
 
   /**
    * Set the parameters of the function-typed parameter to the given parameters.
+   *
    * @param parameters the parameters of the function-typed parameter
    */
   void set parameters(FormalParameterList parameters2) {
@@ -6655,6 +7474,7 @@ class FunctionTypedFormalParameter extends NormalFormalParameter {
 
   /**
    * Set the return type of the function to the given type.
+   *
    * @param returnType the return type of the function
    */
   void set returnType(TypeName returnType2) {
@@ -6668,12 +7488,14 @@ class FunctionTypedFormalParameter extends NormalFormalParameter {
   }
 }
 /**
- * Instances of the class {@code HideCombinator} represent a combinator that restricts the names
+ * Instances of the class `HideCombinator` represent a combinator that restricts the names
  * being imported to those that are not in a given list.
+ *
  * <pre>
  * hideCombinator ::=
- * 'hide' {@link SimpleIdentifier identifier} (',' {@link SimpleIdentifier identifier})
+ *     'hide' [SimpleIdentifier] (',' [SimpleIdentifier])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class HideCombinator extends Combinator {
@@ -6685,6 +7507,7 @@ class HideCombinator extends Combinator {
 
   /**
    * Initialize a newly created import show combinator.
+   *
    * @param keyword the comma introducing the combinator
    * @param hiddenNames the list of names from the library that are hidden by this combinator
    */
@@ -6695,6 +7518,7 @@ class HideCombinator extends Combinator {
 
   /**
    * Initialize a newly created import show combinator.
+   *
    * @param keyword the comma introducing the combinator
    * @param hiddenNames the list of names from the library that are hidden by this combinator
    */
@@ -6704,6 +7528,7 @@ class HideCombinator extends Combinator {
 
   /**
    * Return the list of names from the library that are hidden by this combinator.
+   *
    * @return the list of names from the library that are hidden by this combinator
    */
   NodeList<SimpleIdentifier> get hiddenNames => _hiddenNames;
@@ -6712,51 +7537,64 @@ class HideCombinator extends Combinator {
   }
 }
 /**
- * The abstract class {@code Identifier} defines the behavior common to nodes that represent an
+ * The abstract class `Identifier` defines the behavior common to nodes that represent an
  * identifier.
+ *
  * <pre>
- * identifier ::={@link SimpleIdentifier simpleIdentifier}| {@link PrefixedIdentifier prefixedIdentifier}</pre>
+ * identifier ::=
+ *     [SimpleIdentifier]
+ *   | [PrefixedIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class Identifier extends Expression {
 
   /**
-   * Return {@code true} if the given name is visible only within the library in which it is
+   * Return `true` if the given name is visible only within the library in which it is
    * declared.
+   *
    * @param name the name being tested
-   * @return {@code true} if the given name is private
+   * @return `true` if the given name is private
    */
   static bool isPrivateName(String name) => name.startsWith("_");
 
   /**
-   * Return the element associated with this identifier based on propagated type information, or{@code null} if the AST structure has not been resolved or if this identifier could not be
+   * Return the element associated with this identifier based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if this identifier could not be
    * resolved. One example of the latter case is an identifier that is not defined within the scope
    * in which it appears.
+   *
    * @return the element associated with this identifier
    */
   Element get element;
 
   /**
    * Return the lexical representation of the identifier.
+   *
    * @return the lexical representation of the identifier
    */
   String get name;
 
   /**
-   * Return the element associated with this identifier based on static type information, or{@code null} if the AST structure has not been resolved or if this identifier could not be
+   * Return the element associated with this identifier based on static type information, or
+   * `null` if the AST structure has not been resolved or if this identifier could not be
    * resolved. One example of the latter case is an identifier that is not defined within the scope
    * in which it appears
+   *
    * @return the element associated with the operator
    */
   Element get staticElement;
-  bool isAssignable() => true;
+  bool get isAssignable => true;
 }
 /**
- * Instances of the class {@code IfStatement} represent an if statement.
+ * Instances of the class `IfStatement` represent an if statement.
+ *
  * <pre>
  * ifStatement ::=
- * 'if' '(' {@link Expression expression} ')' {@link Statement thenStatement} ('else' {@link Statement elseStatement})?
+ *     'if' '(' [Expression] ')' [Statement] ('else' [Statement])?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class IfStatement extends Statement {
@@ -6782,7 +7620,7 @@ class IfStatement extends Statement {
   Token _rightParenthesis;
 
   /**
-   * The statement that is executed if the condition evaluates to {@code true}.
+   * The statement that is executed if the condition evaluates to `true`.
    */
   Statement _thenStatement;
 
@@ -6792,20 +7630,21 @@ class IfStatement extends Statement {
   Token _elseKeyword;
 
   /**
-   * The statement that is executed if the condition evaluates to {@code false}, or {@code null} if
+   * The statement that is executed if the condition evaluates to `false`, or `null` if
    * there is no else statement.
    */
   Statement _elseStatement;
 
   /**
    * Initialize a newly created if statement.
+   *
    * @param ifKeyword the token representing the 'if' keyword
    * @param leftParenthesis the left parenthesis
    * @param condition the condition used to determine which of the statements is executed next
    * @param rightParenthesis the right parenthesis
-   * @param thenStatement the statement that is executed if the condition evaluates to {@code true}
+   * @param thenStatement the statement that is executed if the condition evaluates to `true`
    * @param elseKeyword the token representing the 'else' keyword
-   * @param elseStatement the statement that is executed if the condition evaluates to {@code false}
+   * @param elseStatement the statement that is executed if the condition evaluates to `false`
    */
   IfStatement.full(Token ifKeyword, Token leftParenthesis, Expression condition, Token rightParenthesis, Statement thenStatement, Token elseKeyword, Statement elseStatement) {
     this._ifKeyword = ifKeyword;
@@ -6819,13 +7658,14 @@ class IfStatement extends Statement {
 
   /**
    * Initialize a newly created if statement.
+   *
    * @param ifKeyword the token representing the 'if' keyword
    * @param leftParenthesis the left parenthesis
    * @param condition the condition used to determine which of the statements is executed next
    * @param rightParenthesis the right parenthesis
-   * @param thenStatement the statement that is executed if the condition evaluates to {@code true}
+   * @param thenStatement the statement that is executed if the condition evaluates to `true`
    * @param elseKeyword the token representing the 'else' keyword
-   * @param elseStatement the statement that is executed if the condition evaluates to {@code false}
+   * @param elseStatement the statement that is executed if the condition evaluates to `false`
    */
   IfStatement({Token ifKeyword, Token leftParenthesis, Expression condition, Token rightParenthesis, Statement thenStatement, Token elseKeyword, Statement elseStatement}) : this.full(ifKeyword, leftParenthesis, condition, rightParenthesis, thenStatement, elseKeyword, elseStatement);
   accept(ASTVisitor visitor) => visitor.visitIfStatement(this);
@@ -6833,19 +7673,23 @@ class IfStatement extends Statement {
 
   /**
    * Return the condition used to determine which of the statements is executed next.
+   *
    * @return the condition used to determine which statement is executed next
    */
   Expression get condition => _condition;
 
   /**
    * Return the token representing the 'else' keyword.
+   *
    * @return the token representing the 'else' keyword
    */
   Token get elseKeyword => _elseKeyword;
 
   /**
-   * Return the statement that is executed if the condition evaluates to {@code false}, or{@code null} if there is no else statement.
-   * @return the statement that is executed if the condition evaluates to {@code false}
+   * Return the statement that is executed if the condition evaluates to `false`, or
+   * `null` if there is no else statement.
+   *
+   * @return the statement that is executed if the condition evaluates to `false`
    */
   Statement get elseStatement => _elseStatement;
   Token get endToken {
@@ -6857,31 +7701,36 @@ class IfStatement extends Statement {
 
   /**
    * Return the token representing the 'if' keyword.
+   *
    * @return the token representing the 'if' keyword
    */
   Token get ifKeyword => _ifKeyword;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
-   * Return the statement that is executed if the condition evaluates to {@code true}.
-   * @return the statement that is executed if the condition evaluates to {@code true}
+   * Return the statement that is executed if the condition evaluates to `true`.
+   *
+   * @return the statement that is executed if the condition evaluates to `true`
    */
   Statement get thenStatement => _thenStatement;
 
   /**
    * Set the condition used to determine which of the statements is executed next to the given
    * expression.
+   *
    * @param expression the condition used to determine which statement is executed next
    */
   void set condition(Expression expression) {
@@ -6890,6 +7739,7 @@ class IfStatement extends Statement {
 
   /**
    * Set the token representing the 'else' keyword to the given token.
+   *
    * @param elseKeyword the token representing the 'else' keyword
    */
   void set elseKeyword(Token elseKeyword2) {
@@ -6897,9 +7747,10 @@ class IfStatement extends Statement {
   }
 
   /**
-   * Set the statement that is executed if the condition evaluates to {@code false} to the given
+   * Set the statement that is executed if the condition evaluates to `false` to the given
    * statement.
-   * @param statement the statement that is executed if the condition evaluates to {@code false}
+   *
+   * @param statement the statement that is executed if the condition evaluates to `false`
    */
   void set elseStatement(Statement statement) {
     _elseStatement = becomeParentOf(statement);
@@ -6907,6 +7758,7 @@ class IfStatement extends Statement {
 
   /**
    * Set the token representing the 'if' keyword to the given token.
+   *
    * @param ifKeyword the token representing the 'if' keyword
    */
   void set ifKeyword(Token ifKeyword2) {
@@ -6915,6 +7767,7 @@ class IfStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param leftParenthesis the left parenthesis
    */
   void set leftParenthesis(Token leftParenthesis2) {
@@ -6923,6 +7776,7 @@ class IfStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param rightParenthesis the right parenthesis
    */
   void set rightParenthesis(Token rightParenthesis2) {
@@ -6930,9 +7784,10 @@ class IfStatement extends Statement {
   }
 
   /**
-   * Set the statement that is executed if the condition evaluates to {@code true} to the given
+   * Set the statement that is executed if the condition evaluates to `true` to the given
    * statement.
-   * @param statement the statement that is executed if the condition evaluates to {@code true}
+   *
+   * @param statement the statement that is executed if the condition evaluates to `true`
    */
   void set thenStatement(Statement statement) {
     _thenStatement = becomeParentOf(statement);
@@ -6944,12 +7799,14 @@ class IfStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code ImplementsClause} represent the "implements" clause in an class
+ * Instances of the class `ImplementsClause` represent the "implements" clause in an class
  * declaration.
+ *
  * <pre>
  * implementsClause ::=
- * 'implements' {@link TypeName superclass} (',' {@link TypeName superclass})
+ *     'implements' [TypeName] (',' [TypeName])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ImplementsClause extends ASTNode {
@@ -6965,7 +7822,8 @@ class ImplementsClause extends ASTNode {
   NodeList<TypeName> _interfaces;
 
   /**
-   * Initialize a newly created extends clause.
+   * Initialize a newly created implements clause.
+   *
    * @param keyword the token representing the 'implements' keyword
    * @param interfaces the interfaces that are being implemented
    */
@@ -6976,7 +7834,8 @@ class ImplementsClause extends ASTNode {
   }
 
   /**
-   * Initialize a newly created extends clause.
+   * Initialize a newly created implements clause.
+   *
    * @param keyword the token representing the 'implements' keyword
    * @param interfaces the interfaces that are being implemented
    */
@@ -6987,18 +7846,21 @@ class ImplementsClause extends ASTNode {
 
   /**
    * Return the list of the interfaces that are being implemented.
+   *
    * @return the list of the interfaces that are being implemented
    */
   NodeList<TypeName> get interfaces => _interfaces;
 
   /**
    * Return the token representing the 'implements' keyword.
+   *
    * @return the token representing the 'implements' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Set the token representing the 'implements' keyword to the given token.
+   *
    * @param keyword the token representing the 'implements' keyword
    */
   void set keyword(Token keyword2) {
@@ -7009,27 +7871,31 @@ class ImplementsClause extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code ImportDirective} represent an import directive.
+ * Instances of the class `ImportDirective` represent an import directive.
+ *
  * <pre>
- * importDirective ::={@link Annotation metadata} 'import' {@link StringLiteral libraryUri} ('as' identifier)? {@link Combinator combinator}* ';'
+ * importDirective ::=
+ *     [Annotation] 'import' [StringLiteral] ('as' identifier)? [Combinator]* ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ImportDirective extends NamespaceDirective {
 
   /**
-   * The token representing the 'as' token, or {@code null} if the imported names are not prefixed.
+   * The token representing the 'as' token, or `null` if the imported names are not prefixed.
    */
   Token _asToken;
 
   /**
-   * The prefix to be used with the imported names, or {@code null} if the imported names are not
+   * The prefix to be used with the imported names, or `null` if the imported names are not
    * prefixed.
    */
   SimpleIdentifier _prefix;
 
   /**
    * Initialize a newly created import directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param keyword the token representing the 'import' keyword
@@ -7046,6 +7912,7 @@ class ImportDirective extends NamespaceDirective {
 
   /**
    * Initialize a newly created import directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param keyword the token representing the 'import' keyword
@@ -7059,15 +7926,17 @@ class ImportDirective extends NamespaceDirective {
   accept(ASTVisitor visitor) => visitor.visitImportDirective(this);
 
   /**
-   * Return the token representing the 'as' token, or {@code null} if the imported names are not
+   * Return the token representing the 'as' token, or `null` if the imported names are not
    * prefixed.
+   *
    * @return the token representing the 'as' token
    */
   Token get asToken => _asToken;
 
   /**
-   * Return the prefix to be used with the imported names, or {@code null} if the imported names are
+   * Return the prefix to be used with the imported names, or `null` if the imported names are
    * not prefixed.
+   *
    * @return the prefix to be used with the imported names
    */
   SimpleIdentifier get prefix => _prefix;
@@ -7081,6 +7950,7 @@ class ImportDirective extends NamespaceDirective {
 
   /**
    * Set the token representing the 'as' token to the given token.
+   *
    * @param asToken the token representing the 'as' token
    */
   void set asToken(Token asToken2) {
@@ -7089,6 +7959,7 @@ class ImportDirective extends NamespaceDirective {
 
   /**
    * Set the prefix to be used with the imported names to the given identifier.
+   *
    * @param prefix the prefix to be used with the imported names
    */
   void set prefix(SimpleIdentifier prefix2) {
@@ -7101,22 +7972,25 @@ class ImportDirective extends NamespaceDirective {
   }
 }
 /**
- * Instances of the class {@code IndexExpression} represent an index expression.
+ * Instances of the class `IndexExpression` represent an index expression.
+ *
  * <pre>
- * indexExpression ::={@link Expression target} '\[' {@link Expression index} '\]'
+ * indexExpression ::=
+ *     [Expression] '[' [Expression] ']'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class IndexExpression extends Expression {
 
   /**
-   * The expression used to compute the object being indexed, or {@code null} if this index
+   * The expression used to compute the object being indexed, or `null` if this index
    * expression is part of a cascade expression.
    */
   Expression _target;
 
   /**
-   * The period ("..") before a cascaded index expression, or {@code null} if this index expression
+   * The period ("..") before a cascaded index expression, or `null` if this index expression
    * is not part of a cascade expression.
    */
   Token _period;
@@ -7137,73 +8011,74 @@ class IndexExpression extends Expression {
   Token _rightBracket;
 
   /**
-   * The element associated with the operator based on the static type of the target, or{@code null} if the AST structure has not been resolved or if the operator could not be
+   * The element associated with the operator based on the static type of the target, or
+   * `null` if the AST structure has not been resolved or if the operator could not be
    * resolved.
    */
   MethodElement _staticElement;
 
   /**
-   * The element associated with the operator based on the propagated type of the target, or{@code null} if the AST structure has not been resolved or if the operator could not be
+   * The element associated with the operator based on the propagated type of the target, or
+   * `null` if the AST structure has not been resolved or if the operator could not be
    * resolved.
    */
   MethodElement _propagatedElement;
 
   /**
    * Initialize a newly created index expression.
+   *
    * @param target the expression used to compute the object being indexed
    * @param leftBracket the left square bracket
    * @param index the expression used to compute the index
    * @param rightBracket the right square bracket
    */
-  IndexExpression.forTarget_full(Expression target2, Token leftBracket2, Expression index2, Token rightBracket2) {
-    _jtd_constructor_58_impl(target2, leftBracket2, index2, rightBracket2);
+  IndexExpression.forTarget_full(Expression target, Token leftBracket, Expression index, Token rightBracket) {
+    this._target = becomeParentOf(target);
+    this._leftBracket = leftBracket;
+    this._index = becomeParentOf(index);
+    this._rightBracket = rightBracket;
   }
 
   /**
    * Initialize a newly created index expression.
+   *
    * @param target the expression used to compute the object being indexed
    * @param leftBracket the left square bracket
    * @param index the expression used to compute the index
    * @param rightBracket the right square bracket
    */
-  IndexExpression.forTarget({Expression target2, Token leftBracket2, Expression index2, Token rightBracket2}) : this.forTarget_full(target2, leftBracket2, index2, rightBracket2);
-  _jtd_constructor_58_impl(Expression target2, Token leftBracket2, Expression index2, Token rightBracket2) {
-    this._target = becomeParentOf(target2);
-    this._leftBracket = leftBracket2;
-    this._index = becomeParentOf(index2);
-    this._rightBracket = rightBracket2;
-  }
+  IndexExpression.forTarget({Expression target, Token leftBracket, Expression index, Token rightBracket}) : this.forTarget_full(target, leftBracket, index, rightBracket);
 
   /**
    * Initialize a newly created index expression.
+   *
    * @param period the period ("..") before a cascaded index expression
    * @param leftBracket the left square bracket
    * @param index the expression used to compute the index
    * @param rightBracket the right square bracket
    */
-  IndexExpression.forCascade_full(Token period2, Token leftBracket2, Expression index2, Token rightBracket2) {
-    _jtd_constructor_59_impl(period2, leftBracket2, index2, rightBracket2);
+  IndexExpression.forCascade_full(Token period, Token leftBracket, Expression index, Token rightBracket) {
+    this._period = period;
+    this._leftBracket = leftBracket;
+    this._index = becomeParentOf(index);
+    this._rightBracket = rightBracket;
   }
 
   /**
    * Initialize a newly created index expression.
+   *
    * @param period the period ("..") before a cascaded index expression
    * @param leftBracket the left square bracket
    * @param index the expression used to compute the index
    * @param rightBracket the right square bracket
    */
-  IndexExpression.forCascade({Token period2, Token leftBracket2, Expression index2, Token rightBracket2}) : this.forCascade_full(period2, leftBracket2, index2, rightBracket2);
-  _jtd_constructor_59_impl(Token period2, Token leftBracket2, Expression index2, Token rightBracket2) {
-    this._period = period2;
-    this._leftBracket = leftBracket2;
-    this._index = becomeParentOf(index2);
-    this._rightBracket = rightBracket2;
-  }
+  IndexExpression.forCascade({Token period, Token leftBracket, Expression index, Token rightBracket}) : this.forCascade_full(period, leftBracket, index, rightBracket);
   accept(ASTVisitor visitor) => visitor.visitIndexExpression(this);
 
   /**
-   * Return the expression used to compute the object being indexed, or {@code null} if this index
+   * Return the expression used to compute the object being indexed, or `null` if this index
    * expression is part of a cascade expression.
+   *
    * @return the expression used to compute the object being indexed
    * @see #getRealTarget()
    */
@@ -7216,9 +8091,11 @@ class IndexExpression extends Expression {
   }
 
   /**
-   * Return the element associated with the operator based on the propagated type of the target, or{@code null} if the AST structure has not been resolved or if the operator could not be
+   * Return the element associated with the operator based on the propagated type of the target, or
+   * `null` if the AST structure has not been resolved or if the operator could not be
    * resolved. One example of the latter case is an operator that is not defined for the type of the
    * target.
+   *
    * @return the element associated with this operator
    */
   MethodElement get element => _propagatedElement;
@@ -7226,33 +8103,37 @@ class IndexExpression extends Expression {
 
   /**
    * Return the expression used to compute the index.
+   *
    * @return the expression used to compute the index
    */
   Expression get index => _index;
 
   /**
    * Return the left square bracket.
+   *
    * @return the left square bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
-   * Return the period ("..") before a cascaded index expression, or {@code null} if this index
+   * Return the period ("..") before a cascaded index expression, or `null` if this index
    * expression is not part of a cascade expression.
+   *
    * @return the period ("..") before a cascaded index expression
    */
   Token get period => _period;
 
   /**
    * Return the expression used to compute the object being indexed. If this index expression is not
-   * part of a cascade expression, then this is the same as {@link #getArray()}. If this index
+   * part of a cascade expression, then this is the same as [getArray]. If this index
    * expression is part of a cascade expression, then the target expression stored with the cascade
    * expression is returned.
+   *
    * @return the expression used to compute the object being indexed
    * @see #getArray()
    */
   Expression get realTarget {
-    if (isCascaded()) {
+    if (isCascaded) {
       ASTNode ancestor = parent;
       while (ancestor is! CascadeExpression) {
         if (ancestor == null) {
@@ -7267,24 +8148,29 @@ class IndexExpression extends Expression {
 
   /**
    * Return the right square bracket.
+   *
    * @return the right square bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
-   * Return the element associated with the operator based on the static type of the target, or{@code null} if the AST structure has not been resolved or if the operator could not be
+   * Return the element associated with the operator based on the static type of the target, or
+   * `null` if the AST structure has not been resolved or if the operator could not be
    * resolved. One example of the latter case is an operator that is not defined for the type of the
    * target.
+   *
    * @return the element associated with the operator
    */
   MethodElement get staticElement => _staticElement;
 
   /**
-   * Return {@code true} if this expression is computing a right-hand value.
-   * <p>
-   * Note that {@link #inGetterContext()} and {@link #inSetterContext()} are not opposites, nor are
-   * they mutually exclusive. In other words, it is possible for both methods to return {@code true}when invoked on the same node.
-   * @return {@code true} if this expression is in a context where the operator '\[\]' will be invoked
+   * Return `true` if this expression is computing a right-hand value.
+   *
+   * Note that [inGetterContext] and [inSetterContext] are not opposites, nor are
+   * they mutually exclusive. In other words, it is possible for both methods to return `true`
+   * when invoked on the same node.
+   *
+   * @return `true` if this expression is in a context where the operator '[]' will be invoked
    */
   bool inGetterContext() {
     ASTNode parent = this.parent;
@@ -7298,17 +8184,19 @@ class IndexExpression extends Expression {
   }
 
   /**
-   * Return {@code true} if this expression is computing a left-hand value.
-   * <p>
-   * Note that {@link #inGetterContext()} and {@link #inSetterContext()} are not opposites, nor are
-   * they mutually exclusive. In other words, it is possible for both methods to return {@code true}when invoked on the same node.
-   * @return {@code true} if this expression is in a context where the operator '\[\]=' will be
-   * invoked
+   * Return `true` if this expression is computing a left-hand value.
+   *
+   * Note that [inGetterContext] and [inSetterContext] are not opposites, nor are
+   * they mutually exclusive. In other words, it is possible for both methods to return `true`
+   * when invoked on the same node.
+   *
+   * @return `true` if this expression is in a context where the operator '[]=' will be
+   *         invoked
    */
   bool inSetterContext() {
     ASTNode parent = this.parent;
     if (parent is PrefixExpression) {
-      return ((parent as PrefixExpression)).operator.type.isIncrementOperator();
+      return ((parent as PrefixExpression)).operator.type.isIncrementOperator;
     } else if (parent is PostfixExpression) {
       return true;
     } else if (parent is AssignmentExpression) {
@@ -7316,17 +8204,20 @@ class IndexExpression extends Expression {
     }
     return false;
   }
-  bool isAssignable() => true;
+  bool get isAssignable => true;
 
   /**
-   * Return {@code true} if this expression is cascaded. If it is, then the target of this
-   * expression is not stored locally but is stored in the nearest ancestor that is a{@link CascadeExpression}.
-   * @return {@code true} if this expression is cascaded
+   * Return `true` if this expression is cascaded. If it is, then the target of this
+   * expression is not stored locally but is stored in the nearest ancestor that is a
+   * [CascadeExpression].
+   *
+   * @return `true` if this expression is cascaded
    */
-  bool isCascaded() => _period != null;
+  bool get isCascaded => _period != null;
 
   /**
    * Set the expression used to compute the object being indexed to the given expression.
+   *
    * @param expression the expression used to compute the object being indexed
    */
   void set array(Expression expression) {
@@ -7336,6 +8227,7 @@ class IndexExpression extends Expression {
   /**
    * Set the element associated with the operator based on the propagated type of the target to the
    * given element.
+   *
    * @param element the element to be associated with this operator
    */
   void set element(MethodElement element2) {
@@ -7344,6 +8236,7 @@ class IndexExpression extends Expression {
 
   /**
    * Set the expression used to compute the index to the given expression.
+   *
    * @param expression the expression used to compute the index
    */
   void set index(Expression expression) {
@@ -7352,6 +8245,7 @@ class IndexExpression extends Expression {
 
   /**
    * Set the left square bracket to the given token.
+   *
    * @param bracket the left square bracket
    */
   void set leftBracket(Token bracket) {
@@ -7360,6 +8254,7 @@ class IndexExpression extends Expression {
 
   /**
    * Set the period ("..") before a cascaded index expression to the given token.
+   *
    * @param period the period ("..") before a cascaded index expression
    */
   void set period(Token period2) {
@@ -7368,6 +8263,7 @@ class IndexExpression extends Expression {
 
   /**
    * Set the right square bracket to the given token.
+   *
    * @param bracket the right square bracket
    */
   void set rightBracket(Token bracket) {
@@ -7377,6 +8273,7 @@ class IndexExpression extends Expression {
   /**
    * Set the element associated with the operator based on the static type of the target to the
    * given element.
+   *
    * @param element the static element to be associated with the operator
    */
   void set staticElement(MethodElement element) {
@@ -7390,11 +8287,12 @@ class IndexExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on
    * propagated type information, then return the parameter element representing the parameter to
-   * which the value of the index expression will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getParameterElement()}.
+   * which the value of the index expression will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the index
-   * expression will be bound
+   *         expression will be bound
    */
   ParameterElement get propagatedParameterElementForIndex {
     if (_propagatedElement == null) {
@@ -7410,11 +8308,12 @@ class IndexExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on static
    * type information, then return the parameter element representing the parameter to which the
-   * value of the index expression will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getStaticParameterElement()}.
+   * value of the index expression will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getStaticParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the index
-   * expression will be bound
+   *         expression will be bound
    */
   ParameterElement get staticParameterElementForIndex {
     if (_staticElement == null) {
@@ -7428,11 +8327,14 @@ class IndexExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code InstanceCreationExpression} represent an instance creation
+ * Instances of the class `InstanceCreationExpression` represent an instance creation
  * expression.
+ *
  * <pre>
  * newExpression ::=
- * ('new' | 'const') {@link TypeName type} ('.' {@link SimpleIdentifier identifier})? {@link ArgumentList argumentList}</pre>
+ *     ('new' | 'const') [TypeName] ('.' [SimpleIdentifier])? [ArgumentList]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class InstanceCreationExpression extends Expression {
@@ -7453,18 +8355,21 @@ class InstanceCreationExpression extends Expression {
   ArgumentList _argumentList;
 
   /**
-   * The element associated with the constructor based on static type information, or {@code null}if the AST structure has not been resolved or if the constructor could not be resolved.
+   * The element associated with the constructor based on static type information, or `null`
+   * if the AST structure has not been resolved or if the constructor could not be resolved.
    */
   ConstructorElement _staticElement;
 
   /**
-   * The element associated with the constructor based on propagated type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * The element associated with the constructor based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
    */
   ConstructorElement _propagatedElement;
 
   /**
    * Initialize a newly created instance creation expression.
+   *
    * @param keyword the keyword used to indicate how an object should be created
    * @param constructorName the name of the constructor to be invoked
    * @param argumentList the list of arguments to the constructor
@@ -7477,6 +8382,7 @@ class InstanceCreationExpression extends Expression {
 
   /**
    * Initialize a newly created instance creation expression.
+   *
    * @param keyword the keyword used to indicate how an object should be created
    * @param constructorName the name of the constructor to be invoked
    * @param argumentList the list of arguments to the constructor
@@ -7486,6 +8392,7 @@ class InstanceCreationExpression extends Expression {
 
   /**
    * Return the list of arguments to the constructor.
+   *
    * @return the list of arguments to the constructor
    */
   ArgumentList get argumentList => _argumentList;
@@ -7493,13 +8400,16 @@ class InstanceCreationExpression extends Expression {
 
   /**
    * Return the name of the constructor to be invoked.
+   *
    * @return the name of the constructor to be invoked
    */
   ConstructorName get constructorName => _constructorName;
 
   /**
-   * Return the element associated with the constructor based on propagated type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * Return the element associated with the constructor based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
+   *
    * @return the element associated with the constructor
    */
   ConstructorElement get element => _propagatedElement;
@@ -7507,25 +8417,30 @@ class InstanceCreationExpression extends Expression {
 
   /**
    * Return the keyword used to indicate how an object should be created.
+   *
    * @return the keyword used to indicate how an object should be created
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the element associated with the constructor based on static type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * Return the element associated with the constructor based on static type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
+   *
    * @return the element associated with the constructor
    */
   ConstructorElement get staticElement => _staticElement;
 
   /**
-   * Return {@code true} if this creation expression is used to invoke a constant constructor.
-   * @return {@code true} if this creation expression is used to invoke a constant constructor
+   * Return `true` if this creation expression is used to invoke a constant constructor.
+   *
+   * @return `true` if this creation expression is used to invoke a constant constructor
    */
-  bool isConst() => _keyword is KeywordToken && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
+  bool get isConst => _keyword is KeywordToken && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
 
   /**
    * Set the list of arguments to the constructor to the given list.
+   *
    * @param argumentList the list of arguments to the constructor
    */
   void set argumentList(ArgumentList argumentList2) {
@@ -7534,6 +8449,7 @@ class InstanceCreationExpression extends Expression {
 
   /**
    * Set the name of the constructor to be invoked to the given name.
+   *
    * @param constructorName the name of the constructor to be invoked
    */
   void set constructorName(ConstructorName constructorName2) {
@@ -7543,6 +8459,7 @@ class InstanceCreationExpression extends Expression {
   /**
    * Set the element associated with the constructor based on propagated type information to the
    * given element.
+   *
    * @param element the element to be associated with the constructor
    */
   void set element(ConstructorElement element2) {
@@ -7551,6 +8468,7 @@ class InstanceCreationExpression extends Expression {
 
   /**
    * Set the keyword used to indicate how an object should be created to the given keyword.
+   *
    * @param keyword the keyword used to indicate how an object should be created
    */
   void set keyword(Token keyword2) {
@@ -7560,6 +8478,7 @@ class InstanceCreationExpression extends Expression {
   /**
    * Set the element associated with the constructor based on static type information to the given
    * element.
+   *
    * @param element the element to be associated with the constructor
    */
   void set staticElement(ConstructorElement element) {
@@ -7571,17 +8490,21 @@ class InstanceCreationExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code IntegerLiteral} represent an integer literal expression.
+ * Instances of the class `IntegerLiteral` represent an integer literal expression.
+ *
  * <pre>
  * integerLiteral ::=
- * decimalIntegerLiteral
- * | hexidecimalIntegerLiteral
+ *     decimalIntegerLiteral
+ *   | hexidecimalIntegerLiteral
+ *
  * decimalIntegerLiteral ::=
- * decimalDigit+
+ *     decimalDigit+
+ *
  * hexidecimalIntegerLiteral ::=
- * '0x' hexidecimalDigit+
- * | '0X' hexidecimalDigit+
+ *     '0x' hexidecimalDigit+
+ *   | '0X' hexidecimalDigit+
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class IntegerLiteral extends Literal {
@@ -7598,6 +8521,7 @@ class IntegerLiteral extends Literal {
 
   /**
    * Initialize a newly created integer literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -7608,6 +8532,7 @@ class IntegerLiteral extends Literal {
 
   /**
    * Initialize a newly created integer literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -7618,18 +8543,21 @@ class IntegerLiteral extends Literal {
 
   /**
    * Return the token representing the literal.
+   *
    * @return the token representing the literal
    */
   Token get literal => _literal;
 
   /**
    * Return the value of the literal.
+   *
    * @return the value of the literal
    */
   int get value => _value;
 
   /**
    * Set the token representing the literal to the given token.
+   *
    * @param literal the token representing the literal
    */
   void set literal(Token literal2) {
@@ -7638,6 +8566,7 @@ class IntegerLiteral extends Literal {
 
   /**
    * Set the value of the literal to the given value.
+   *
    * @param value the value of the literal
    */
   void set value(int value2) {
@@ -7647,20 +8576,29 @@ class IntegerLiteral extends Literal {
   }
 }
 /**
- * The abstract class {@code InterpolationElement} defines the behavior common to elements within a{@link StringInterpolation string interpolation}.
+ * The abstract class `InterpolationElement` defines the behavior common to elements within a
+ * [StringInterpolation].
+ *
  * <pre>
- * interpolationElement ::={@link InterpolationExpression interpolationExpression}| {@link InterpolationString interpolationString}</pre>
+ * interpolationElement ::=
+ *     [InterpolationExpression]
+ *   | [InterpolationString]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class InterpolationElement extends ASTNode {
 }
 /**
- * Instances of the class {@code InterpolationExpression} represent an expression embedded in a
+ * Instances of the class `InterpolationExpression` represent an expression embedded in a
  * string interpolation.
+ *
  * <pre>
  * interpolationExpression ::=
- * '$' {@link SimpleIdentifier identifier}| '$' '{' {@link Expression expression} '}'
+ *     '$' [SimpleIdentifier]
+ *   | '$' '{' [Expression] '}'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class InterpolationExpression extends InterpolationElement {
@@ -7677,12 +8615,13 @@ class InterpolationExpression extends InterpolationElement {
   Expression _expression;
 
   /**
-   * The right curly bracket, or {@code null} if the expression is an identifier without brackets.
+   * The right curly bracket, or `null` if the expression is an identifier without brackets.
    */
   Token _rightBracket;
 
   /**
    * Initialize a newly created interpolation expression.
+   *
    * @param leftBracket the left curly bracket
    * @param expression the expression to be evaluated for the value to be converted into a string
    * @param rightBracket the right curly bracket
@@ -7695,6 +8634,7 @@ class InterpolationExpression extends InterpolationElement {
 
   /**
    * Initialize a newly created interpolation expression.
+   *
    * @param leftBracket the left curly bracket
    * @param expression the expression to be evaluated for the value to be converted into a string
    * @param rightBracket the right curly bracket
@@ -7711,18 +8651,21 @@ class InterpolationExpression extends InterpolationElement {
 
   /**
    * Return the expression to be evaluated for the value to be converted into a string.
+   *
    * @return the expression to be evaluated for the value to be converted into a string
    */
   Expression get expression => _expression;
 
   /**
    * Return the left curly bracket.
+   *
    * @return the left curly bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the right curly bracket.
+   *
    * @return the right curly bracket
    */
   Token get rightBracket => _rightBracket;
@@ -7730,6 +8673,7 @@ class InterpolationExpression extends InterpolationElement {
   /**
    * Set the expression to be evaluated for the value to be converted into a string to the given
    * expression.
+   *
    * @param expression the expression to be evaluated for the value to be converted into a string
    */
   void set expression(Expression expression2) {
@@ -7738,6 +8682,7 @@ class InterpolationExpression extends InterpolationElement {
 
   /**
    * Set the left curly bracket to the given token.
+   *
    * @param leftBracket the left curly bracket
    */
   void set leftBracket(Token leftBracket2) {
@@ -7746,6 +8691,7 @@ class InterpolationExpression extends InterpolationElement {
 
   /**
    * Set the right curly bracket to the given token.
+   *
    * @param rightBracket the right curly bracket
    */
   void set rightBracket(Token rightBracket2) {
@@ -7756,12 +8702,14 @@ class InterpolationExpression extends InterpolationElement {
   }
 }
 /**
- * Instances of the class {@code InterpolationString} represent a non-empty substring of an
+ * Instances of the class `InterpolationString` represent a non-empty substring of an
  * interpolated string.
+ *
  * <pre>
  * interpolationString ::=
- * characters
+ *     characters
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class InterpolationString extends InterpolationElement {
@@ -7778,6 +8726,7 @@ class InterpolationString extends InterpolationElement {
 
   /**
    * Initialize a newly created string of characters that are part of a string interpolation.
+   *
    * @param the characters that will be added to the string
    * @param value the value of the literal
    */
@@ -7788,6 +8737,7 @@ class InterpolationString extends InterpolationElement {
 
   /**
    * Initialize a newly created string of characters that are part of a string interpolation.
+   *
    * @param the characters that will be added to the string
    * @param value the value of the literal
    */
@@ -7797,6 +8747,7 @@ class InterpolationString extends InterpolationElement {
 
   /**
    * Return the characters that will be added to the string.
+   *
    * @return the characters that will be added to the string
    */
   Token get contents => _contents;
@@ -7804,12 +8755,14 @@ class InterpolationString extends InterpolationElement {
 
   /**
    * Return the value of the literal.
+   *
    * @return the value of the literal
    */
   String get value => _value;
 
   /**
    * Set the characters that will be added to the string to those in the given string.
+   *
    * @param string the characters that will be added to the string
    */
   void set contents(Token string) {
@@ -7818,6 +8771,7 @@ class InterpolationString extends InterpolationElement {
 
   /**
    * Set the value of the literal to the given string.
+   *
    * @param string the value of the literal
    */
   void set value(String string) {
@@ -7827,9 +8781,13 @@ class InterpolationString extends InterpolationElement {
   }
 }
 /**
- * Instances of the class {@code IsExpression} represent an is expression.
+ * Instances of the class `IsExpression` represent an is expression.
+ *
  * <pre>
- * isExpression ::={@link Expression expression} 'is' '!'? {@link TypeName type}</pre>
+ * isExpression ::=
+ *     [Expression] 'is' '!'? [TypeName]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class IsExpression extends Expression {
@@ -7845,7 +8803,7 @@ class IsExpression extends Expression {
   Token _isOperator;
 
   /**
-   * The not operator, or {@code null} if the sense of the test is not negated.
+   * The not operator, or `null` if the sense of the test is not negated.
    */
   Token _notOperator;
 
@@ -7856,9 +8814,10 @@ class IsExpression extends Expression {
 
   /**
    * Initialize a newly created is expression.
+   *
    * @param expression the expression used to compute the value whose type is being tested
    * @param isOperator the is operator
-   * @param notOperator the not operator, or {@code null} if the sense of the test is not negated
+   * @param notOperator the not operator, or `null` if the sense of the test is not negated
    * @param type the name of the type being tested for
    */
   IsExpression.full(Expression expression, Token isOperator, Token notOperator, TypeName type) {
@@ -7870,9 +8829,10 @@ class IsExpression extends Expression {
 
   /**
    * Initialize a newly created is expression.
+   *
    * @param expression the expression used to compute the value whose type is being tested
    * @param isOperator the is operator
-   * @param notOperator the not operator, or {@code null} if the sense of the test is not negated
+   * @param notOperator the not operator, or `null` if the sense of the test is not negated
    * @param type the name of the type being tested for
    */
   IsExpression({Expression expression, Token isOperator, Token notOperator, TypeName type}) : this.full(expression, isOperator, notOperator, type);
@@ -7882,24 +8842,28 @@ class IsExpression extends Expression {
 
   /**
    * Return the expression used to compute the value whose type is being tested.
+   *
    * @return the expression used to compute the value whose type is being tested
    */
   Expression get expression => _expression;
 
   /**
    * Return the is operator being applied.
+   *
    * @return the is operator being applied
    */
   Token get isOperator => _isOperator;
 
   /**
    * Return the not operator being applied.
+   *
    * @return the not operator being applied
    */
   Token get notOperator => _notOperator;
 
   /**
    * Return the name of the type being tested for.
+   *
    * @return the name of the type being tested for
    */
   TypeName get type => _type;
@@ -7907,6 +8871,7 @@ class IsExpression extends Expression {
   /**
    * Set the expression used to compute the value whose type is being tested to the given
    * expression.
+   *
    * @param expression the expression used to compute the value whose type is being tested
    */
   void set expression(Expression expression2) {
@@ -7915,6 +8880,7 @@ class IsExpression extends Expression {
 
   /**
    * Set the is operator being applied to the given operator.
+   *
    * @param isOperator the is operator being applied
    */
   void set isOperator(Token isOperator2) {
@@ -7923,6 +8889,7 @@ class IsExpression extends Expression {
 
   /**
    * Set the not operator being applied to the given operator.
+   *
    * @param notOperator the is operator being applied
    */
   void set notOperator(Token notOperator2) {
@@ -7931,6 +8898,7 @@ class IsExpression extends Expression {
 
   /**
    * Set the name of the type being tested for to the given name.
+   *
    * @param name the name of the type being tested for
    */
   void set type(TypeName name) {
@@ -7942,10 +8910,13 @@ class IsExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code Label} represent a label.
+ * Instances of the class `Label` represent a label.
+ *
  * <pre>
- * label ::={@link SimpleIdentifier label} ':'
+ * label ::=
+ *     [SimpleIdentifier] ':'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class Label extends ASTNode {
@@ -7962,6 +8933,7 @@ class Label extends ASTNode {
 
   /**
    * Initialize a newly created label.
+   *
    * @param label the label being applied
    * @param colon the colon that separates the label from whatever follows
    */
@@ -7972,6 +8944,7 @@ class Label extends ASTNode {
 
   /**
    * Initialize a newly created label.
+   *
    * @param label the label being applied
    * @param colon the colon that separates the label from whatever follows
    */
@@ -7981,6 +8954,7 @@ class Label extends ASTNode {
 
   /**
    * Return the colon that separates the label from the statement.
+   *
    * @return the colon that separates the label from the statement
    */
   Token get colon => _colon;
@@ -7988,12 +8962,14 @@ class Label extends ASTNode {
 
   /**
    * Return the label being associated with the statement.
+   *
    * @return the label being associated with the statement
    */
   SimpleIdentifier get label => _label;
 
   /**
    * Set the colon that separates the label from the statement to the given token.
+   *
    * @param colon the colon that separates the label from the statement
    */
   void set colon(Token colon2) {
@@ -8002,6 +8978,7 @@ class Label extends ASTNode {
 
   /**
    * Set the label being associated with the statement to the given label.
+   *
    * @param label the label being associated with the statement
    */
   void set label(SimpleIdentifier label2) {
@@ -8012,10 +8989,14 @@ class Label extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code LabeledStatement} represent a statement that has a label associated
+ * Instances of the class `LabeledStatement` represent a statement that has a label associated
  * with them.
+ *
  * <pre>
- * labeledStatement ::={@link Label label}+ {@link Statement statement}</pre>
+ * labeledStatement ::=
+ *    [Label]+ [Statement]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class LabeledStatement extends Statement {
@@ -8032,6 +9013,7 @@ class LabeledStatement extends Statement {
 
   /**
    * Initialize a newly created labeled statement.
+   *
    * @param labels the labels being associated with the statement
    * @param statement the statement with which the labels are being associated
    */
@@ -8043,6 +9025,7 @@ class LabeledStatement extends Statement {
 
   /**
    * Initialize a newly created labeled statement.
+   *
    * @param labels the labels being associated with the statement
    * @param statement the statement with which the labels are being associated
    */
@@ -8058,18 +9041,21 @@ class LabeledStatement extends Statement {
 
   /**
    * Return the labels being associated with the statement.
+   *
    * @return the labels being associated with the statement
    */
   NodeList<Label> get labels => _labels;
 
   /**
    * Return the statement with which the labels are being associated.
+   *
    * @return the statement with which the labels are being associated
    */
   Statement get statement => _statement;
 
   /**
    * Set the statement with which the labels are being associated to the given statement.
+   *
    * @param statement the statement with which the labels are being associated
    */
   void set statement(Statement statement2) {
@@ -8081,10 +9067,13 @@ class LabeledStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code LibraryDirective} represent a library directive.
+ * Instances of the class `LibraryDirective` represent a library directive.
+ *
  * <pre>
- * libraryDirective ::={@link Annotation metadata} 'library' {@link Identifier name} ';'
+ * libraryDirective ::=
+ *     [Annotation] 'library' [Identifier] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class LibraryDirective extends Directive {
@@ -8106,6 +9095,7 @@ class LibraryDirective extends Directive {
 
   /**
    * Initialize a newly created library directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param libraryToken the token representing the 'library' token
@@ -8120,6 +9110,7 @@ class LibraryDirective extends Directive {
 
   /**
    * Initialize a newly created library directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param libraryToken the token representing the 'library' token
@@ -8133,24 +9124,28 @@ class LibraryDirective extends Directive {
 
   /**
    * Return the token representing the 'library' token.
+   *
    * @return the token representing the 'library' token
    */
   Token get libraryToken => _libraryToken;
 
   /**
    * Return the name of the library being defined.
+   *
    * @return the name of the library being defined
    */
   LibraryIdentifier get name => _name;
 
   /**
    * Return the semicolon terminating the directive.
+   *
    * @return the semicolon terminating the directive
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the token representing the 'library' token to the given token.
+   *
    * @param libraryToken the token representing the 'library' token
    */
   void set libraryToken(Token libraryToken2) {
@@ -8159,6 +9154,7 @@ class LibraryDirective extends Directive {
 
   /**
    * Set the name of the library being defined to the given name.
+   *
    * @param name the name of the library being defined
    */
   void set name(LibraryIdentifier name2) {
@@ -8167,6 +9163,7 @@ class LibraryDirective extends Directive {
 
   /**
    * Set the semicolon terminating the directive to the given token.
+   *
    * @param semicolon the semicolon terminating the directive
    */
   void set semicolon(Token semicolon2) {
@@ -8179,10 +9176,13 @@ class LibraryDirective extends Directive {
   Token get firstTokenAfterCommentAndMetadata => _libraryToken;
 }
 /**
- * Instances of the class {@code LibraryIdentifier} represent the identifier for a library.
+ * Instances of the class `LibraryIdentifier` represent the identifier for a library.
+ *
  * <pre>
- * libraryIdentifier ::={@link SimpleIdentifier component} ('.' {@link SimpleIdentifier component})
+ * libraryIdentifier ::=
+ *     [SimpleIdentifier] ('.' [SimpleIdentifier])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class LibraryIdentifier extends Identifier {
@@ -8194,6 +9194,7 @@ class LibraryIdentifier extends Identifier {
 
   /**
    * Initialize a newly created prefixed identifier.
+   *
    * @param components the components of the identifier
    */
   LibraryIdentifier.full(List<SimpleIdentifier> components) {
@@ -8203,6 +9204,7 @@ class LibraryIdentifier extends Identifier {
 
   /**
    * Initialize a newly created prefixed identifier.
+   *
    * @param components the components of the identifier
    */
   LibraryIdentifier({List<SimpleIdentifier> components}) : this.full(components);
@@ -8211,6 +9213,7 @@ class LibraryIdentifier extends Identifier {
 
   /**
    * Return the components of the identifier.
+   *
    * @return the components of the identifier
    */
   NodeList<SimpleIdentifier> get components => _components;
@@ -8235,11 +9238,13 @@ class LibraryIdentifier extends Identifier {
   }
 }
 /**
- * Instances of the class {@code ListLiteral} represent a list literal.
+ * Instances of the class `ListLiteral` represent a list literal.
+ *
  * <pre>
  * listLiteral ::=
- * 'const'? ('<' {@link TypeName type} '>')? '\[' ({@link Expression expressionList} ','?)? '\]'
+ *     'const'? ('<' [TypeName] '>')? '[' ([Expression] ','?)? ']'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ListLiteral extends TypedLiteral {
@@ -8261,9 +9266,10 @@ class ListLiteral extends TypedLiteral {
 
   /**
    * Initialize a newly created list literal.
+   *
    * @param modifier the const modifier associated with this literal
-   * @param typeArguments the type argument associated with this literal, or {@code null} if no type
-   * arguments were declared
+   * @param typeArguments the type argument associated with this literal, or `null` if no type
+   *          arguments were declared
    * @param leftBracket the left square bracket
    * @param elements the expressions used to compute the elements of the list
    * @param rightBracket the right square bracket
@@ -8277,9 +9283,10 @@ class ListLiteral extends TypedLiteral {
 
   /**
    * Initialize a newly created list literal.
+   *
    * @param modifier the const modifier associated with this literal
-   * @param typeArguments the type argument associated with this literal, or {@code null} if no type
-   * arguments were declared
+   * @param typeArguments the type argument associated with this literal, or `null` if no type
+   *          arguments were declared
    * @param leftBracket the left square bracket
    * @param elements the expressions used to compute the elements of the list
    * @param rightBracket the right square bracket
@@ -8300,6 +9307,7 @@ class ListLiteral extends TypedLiteral {
 
   /**
    * Return the expressions used to compute the elements of the list.
+   *
    * @return the expressions used to compute the elements of the list
    */
   NodeList<Expression> get elements => _elements;
@@ -8307,18 +9315,21 @@ class ListLiteral extends TypedLiteral {
 
   /**
    * Return the left square bracket.
+   *
    * @return the left square bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the right square bracket.
+   *
    * @return the right square bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
    * Set the left square bracket to the given token.
+   *
    * @param bracket the left square bracket
    */
   void set leftBracket(Token bracket) {
@@ -8327,6 +9338,7 @@ class ListLiteral extends TypedLiteral {
 
   /**
    * Set the right square bracket to the given token.
+   *
    * @param bracket the right square bracket
    */
   void set rightBracket(Token bracket) {
@@ -8338,20 +9350,32 @@ class ListLiteral extends TypedLiteral {
   }
 }
 /**
- * The abstract class {@code Literal} defines the behavior common to nodes that represent a literal
+ * The abstract class `Literal` defines the behavior common to nodes that represent a literal
  * expression.
+ *
  * <pre>
- * literal ::={@link BooleanLiteral booleanLiteral}| {@link DoubleLiteral doubleLiteral}| {@link IntegerLiteral integerLiteral}| {@link ListLiteral listLiteral}| {@link MapLiteral mapLiteral}| {@link NullLiteral nullLiteral}| {@link StringLiteral stringLiteral}</pre>
+ * literal ::=
+ *     [BooleanLiteral]
+ *   | [DoubleLiteral]
+ *   | [IntegerLiteral]
+ *   | [ListLiteral]
+ *   | [MapLiteral]
+ *   | [NullLiteral]
+ *   | [StringLiteral]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class Literal extends Expression {
 }
 /**
- * Instances of the class {@code MapLiteral} represent a literal map.
+ * Instances of the class `MapLiteral` represent a literal map.
+ *
  * <pre>
  * mapLiteral ::=
- * 'const'? ('<' {@link TypeName type} (',' {@link TypeName type})* '>')? '{' ({@link MapLiteralEntry entry} (',' {@link MapLiteralEntry entry})* ','?)? '}'
+ *     'const'? ('<' [TypeName] (',' [TypeName])* '>')? '{' ([MapLiteralEntry] (',' [MapLiteralEntry])* ','?)? '}'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class MapLiteral extends TypedLiteral {
@@ -8373,9 +9397,10 @@ class MapLiteral extends TypedLiteral {
 
   /**
    * Initialize a newly created map literal.
+   *
    * @param modifier the const modifier associated with this literal
-   * @param typeArguments the type argument associated with this literal, or {@code null} if no type
-   * arguments were declared
+   * @param typeArguments the type argument associated with this literal, or `null` if no type
+   *          arguments were declared
    * @param leftBracket the left curly bracket
    * @param entries the entries in the map
    * @param rightBracket the right curly bracket
@@ -8389,9 +9414,10 @@ class MapLiteral extends TypedLiteral {
 
   /**
    * Initialize a newly created map literal.
+   *
    * @param modifier the const modifier associated with this literal
-   * @param typeArguments the type argument associated with this literal, or {@code null} if no type
-   * arguments were declared
+   * @param typeArguments the type argument associated with this literal, or `null` if no type
+   *          arguments were declared
    * @param leftBracket the left curly bracket
    * @param entries the entries in the map
    * @param rightBracket the right curly bracket
@@ -8413,24 +9439,28 @@ class MapLiteral extends TypedLiteral {
 
   /**
    * Return the entries in the map.
+   *
    * @return the entries in the map
    */
   NodeList<MapLiteralEntry> get entries => _entries;
 
   /**
    * Return the left curly bracket.
+   *
    * @return the left curly bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the right curly bracket.
+   *
    * @return the right curly bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
    * Set the left curly bracket to the given token.
+   *
    * @param bracket the left curly bracket
    */
   void set leftBracket(Token bracket) {
@@ -8439,6 +9469,7 @@ class MapLiteral extends TypedLiteral {
 
   /**
    * Set the right curly bracket to the given token.
+   *
    * @param bracket the right curly bracket
    */
   void set rightBracket(Token bracket) {
@@ -8450,10 +9481,14 @@ class MapLiteral extends TypedLiteral {
   }
 }
 /**
- * Instances of the class {@code MapLiteralEntry} represent a single key/value pair in a map
+ * Instances of the class `MapLiteralEntry` represent a single key/value pair in a map
  * literal.
+ *
  * <pre>
- * mapLiteralEntry ::={@link Expression key} ':' {@link Expression value}</pre>
+ * mapLiteralEntry ::=
+ *     [Expression] ':' [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class MapLiteralEntry extends ASTNode {
@@ -8475,6 +9510,7 @@ class MapLiteralEntry extends ASTNode {
 
   /**
    * Initialize a newly created map literal entry.
+   *
    * @param key the expression computing the key with which the value will be associated
    * @param separator the colon that separates the key from the value
    * @param value the expression computing the value that will be associated with the key
@@ -8487,6 +9523,7 @@ class MapLiteralEntry extends ASTNode {
 
   /**
    * Initialize a newly created map literal entry.
+   *
    * @param key the expression computing the key with which the value will be associated
    * @param separator the colon that separates the key from the value
    * @param value the expression computing the value that will be associated with the key
@@ -8498,18 +9535,21 @@ class MapLiteralEntry extends ASTNode {
 
   /**
    * Return the expression computing the key with which the value will be associated.
+   *
    * @return the expression computing the key with which the value will be associated
    */
   Expression get key => _key;
 
   /**
    * Return the colon that separates the key from the value.
+   *
    * @return the colon that separates the key from the value
    */
   Token get separator => _separator;
 
   /**
    * Return the expression computing the value that will be associated with the key.
+   *
    * @return the expression computing the value that will be associated with the key
    */
   Expression get value => _value;
@@ -8517,6 +9557,7 @@ class MapLiteralEntry extends ASTNode {
   /**
    * Set the expression computing the key with which the value will be associated to the given
    * string.
+   *
    * @param string the expression computing the key with which the value will be associated
    */
   void set key(Expression string) {
@@ -8525,6 +9566,7 @@ class MapLiteralEntry extends ASTNode {
 
   /**
    * Set the colon that separates the key from the value to the given token.
+   *
    * @param separator the colon that separates the key from the value
    */
   void set separator(Token separator2) {
@@ -8534,6 +9576,7 @@ class MapLiteralEntry extends ASTNode {
   /**
    * Set the expression computing the value that will be associated with the key to the given
    * expression.
+   *
    * @param expression the expression computing the value that will be associated with the key
    */
   void set value(Expression expression) {
@@ -8545,39 +9588,49 @@ class MapLiteralEntry extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code MethodDeclaration} represent a method declaration.
+ * Instances of the class `MethodDeclaration` represent a method declaration.
+ *
  * <pre>
  * methodDeclaration ::=
- * methodSignature {@link FunctionBody body}methodSignature ::=
- * 'external'? ('abstract' | 'static')? {@link Type returnType}? ('get' | 'set')? methodName{@link FormalParameterList formalParameterList}methodName ::={@link SimpleIdentifier name}| 'operator' {@link SimpleIdentifier operator}</pre>
+ *     methodSignature [FunctionBody]
+ *
+ * methodSignature ::=
+ *     'external'? ('abstract' | 'static')? [Type]? ('get' | 'set')? methodName
+ *     [FormalParameterList]
+ *
+ * methodName ::=
+ *     [SimpleIdentifier]
+ *   | 'operator' [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class MethodDeclaration extends ClassMember {
 
   /**
-   * The token for the 'external' keyword, or {@code null} if the constructor is not external.
+   * The token for the 'external' keyword, or `null` if the constructor is not external.
    */
   Token _externalKeyword;
 
   /**
-   * The token representing the 'abstract' or 'static' keyword, or {@code null} if neither modifier
+   * The token representing the 'abstract' or 'static' keyword, or `null` if neither modifier
    * was specified.
    */
   Token _modifierKeyword;
 
   /**
-   * The return type of the method, or {@code null} if no return type was declared.
+   * The return type of the method, or `null` if no return type was declared.
    */
   TypeName _returnType;
 
   /**
-   * The token representing the 'get' or 'set' keyword, or {@code null} if this is a method
+   * The token representing the 'get' or 'set' keyword, or `null` if this is a method
    * declaration rather than a property declaration.
    */
   Token _propertyKeyword;
 
   /**
-   * The token representing the 'operator' keyword, or {@code null} if this method does not declare
+   * The token representing the 'operator' keyword, or `null` if this method does not declare
    * an operator.
    */
   Token _operatorKeyword;
@@ -8588,7 +9641,7 @@ class MethodDeclaration extends ClassMember {
   SimpleIdentifier _name;
 
   /**
-   * The parameters associated with the method, or {@code null} if this method declares a getter.
+   * The parameters associated with the method, or `null` if this method declares a getter.
    */
   FormalParameterList _parameters;
 
@@ -8599,6 +9652,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Initialize a newly created method declaration.
+   *
    * @param externalKeyword the token for the 'external' keyword
    * @param comment the documentation comment associated with this method
    * @param metadata the annotations associated with this method
@@ -8607,8 +9661,8 @@ class MethodDeclaration extends ClassMember {
    * @param propertyKeyword the token representing the 'get' or 'set' keyword
    * @param operatorKeyword the token representing the 'operator' keyword
    * @param name the name of the method
-   * @param parameters the parameters associated with the method, or {@code null} if this method
-   * declares a getter
+   * @param parameters the parameters associated with the method, or `null` if this method
+   *          declares a getter
    * @param body the body of the method
    */
   MethodDeclaration.full(Comment comment, List<Annotation> metadata, Token externalKeyword, Token modifierKeyword, TypeName returnType, Token propertyKeyword, Token operatorKeyword, SimpleIdentifier name, FormalParameterList parameters, FunctionBody body) : super.full(comment, metadata) {
@@ -8624,6 +9678,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Initialize a newly created method declaration.
+   *
    * @param externalKeyword the token for the 'external' keyword
    * @param comment the documentation comment associated with this method
    * @param metadata the annotations associated with this method
@@ -8632,8 +9687,8 @@ class MethodDeclaration extends ClassMember {
    * @param propertyKeyword the token representing the 'get' or 'set' keyword
    * @param operatorKeyword the token representing the 'operator' keyword
    * @param name the name of the method
-   * @param parameters the parameters associated with the method, or {@code null} if this method
-   * declares a getter
+   * @param parameters the parameters associated with the method, or `null` if this method
+   *          declares a getter
    * @param body the body of the method
    */
   MethodDeclaration({Comment comment, List<Annotation> metadata, Token externalKeyword, Token modifierKeyword, TypeName returnType, Token propertyKeyword, Token operatorKeyword, SimpleIdentifier name, FormalParameterList parameters, FunctionBody body}) : this.full(comment, metadata, externalKeyword, modifierKeyword, returnType, propertyKeyword, operatorKeyword, name, parameters, body);
@@ -8641,99 +9696,114 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Return the body of the method.
+   *
    * @return the body of the method
    */
   FunctionBody get body => _body;
 
   /**
-   * Return the element associated with this method, or {@code null} if the AST structure has not
-   * been resolved. The element can either be a {@link MethodElement}, if this represents the
-   * declaration of a normal method, or a {@link PropertyAccessorElement} if this represents the
+   * Return the element associated with this method, or `null` if the AST structure has not
+   * been resolved. The element can either be a [MethodElement], if this represents the
+   * declaration of a normal method, or a [PropertyAccessorElement] if this represents the
    * declaration of either a getter or a setter.
+   *
    * @return the element associated with this method
    */
   ExecutableElement get element => _name != null ? (_name.element as ExecutableElement) : null;
   Token get endToken => _body.endToken;
 
   /**
-   * Return the token for the 'external' keyword, or {@code null} if the constructor is not
+   * Return the token for the 'external' keyword, or `null` if the constructor is not
    * external.
+   *
    * @return the token for the 'external' keyword
    */
   Token get externalKeyword => _externalKeyword;
 
   /**
-   * Return the token representing the 'abstract' or 'static' keyword, or {@code null} if neither
+   * Return the token representing the 'abstract' or 'static' keyword, or `null` if neither
    * modifier was specified.
+   *
    * @return the token representing the 'abstract' or 'static' keyword
    */
   Token get modifierKeyword => _modifierKeyword;
 
   /**
    * Return the name of the method.
+   *
    * @return the name of the method
    */
   SimpleIdentifier get name => _name;
 
   /**
-   * Return the token representing the 'operator' keyword, or {@code null} if this method does not
+   * Return the token representing the 'operator' keyword, or `null` if this method does not
    * declare an operator.
+   *
    * @return the token representing the 'operator' keyword
    */
   Token get operatorKeyword => _operatorKeyword;
 
   /**
-   * Return the parameters associated with the method, or {@code null} if this method declares a
+   * Return the parameters associated with the method, or `null` if this method declares a
    * getter.
+   *
    * @return the parameters associated with the method
    */
   FormalParameterList get parameters => _parameters;
 
   /**
-   * Return the token representing the 'get' or 'set' keyword, or {@code null} if this is a method
+   * Return the token representing the 'get' or 'set' keyword, or `null` if this is a method
    * declaration rather than a property declaration.
+   *
    * @return the token representing the 'get' or 'set' keyword
    */
   Token get propertyKeyword => _propertyKeyword;
 
   /**
-   * Return the return type of the method, or {@code null} if no return type was declared.
+   * Return the return type of the method, or `null` if no return type was declared.
+   *
    * @return the return type of the method
    */
   TypeName get returnType => _returnType;
 
   /**
-   * Return {@code true} if this method is declared to be an abstract method.
-   * @return {@code true} if this method is declared to be an abstract method
+   * Return `true` if this method is declared to be an abstract method.
+   *
+   * @return `true` if this method is declared to be an abstract method
    */
-  bool isAbstract() => _externalKeyword == null && (_body is EmptyFunctionBody);
+  bool get isAbstract => _externalKeyword == null && (_body is EmptyFunctionBody);
 
   /**
-   * Return {@code true} if this method declares a getter.
-   * @return {@code true} if this method declares a getter
+   * Return `true` if this method declares a getter.
+   *
+   * @return `true` if this method declares a getter
    */
-  bool isGetter() => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.GET);
+  bool get isGetter => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.GET);
 
   /**
-   * Return {@code true} if this method declares an operator.
-   * @return {@code true} if this method declares an operator
+   * Return `true` if this method declares an operator.
+   *
+   * @return `true` if this method declares an operator
    */
-  bool isOperator() => _operatorKeyword != null;
+  bool get isOperator => _operatorKeyword != null;
 
   /**
-   * Return {@code true} if this method declares a setter.
-   * @return {@code true} if this method declares a setter
+   * Return `true` if this method declares a setter.
+   *
+   * @return `true` if this method declares a setter
    */
-  bool isSetter() => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.SET);
+  bool get isSetter => _propertyKeyword != null && identical(((_propertyKeyword as KeywordToken)).keyword, Keyword.SET);
 
   /**
-   * Return {@code true} if this method is declared to be a static method.
-   * @return {@code true} if this method is declared to be a static method
+   * Return `true` if this method is declared to be a static method.
+   *
+   * @return `true` if this method is declared to be a static method
    */
-  bool isStatic() => _modifierKeyword != null && identical(((_modifierKeyword as KeywordToken)).keyword, Keyword.STATIC);
+  bool get isStatic => _modifierKeyword != null && identical(((_modifierKeyword as KeywordToken)).keyword, Keyword.STATIC);
 
   /**
    * Set the body of the method to the given function body.
+   *
    * @param functionBody the body of the method
    */
   void set body(FunctionBody functionBody) {
@@ -8742,6 +9812,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the token for the 'external' keyword to the given token.
+   *
    * @param externalKeyword the token for the 'external' keyword
    */
   void set externalKeyword(Token externalKeyword2) {
@@ -8750,6 +9821,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the token representing the 'abstract' or 'static' keyword to the given token.
+   *
    * @param modifierKeyword the token representing the 'abstract' or 'static' keyword
    */
   void set modifierKeyword(Token modifierKeyword2) {
@@ -8758,6 +9830,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the name of the method to the given identifier.
+   *
    * @param identifier the name of the method
    */
   void set name(SimpleIdentifier identifier) {
@@ -8766,6 +9839,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the token representing the 'operator' keyword to the given token.
+   *
    * @param operatorKeyword the token representing the 'operator' keyword
    */
   void set operatorKeyword(Token operatorKeyword2) {
@@ -8774,6 +9848,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the parameters associated with the method to the given list of parameters.
+   *
    * @param parameters the parameters associated with the method
    */
   void set parameters(FormalParameterList parameters2) {
@@ -8782,6 +9857,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the token representing the 'get' or 'set' keyword to the given token.
+   *
    * @param propertyKeyword the token representing the 'get' or 'set' keyword
    */
   void set propertyKeyword(Token propertyKeyword2) {
@@ -8790,6 +9866,7 @@ class MethodDeclaration extends ClassMember {
 
   /**
    * Set the return type of the method to the given type name.
+   *
    * @param typeName the return type of the method
    */
   void set returnType(TypeName typeName) {
@@ -8816,24 +9893,29 @@ class MethodDeclaration extends ClassMember {
   }
 }
 /**
- * Instances of the class {@code MethodInvocation} represent the invocation of either a function or
- * a method. Invocations of functions resulting from evaluating an expression are represented by{@link FunctionExpressionInvocation function expression invocation} nodes. Invocations of getters
- * and setters are represented by either {@link PrefixedIdentifier prefixed identifier} or{@link PropertyAccess property access} nodes.
+ * Instances of the class `MethodInvocation` represent the invocation of either a function or
+ * a method. Invocations of functions resulting from evaluating an expression are represented by
+ * [FunctionExpressionInvocation] nodes. Invocations of getters
+ * and setters are represented by either [PrefixedIdentifier] or
+ * [PropertyAccess] nodes.
+ *
  * <pre>
  * methodInvoction ::=
- * ({@link Expression target} '.')? {@link SimpleIdentifier methodName} {@link ArgumentList argumentList}</pre>
+ *     ([Expression] '.')? [SimpleIdentifier] [ArgumentList]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class MethodInvocation extends Expression {
 
   /**
-   * The expression producing the object on which the method is defined, or {@code null} if there is
-   * no target (that is, the target is implicitly {@code this}).
+   * The expression producing the object on which the method is defined, or `null` if there is
+   * no target (that is, the target is implicitly `this`).
    */
   Expression _target;
 
   /**
-   * The period that separates the target from the method name, or {@code null} if there is no
+   * The period that separates the target from the method name, or `null` if there is no
    * target.
    */
   Token _period;
@@ -8850,6 +9932,7 @@ class MethodInvocation extends Expression {
 
   /**
    * Initialize a newly created method invocation.
+   *
    * @param target the expression producing the object on which the method is defined
    * @param period the period that separates the target from the method name
    * @param methodName the name of the method being invoked
@@ -8864,6 +9947,7 @@ class MethodInvocation extends Expression {
 
   /**
    * Initialize a newly created method invocation.
+   *
    * @param target the expression producing the object on which the method is defined
    * @param period the period that separates the target from the method name
    * @param methodName the name of the method being invoked
@@ -8874,6 +9958,7 @@ class MethodInvocation extends Expression {
 
   /**
    * Return the list of arguments to the method.
+   *
    * @return the list of arguments to the method
    */
   ArgumentList get argumentList => _argumentList;
@@ -8889,27 +9974,30 @@ class MethodInvocation extends Expression {
 
   /**
    * Return the name of the method being invoked.
+   *
    * @return the name of the method being invoked
    */
   SimpleIdentifier get methodName => _methodName;
 
   /**
-   * Return the period that separates the target from the method name, or {@code null} if there is
+   * Return the period that separates the target from the method name, or `null` if there is
    * no target.
+   *
    * @return the period that separates the target from the method name
    */
   Token get period => _period;
 
   /**
    * Return the expression used to compute the receiver of the invocation. If this invocation is not
-   * part of a cascade expression, then this is the same as {@link #getTarget()}. If this invocation
+   * part of a cascade expression, then this is the same as [getTarget]. If this invocation
    * is part of a cascade expression, then the target stored with the cascade expression is
    * returned.
+   *
    * @return the expression used to compute the receiver of the invocation
    * @see #getTarget()
    */
   Expression get realTarget {
-    if (isCascaded()) {
+    if (isCascaded) {
       ASTNode ancestor = parent;
       while (ancestor is! CascadeExpression) {
         if (ancestor == null) {
@@ -8923,23 +10011,27 @@ class MethodInvocation extends Expression {
   }
 
   /**
-   * Return the expression producing the object on which the method is defined, or {@code null} if
-   * there is no target (that is, the target is implicitly {@code this}) or if this method
+   * Return the expression producing the object on which the method is defined, or `null` if
+   * there is no target (that is, the target is implicitly `this`) or if this method
    * invocation is part of a cascade expression.
+   *
    * @return the expression producing the object on which the method is defined
    * @see #getRealTarget()
    */
   Expression get target => _target;
 
   /**
-   * Return {@code true} if this expression is cascaded. If it is, then the target of this
-   * expression is not stored locally but is stored in the nearest ancestor that is a{@link CascadeExpression}.
-   * @return {@code true} if this expression is cascaded
+   * Return `true` if this expression is cascaded. If it is, then the target of this
+   * expression is not stored locally but is stored in the nearest ancestor that is a
+   * [CascadeExpression].
+   *
+   * @return `true` if this expression is cascaded
    */
-  bool isCascaded() => _period != null && identical(_period.type, TokenType.PERIOD_PERIOD);
+  bool get isCascaded => _period != null && identical(_period.type, TokenType.PERIOD_PERIOD);
 
   /**
    * Set the list of arguments to the method to the given list.
+   *
    * @param argumentList the list of arguments to the method
    */
   void set argumentList(ArgumentList argumentList2) {
@@ -8948,6 +10040,7 @@ class MethodInvocation extends Expression {
 
   /**
    * Set the name of the method being invoked to the given identifier.
+   *
    * @param identifier the name of the method being invoked
    */
   void set methodName(SimpleIdentifier identifier) {
@@ -8956,6 +10049,7 @@ class MethodInvocation extends Expression {
 
   /**
    * Set the period that separates the target from the method name to the given token.
+   *
    * @param period the period that separates the target from the method name
    */
   void set period(Token period2) {
@@ -8964,6 +10058,7 @@ class MethodInvocation extends Expression {
 
   /**
    * Set the expression producing the object on which the method is defined to the given expression.
+   *
    * @param expression the expression producing the object on which the method is defined
    */
   void set target(Expression expression) {
@@ -8976,10 +10071,14 @@ class MethodInvocation extends Expression {
   }
 }
 /**
- * Instances of the class {@code NamedExpression} represent an expression that has a name associated
+ * Instances of the class `NamedExpression` represent an expression that has a name associated
  * with it. They are used in method invocations when there are named parameters.
+ *
  * <pre>
- * namedExpression ::={@link Label name} {@link Expression expression}</pre>
+ * namedExpression ::=
+ *     [Label] [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class NamedExpression extends Expression {
@@ -8996,6 +10095,7 @@ class NamedExpression extends Expression {
 
   /**
    * Initialize a newly created named expression.
+   *
    * @param name the name associated with the expression
    * @param expression the expression with which the name is associated
    */
@@ -9006,6 +10106,7 @@ class NamedExpression extends Expression {
 
   /**
    * Initialize a newly created named expression.
+   *
    * @param name the name associated with the expression
    * @param expression the expression with which the name is associated
    */
@@ -9014,8 +10115,10 @@ class NamedExpression extends Expression {
   Token get beginToken => _name.beginToken;
 
   /**
-   * Return the element representing the parameter being named by this expression, or {@code null}if the AST structure has not been resolved or if there is no parameter with the same name as
+   * Return the element representing the parameter being named by this expression, or `null`
+   * if the AST structure has not been resolved or if there is no parameter with the same name as
    * this expression.
+   *
    * @return the element representing the parameter being named by this expression
    */
   ParameterElement get element {
@@ -9029,18 +10132,21 @@ class NamedExpression extends Expression {
 
   /**
    * Return the expression with which the name is associated.
+   *
    * @return the expression with which the name is associated
    */
   Expression get expression => _expression;
 
   /**
    * Return the name associated with the expression.
+   *
    * @return the name associated with the expression
    */
   Label get name => _name;
 
   /**
    * Set the expression with which the name is associated to the given expression.
+   *
    * @param expression the expression with which the name is associated
    */
   void set expression(Expression expression2) {
@@ -9049,6 +10155,7 @@ class NamedExpression extends Expression {
 
   /**
    * Set the name associated with the expression to the given identifier.
+   *
    * @param identifier the name associated with the expression
    */
   void set name(Label identifier) {
@@ -9060,10 +10167,15 @@ class NamedExpression extends Expression {
   }
 }
 /**
- * The abstract class {@code NamespaceDirective} defines the behavior common to nodes that represent
+ * The abstract class `NamespaceDirective` defines the behavior common to nodes that represent
  * a directive that impacts the namespace of a library.
+ *
  * <pre>
- * directive ::={@link ExportDirective exportDirective}| {@link ImportDirective importDirective}</pre>
+ * directive ::=
+ *     [ExportDirective]
+ *   | [ImportDirective]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class NamespaceDirective extends UriBasedDirective {
@@ -9085,6 +10197,7 @@ abstract class NamespaceDirective extends UriBasedDirective {
 
   /**
    * Initialize a newly created namespace directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param keyword the token representing the 'import' or 'export' keyword
@@ -9101,6 +10214,7 @@ abstract class NamespaceDirective extends UriBasedDirective {
 
   /**
    * Initialize a newly created namespace directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param keyword the token representing the 'import' or 'export' keyword
@@ -9112,6 +10226,7 @@ abstract class NamespaceDirective extends UriBasedDirective {
 
   /**
    * Return the combinators used to control how names are imported or exported.
+   *
    * @return the combinators used to control how names are imported or exported
    */
   NodeList<Combinator> get combinators => _combinators;
@@ -9120,6 +10235,7 @@ abstract class NamespaceDirective extends UriBasedDirective {
 
   /**
    * Return the semicolon terminating the directive.
+   *
    * @return the semicolon terminating the directive
    */
   Token get semicolon => _semicolon;
@@ -9127,6 +10243,7 @@ abstract class NamespaceDirective extends UriBasedDirective {
 
   /**
    * Set the token representing the 'import' or 'export' keyword to the given token.
+   *
    * @param exportToken the token representing the 'import' or 'export' keyword
    */
   void set keyword(Token exportToken) {
@@ -9135,6 +10252,7 @@ abstract class NamespaceDirective extends UriBasedDirective {
 
   /**
    * Set the semicolon terminating the directive to the given token.
+   *
    * @param semicolon the semicolon terminating the directive
    */
   void set semicolon(Token semicolon2) {
@@ -9143,12 +10261,92 @@ abstract class NamespaceDirective extends UriBasedDirective {
   Token get firstTokenAfterCommentAndMetadata => _keyword;
 }
 /**
- * Instances of the class {@code NativeFunctionBody} represent a function body that consists of a
+ * Instances of the class `NativeClause` represent the "native" clause in an class
+ * declaration.
+ *
+ * <pre>
+ * nativeClause ::=
+ *     'native' [StringLiteral]
+ * </pre>
+ *
+ * @coverage dart.engine.ast
+ */
+class NativeClause extends ASTNode {
+
+  /**
+   * The token representing the 'native' keyword.
+   */
+  Token _keyword;
+
+  /**
+   * The name of the native object that implements the class.
+   */
+  StringLiteral _name;
+
+  /**
+   * Initialize a newly created native clause.
+   *
+   * @param keyword the token representing the 'native' keyword
+   * @param name the name of the native object that implements the class.
+   */
+  NativeClause.full(Token keyword, StringLiteral name) {
+    this._keyword = keyword;
+    this._name = name;
+  }
+
+  /**
+   * Initialize a newly created native clause.
+   *
+   * @param keyword the token representing the 'native' keyword
+   * @param name the name of the native object that implements the class.
+   */
+  NativeClause({Token keyword, StringLiteral name}) : this.full(keyword, name);
+  accept(ASTVisitor visitor) => visitor.visitNativeClause(this);
+  Token get beginToken => _keyword;
+  Token get endToken => _name.endToken;
+
+  /**
+   * Return the token representing the 'native' keyword.
+   *
+   * @return the token representing the 'native' keyword
+   */
+  Token get keyword => _keyword;
+
+  /**
+   * @return the name of the native object that implements the class.
+   */
+  StringLiteral get name => _name;
+
+  /**
+   * Set the token representing the 'native' keyword to the given token.
+   *
+   * @param keyword the token representing the 'native' keyword
+   */
+  void set keyword(Token keyword2) {
+    this._keyword = keyword2;
+  }
+
+  /**
+   * Sets the name of the native object that implements the class.
+   *
+   * @param name the name of the native object that implements the class.
+   */
+  void set name(StringLiteral name2) {
+    this._name = name2;
+  }
+  void visitChildren(ASTVisitor<Object> visitor) {
+    safelyVisitChild(_name, visitor);
+  }
+}
+/**
+ * Instances of the class `NativeFunctionBody` represent a function body that consists of a
  * native keyword followed by a string literal.
+ *
  * <pre>
  * nativeFunctionBody ::=
- * 'native' {@link SimpleStringLiteral simpleStringLiteral} ';'
+ *     'native' [SimpleStringLiteral] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class NativeFunctionBody extends FunctionBody {
@@ -9171,6 +10369,7 @@ class NativeFunctionBody extends FunctionBody {
   /**
    * Initialize a newly created function body consisting of the 'native' token, a string literal,
    * and a semicolon.
+   *
    * @param nativeToken the token representing 'native' that marks the start of the function body
    * @param stringLiteral the string literal
    * @param semicolon the token representing the semicolon that marks the end of the function body
@@ -9184,6 +10383,7 @@ class NativeFunctionBody extends FunctionBody {
   /**
    * Initialize a newly created function body consisting of the 'native' token, a string literal,
    * and a semicolon.
+   *
    * @param nativeToken the token representing 'native' that marks the start of the function body
    * @param stringLiteral the string literal
    * @param semicolon the token representing the semicolon that marks the end of the function body
@@ -9195,18 +10395,21 @@ class NativeFunctionBody extends FunctionBody {
 
   /**
    * Return the simple identifier representing the 'native' token.
+   *
    * @return the simple identifier representing the 'native' token
    */
   Token get nativeToken => _nativeToken;
 
   /**
    * Return the token representing the semicolon that marks the end of the function body.
+   *
    * @return the token representing the semicolon that marks the end of the function body
    */
   Token get semicolon => _semicolon;
 
   /**
    * Return the string literal representing the string after the 'native' token.
+   *
    * @return the string literal representing the string after the 'native' token
    */
   StringLiteral get stringLiteral => _stringLiteral;
@@ -9215,16 +10418,22 @@ class NativeFunctionBody extends FunctionBody {
   }
 }
 /**
- * The abstract class {@code NormalFormalParameter} defines the behavior common to formal parameters
+ * The abstract class `NormalFormalParameter` defines the behavior common to formal parameters
  * that are required (are not optional).
+ *
  * <pre>
- * normalFormalParameter ::={@link FunctionTypedFormalParameter functionSignature}| {@link FieldFormalParameter fieldFormalParameter}| {@link SimpleFormalParameter simpleFormalParameter}</pre>
+ * normalFormalParameter ::=
+ *     [FunctionTypedFormalParameter]
+ *   | [FieldFormalParameter]
+ *   | [SimpleFormalParameter]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class NormalFormalParameter extends FormalParameter {
 
   /**
-   * The documentation comment associated with this parameter, or {@code null} if this parameter
+   * The documentation comment associated with this parameter, or `null` if this parameter
    * does not have a documentation comment associated with it.
    */
   Comment _comment;
@@ -9241,6 +10450,7 @@ abstract class NormalFormalParameter extends FormalParameter {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param identifier the name of the parameter being declared
@@ -9254,6 +10464,7 @@ abstract class NormalFormalParameter extends FormalParameter {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param identifier the name of the parameter being declared
@@ -9261,8 +10472,9 @@ abstract class NormalFormalParameter extends FormalParameter {
   NormalFormalParameter({Comment comment, List<Annotation> metadata, SimpleIdentifier identifier}) : this.full(comment, metadata, identifier);
 
   /**
-   * Return the documentation comment associated with this parameter, or {@code null} if this
+   * Return the documentation comment associated with this parameter, or `null` if this
    * parameter does not have a documentation comment associated with it.
+   *
    * @return the documentation comment associated with this parameter
    */
   Comment get documentationComment => _comment;
@@ -9277,26 +10489,14 @@ abstract class NormalFormalParameter extends FormalParameter {
 
   /**
    * Return the annotations associated with this parameter.
+   *
    * @return the annotations associated with this parameter
    */
   NodeList<Annotation> get metadata => _metadata;
 
   /**
-   * Return {@code true} if this parameter was declared with the 'const' modifier.
-   * @return {@code true} if this parameter was declared with the 'const' modifier
-   */
-  bool isConst();
-
-  /**
-   * Return {@code true} if this parameter was declared with the 'final' modifier. Parameters that
-   * are declared with the 'const' modifier will return {@code false} even though they are
-   * implicitly final.
-   * @return {@code true} if this parameter was declared with the 'final' modifier
-   */
-  bool isFinal();
-
-  /**
    * Set the documentation comment associated with this parameter to the given comment
+   *
    * @param comment the documentation comment to be associated with this parameter
    */
   void set documentationComment(Comment comment2) {
@@ -9305,6 +10505,7 @@ abstract class NormalFormalParameter extends FormalParameter {
 
   /**
    * Set the name of the parameter being declared to the given identifier.
+   *
    * @param identifier the name of the parameter being declared
    */
   void set identifier(SimpleIdentifier identifier2) {
@@ -9322,8 +10523,9 @@ abstract class NormalFormalParameter extends FormalParameter {
   }
 
   /**
-   * Return {@code true} if the comment is lexically before any annotations.
-   * @return {@code true} if the comment is lexically before any annotations
+   * Return `true` if the comment is lexically before any annotations.
+   *
+   * @return `true` if the comment is lexically before any annotations
    */
   bool commentIsBeforeAnnotations() {
     if (_comment == null || _metadata.isEmpty) {
@@ -9336,8 +10538,9 @@ abstract class NormalFormalParameter extends FormalParameter {
   /**
    * Return an array containing the comment and annotations associated with this parameter, sorted
    * in lexical order.
+   *
    * @return the comment and annotations associated with this parameter in the order in which they
-   * appeared in the original source
+   *         appeared in the original source
    */
   List<ASTNode> get sortedCommentAndAnnotations {
     List<ASTNode> childList = new List<ASTNode>();
@@ -9349,11 +10552,13 @@ abstract class NormalFormalParameter extends FormalParameter {
   }
 }
 /**
- * Instances of the class {@code NullLiteral} represent a null literal expression.
+ * Instances of the class `NullLiteral` represent a null literal expression.
+ *
  * <pre>
  * nullLiteral ::=
- * 'null'
+ *     'null'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class NullLiteral extends Literal {
@@ -9365,6 +10570,7 @@ class NullLiteral extends Literal {
 
   /**
    * Initialize a newly created null literal.
+   *
    * @param token the token representing the literal
    */
   NullLiteral.full(Token token) {
@@ -9373,6 +10579,7 @@ class NullLiteral extends Literal {
 
   /**
    * Initialize a newly created null literal.
+   *
    * @param token the token representing the literal
    */
   NullLiteral({Token token}) : this.full(token);
@@ -9382,12 +10589,14 @@ class NullLiteral extends Literal {
 
   /**
    * Return the token representing the literal.
+   *
    * @return the token representing the literal
    */
   Token get literal => _literal;
 
   /**
    * Set the token representing the literal to the given token.
+   *
    * @param literal the token representing the literal
    */
   void set literal(Token literal2) {
@@ -9397,11 +10606,13 @@ class NullLiteral extends Literal {
   }
 }
 /**
- * Instances of the class {@code ParenthesizedExpression} represent a parenthesized expression.
+ * Instances of the class `ParenthesizedExpression` represent a parenthesized expression.
+ *
  * <pre>
  * parenthesizedExpression ::=
- * '(' {@link Expression expression} ')'
+ *     '(' [Expression] ')'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ParenthesizedExpression extends Expression {
@@ -9423,6 +10634,7 @@ class ParenthesizedExpression extends Expression {
 
   /**
    * Initialize a newly created parenthesized expression.
+   *
    * @param leftParenthesis the left parenthesis
    * @param expression the expression within the parentheses
    * @param rightParenthesis the right parenthesis
@@ -9435,6 +10647,7 @@ class ParenthesizedExpression extends Expression {
 
   /**
    * Initialize a newly created parenthesized expression.
+   *
    * @param leftParenthesis the left parenthesis
    * @param expression the expression within the parentheses
    * @param rightParenthesis the right parenthesis
@@ -9446,24 +10659,28 @@ class ParenthesizedExpression extends Expression {
 
   /**
    * Return the expression within the parentheses.
+   *
    * @return the expression within the parentheses
    */
   Expression get expression => _expression;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Set the expression within the parentheses to the given expression.
+   *
    * @param expression the expression within the parentheses
    */
   void set expression(Expression expression2) {
@@ -9472,6 +10689,7 @@ class ParenthesizedExpression extends Expression {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param parenthesis the left parenthesis
    */
   void set leftParenthesis(Token parenthesis) {
@@ -9480,6 +10698,7 @@ class ParenthesizedExpression extends Expression {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param parenthesis the right parenthesis
    */
   void set rightParenthesis(Token parenthesis) {
@@ -9490,10 +10709,13 @@ class ParenthesizedExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code PartDirective} represent a part directive.
+ * Instances of the class `PartDirective` represent a part directive.
+ *
  * <pre>
- * partDirective ::={@link Annotation metadata} 'part' {@link StringLiteral partUri} ';'
+ * partDirective ::=
+ *     [Annotation] 'part' [StringLiteral] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class PartDirective extends UriBasedDirective {
@@ -9510,6 +10732,7 @@ class PartDirective extends UriBasedDirective {
 
   /**
    * Initialize a newly created part directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param partToken the token representing the 'part' token
@@ -9523,6 +10746,7 @@ class PartDirective extends UriBasedDirective {
 
   /**
    * Initialize a newly created part directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param partToken the token representing the 'part' token
@@ -9536,12 +10760,14 @@ class PartDirective extends UriBasedDirective {
 
   /**
    * Return the token representing the 'part' token.
+   *
    * @return the token representing the 'part' token
    */
   Token get partToken => _partToken;
 
   /**
    * Return the semicolon terminating the directive.
+   *
    * @return the semicolon terminating the directive
    */
   Token get semicolon => _semicolon;
@@ -9549,6 +10775,7 @@ class PartDirective extends UriBasedDirective {
 
   /**
    * Set the token representing the 'part' token to the given token.
+   *
    * @param partToken the token representing the 'part' token
    */
   void set partToken(Token partToken2) {
@@ -9557,6 +10784,7 @@ class PartDirective extends UriBasedDirective {
 
   /**
    * Set the semicolon terminating the directive to the given token.
+   *
    * @param semicolon the semicolon terminating the directive
    */
   void set semicolon(Token semicolon2) {
@@ -9565,10 +10793,13 @@ class PartDirective extends UriBasedDirective {
   Token get firstTokenAfterCommentAndMetadata => _partToken;
 }
 /**
- * Instances of the class {@code PartOfDirective} represent a part-of directive.
+ * Instances of the class `PartOfDirective` represent a part-of directive.
+ *
  * <pre>
- * partOfDirective ::={@link Annotation metadata} 'part' 'of' {@link Identifier libraryName} ';'
+ * partOfDirective ::=
+ *     [Annotation] 'part' 'of' [Identifier] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class PartOfDirective extends Directive {
@@ -9595,6 +10826,7 @@ class PartOfDirective extends Directive {
 
   /**
    * Initialize a newly created part-of directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param partToken the token representing the 'part' token
@@ -9611,6 +10843,7 @@ class PartOfDirective extends Directive {
 
   /**
    * Initialize a newly created part-of directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param partToken the token representing the 'part' token
@@ -9625,30 +10858,35 @@ class PartOfDirective extends Directive {
 
   /**
    * Return the name of the library that the containing compilation unit is part of.
+   *
    * @return the name of the library that the containing compilation unit is part of
    */
   LibraryIdentifier get libraryName => _libraryName;
 
   /**
    * Return the token representing the 'of' token.
+   *
    * @return the token representing the 'of' token
    */
   Token get ofToken => _ofToken;
 
   /**
    * Return the token representing the 'part' token.
+   *
    * @return the token representing the 'part' token
    */
   Token get partToken => _partToken;
 
   /**
    * Return the semicolon terminating the directive.
+   *
    * @return the semicolon terminating the directive
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the name of the library that the containing compilation unit is part of to the given name.
+   *
    * @param libraryName the name of the library that the containing compilation unit is part of
    */
   void set libraryName(LibraryIdentifier libraryName2) {
@@ -9657,6 +10895,7 @@ class PartOfDirective extends Directive {
 
   /**
    * Set the token representing the 'of' token to the given token.
+   *
    * @param ofToken the token representing the 'of' token
    */
   void set ofToken(Token ofToken2) {
@@ -9665,6 +10904,7 @@ class PartOfDirective extends Directive {
 
   /**
    * Set the token representing the 'part' token to the given token.
+   *
    * @param partToken the token representing the 'part' token
    */
   void set partToken(Token partToken2) {
@@ -9673,6 +10913,7 @@ class PartOfDirective extends Directive {
 
   /**
    * Set the semicolon terminating the directive to the given token.
+   *
    * @param semicolon the semicolon terminating the directive
    */
   void set semicolon(Token semicolon2) {
@@ -9685,9 +10926,13 @@ class PartOfDirective extends Directive {
   Token get firstTokenAfterCommentAndMetadata => _partToken;
 }
 /**
- * Instances of the class {@code PostfixExpression} represent a postfix unary expression.
+ * Instances of the class `PostfixExpression` represent a postfix unary expression.
+ *
  * <pre>
- * postfixExpression ::={@link Expression operand} {@link Token operator}</pre>
+ * postfixExpression ::=
+ *     [Expression] [Token]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class PostfixExpression extends Expression {
@@ -9703,19 +10948,22 @@ class PostfixExpression extends Expression {
   Token _operator;
 
   /**
-   * The element associated with this the operator based on the propagated type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * The element associated with this the operator based on the propagated type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved.
    */
   MethodElement _propagatedElement;
 
   /**
-   * The element associated with the operator based on the static type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * The element associated with the operator based on the static type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved.
    */
   MethodElement _staticElement;
 
   /**
    * Initialize a newly created postfix expression.
+   *
    * @param operand the expression computing the operand for the operator
    * @param operator the postfix operator being applied to the operand
    */
@@ -9726,6 +10974,7 @@ class PostfixExpression extends Expression {
 
   /**
    * Initialize a newly created postfix expression.
+   *
    * @param operand the expression computing the operand for the operator
    * @param operator the postfix operator being applied to the operand
    */
@@ -9734,9 +10983,11 @@ class PostfixExpression extends Expression {
   Token get beginToken => _operand.beginToken;
 
   /**
-   * Return the element associated with the operator based on the propagated type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * Return the element associated with the operator based on the propagated type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved. One example of the latter case is an operator that is
    * not defined for the type of the operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get element => _propagatedElement;
@@ -9744,20 +10995,24 @@ class PostfixExpression extends Expression {
 
   /**
    * Return the expression computing the operand for the operator.
+   *
    * @return the expression computing the operand for the operator
    */
   Expression get operand => _operand;
 
   /**
    * Return the postfix operator being applied to the operand.
+   *
    * @return the postfix operator being applied to the operand
    */
   Token get operator => _operator;
 
   /**
-   * Return the element associated with the operator based on the static type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * Return the element associated with the operator based on the static type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved. One example of the latter case is an operator that is
    * not defined for the type of the operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get staticElement => _staticElement;
@@ -9765,6 +11020,7 @@ class PostfixExpression extends Expression {
   /**
    * Set the element associated with the operator based on the propagated type of the operand to the
    * given element.
+   *
    * @param element the element to be associated with the operator
    */
   void set element(MethodElement element2) {
@@ -9773,6 +11029,7 @@ class PostfixExpression extends Expression {
 
   /**
    * Set the expression computing the operand for the operator to the given expression.
+   *
    * @param expression the expression computing the operand for the operator
    */
   void set operand(Expression expression) {
@@ -9781,6 +11038,7 @@ class PostfixExpression extends Expression {
 
   /**
    * Set the postfix operator being applied to the operand to the given operator.
+   *
    * @param operator the postfix operator being applied to the operand
    */
   void set operator(Token operator2) {
@@ -9790,6 +11048,7 @@ class PostfixExpression extends Expression {
   /**
    * Set the element associated with the operator based on the static type of the operand to the
    * given element.
+   *
    * @param element the element to be associated with the operator
    */
   void set staticElement(MethodElement element) {
@@ -9802,11 +11061,12 @@ class PostfixExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on
    * propagated type information, then return the parameter element representing the parameter to
-   * which the value of the operand will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getParameterElement()}.
+   * which the value of the operand will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the right
-   * operand will be bound
+   *         operand will be bound
    */
   ParameterElement get propagatedParameterElementForOperand {
     if (_propagatedElement == null) {
@@ -9822,11 +11082,12 @@ class PostfixExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on static
    * type information, then return the parameter element representing the parameter to which the
-   * value of the operand will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getStaticParameterElement()}.
+   * value of the operand will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getStaticParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the right
-   * operand will be bound
+   *         operand will be bound
    */
   ParameterElement get staticParameterElementForOperand {
     if (_staticElement == null) {
@@ -9840,9 +11101,13 @@ class PostfixExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code PrefixExpression} represent a prefix unary expression.
+ * Instances of the class `PrefixExpression` represent a prefix unary expression.
+ *
  * <pre>
- * prefixExpression ::={@link Token operator} {@link Expression operand}</pre>
+ * prefixExpression ::=
+ *     [Token] [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class PrefixExpression extends Expression {
@@ -9858,19 +11123,22 @@ class PrefixExpression extends Expression {
   Expression _operand;
 
   /**
-   * The element associated with the operator based on the static type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * The element associated with the operator based on the static type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved.
    */
   MethodElement _staticElement;
 
   /**
-   * The element associated with the operator based on the propagated type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * The element associated with the operator based on the propagated type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved.
    */
   MethodElement _propagatedElement;
 
   /**
    * Initialize a newly created prefix expression.
+   *
    * @param operator the prefix operator being applied to the operand
    * @param operand the expression computing the operand for the operator
    */
@@ -9881,6 +11149,7 @@ class PrefixExpression extends Expression {
 
   /**
    * Initialize a newly created prefix expression.
+   *
    * @param operator the prefix operator being applied to the operand
    * @param operand the expression computing the operand for the operator
    */
@@ -9889,9 +11158,11 @@ class PrefixExpression extends Expression {
   Token get beginToken => _operator;
 
   /**
-   * Return the element associated with the operator based on the propagated type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * Return the element associated with the operator based on the propagated type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved. One example of the latter case is an operator that is
    * not defined for the type of the operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get element => _propagatedElement;
@@ -9899,20 +11170,24 @@ class PrefixExpression extends Expression {
 
   /**
    * Return the expression computing the operand for the operator.
+   *
    * @return the expression computing the operand for the operator
    */
   Expression get operand => _operand;
 
   /**
    * Return the prefix operator being applied to the operand.
+   *
    * @return the prefix operator being applied to the operand
    */
   Token get operator => _operator;
 
   /**
-   * Return the element associated with the operator based on the static type of the operand, or{@code null} if the AST structure has not been resolved, if the operator is not user definable,
+   * Return the element associated with the operator based on the static type of the operand, or
+   * `null` if the AST structure has not been resolved, if the operator is not user definable,
    * or if the operator could not be resolved. One example of the latter case is an operator that is
    * not defined for the type of the operand.
+   *
    * @return the element associated with the operator
    */
   MethodElement get staticElement => _staticElement;
@@ -9920,6 +11195,7 @@ class PrefixExpression extends Expression {
   /**
    * Set the element associated with the operator based on the propagated type of the operand to the
    * given element.
+   *
    * @param element the element to be associated with the operator
    */
   void set element(MethodElement element2) {
@@ -9928,6 +11204,7 @@ class PrefixExpression extends Expression {
 
   /**
    * Set the expression computing the operand for the operator to the given expression.
+   *
    * @param expression the expression computing the operand for the operator
    */
   void set operand(Expression expression) {
@@ -9936,6 +11213,7 @@ class PrefixExpression extends Expression {
 
   /**
    * Set the prefix operator being applied to the operand to the given operator.
+   *
    * @param operator the prefix operator being applied to the operand
    */
   void set operator(Token operator2) {
@@ -9945,6 +11223,7 @@ class PrefixExpression extends Expression {
   /**
    * Set the element associated with the operator based on the static type of the operand to the
    * given element.
+   *
    * @param element the static element to be associated with the operator
    */
   void set staticElement(MethodElement element) {
@@ -9957,11 +11236,12 @@ class PrefixExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on
    * propagated type information, then return the parameter element representing the parameter to
-   * which the value of the operand will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getParameterElement()}.
+   * which the value of the operand will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the right
-   * operand will be bound
+   *         operand will be bound
    */
   ParameterElement get propagatedParameterElementForOperand {
     if (_propagatedElement == null) {
@@ -9977,11 +11257,12 @@ class PrefixExpression extends Expression {
   /**
    * If the AST structure has been resolved, and the function being invoked is known based on static
    * type information, then return the parameter element representing the parameter to which the
-   * value of the operand will be bound. Otherwise, return {@code null}.
-   * <p>
-   * This method is only intended to be used by {@link Expression#getStaticParameterElement()}.
+   * value of the operand will be bound. Otherwise, return `null`.
+   *
+   * This method is only intended to be used by [Expression#getStaticParameterElement].
+   *
    * @return the parameter element representing the parameter to which the value of the right
-   * operand will be bound
+   *         operand will be bound
    */
   ParameterElement get staticParameterElementForOperand {
     if (_staticElement == null) {
@@ -9995,11 +11276,15 @@ class PrefixExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code PrefixedIdentifier} represent either an identifier that is prefixed
+ * Instances of the class `PrefixedIdentifier` represent either an identifier that is prefixed
  * or an access to an object property where the target of the property access is a simple
  * identifier.
+ *
  * <pre>
- * prefixedIdentifier ::={@link SimpleIdentifier prefix} '.' {@link SimpleIdentifier identifier}</pre>
+ * prefixedIdentifier ::=
+ *     [SimpleIdentifier] '.' [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class PrefixedIdentifier extends Identifier {
@@ -10021,6 +11306,7 @@ class PrefixedIdentifier extends Identifier {
 
   /**
    * Initialize a newly created prefixed identifier.
+   *
    * @param prefix the identifier being prefixed
    * @param period the period used to separate the prefix from the identifier
    * @param identifier the prefix associated with the library in which the identifier is defined
@@ -10033,6 +11319,7 @@ class PrefixedIdentifier extends Identifier {
 
   /**
    * Initialize a newly created prefixed identifier.
+   *
    * @param prefix the identifier being prefixed
    * @param period the period used to separate the prefix from the identifier
    * @param identifier the prefix associated with the library in which the identifier is defined
@@ -10050,6 +11337,7 @@ class PrefixedIdentifier extends Identifier {
 
   /**
    * Return the identifier being prefixed.
+   *
    * @return the identifier being prefixed
    */
   SimpleIdentifier get identifier => _identifier;
@@ -10057,12 +11345,14 @@ class PrefixedIdentifier extends Identifier {
 
   /**
    * Return the period used to separate the prefix from the identifier.
+   *
    * @return the period used to separate the prefix from the identifier
    */
   Token get period => _period;
 
   /**
    * Return the prefix associated with the library in which the identifier is defined.
+   *
    * @return the prefix associated with the library in which the identifier is defined
    */
   SimpleIdentifier get prefix => _prefix;
@@ -10075,6 +11365,7 @@ class PrefixedIdentifier extends Identifier {
 
   /**
    * Set the identifier being prefixed to the given identifier.
+   *
    * @param identifier the identifier being prefixed
    */
   void set identifier(SimpleIdentifier identifier2) {
@@ -10083,6 +11374,7 @@ class PrefixedIdentifier extends Identifier {
 
   /**
    * Set the period used to separate the prefix from the identifier to the given token.
+   *
    * @param period the period used to separate the prefix from the identifier
    */
   void set period(Token period2) {
@@ -10092,6 +11384,7 @@ class PrefixedIdentifier extends Identifier {
   /**
    * Set the prefix associated with the library in which the identifier is defined to the given
    * identifier.
+   *
    * @param identifier the prefix associated with the library in which the identifier is defined
    */
   void set prefix(SimpleIdentifier identifier) {
@@ -10103,12 +11396,17 @@ class PrefixedIdentifier extends Identifier {
   }
 }
 /**
- * Instances of the class {@code PropertyAccess} represent the access of a property of an object.
- * <p>
- * Note, however, that accesses to properties of objects can also be represented as{@link PrefixedIdentifier prefixed identifier} nodes in cases where the target is also a simple
+ * Instances of the class `PropertyAccess` represent the access of a property of an object.
+ *
+ * Note, however, that accesses to properties of objects can also be represented as
+ * [PrefixedIdentifier] nodes in cases where the target is also a simple
  * identifier.
+ *
  * <pre>
- * propertyAccess ::={@link Expression target} '.' {@link SimpleIdentifier propertyName}</pre>
+ * propertyAccess ::=
+ *     [Expression] '.' [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class PropertyAccess extends Expression {
@@ -10130,6 +11428,7 @@ class PropertyAccess extends Expression {
 
   /**
    * Initialize a newly created property access expression.
+   *
    * @param target the expression computing the object defining the property being accessed
    * @param operator the property access operator
    * @param propertyName the name of the property being accessed
@@ -10142,6 +11441,7 @@ class PropertyAccess extends Expression {
 
   /**
    * Initialize a newly created property access expression.
+   *
    * @param target the expression computing the object defining the property being accessed
    * @param operator the property access operator
    * @param propertyName the name of the property being accessed
@@ -10158,26 +11458,29 @@ class PropertyAccess extends Expression {
 
   /**
    * Return the property access operator.
+   *
    * @return the property access operator
    */
   Token get operator => _operator;
 
   /**
    * Return the name of the property being accessed.
+   *
    * @return the name of the property being accessed
    */
   SimpleIdentifier get propertyName => _propertyName;
 
   /**
    * Return the expression used to compute the receiver of the invocation. If this invocation is not
-   * part of a cascade expression, then this is the same as {@link #getTarget()}. If this invocation
+   * part of a cascade expression, then this is the same as [getTarget]. If this invocation
    * is part of a cascade expression, then the target stored with the cascade expression is
    * returned.
+   *
    * @return the expression used to compute the receiver of the invocation
    * @see #getTarget()
    */
   Expression get realTarget {
-    if (isCascaded()) {
+    if (isCascaded) {
       ASTNode ancestor = parent;
       while (ancestor is! CascadeExpression) {
         if (ancestor == null) {
@@ -10191,22 +11494,27 @@ class PropertyAccess extends Expression {
   }
 
   /**
-   * Return the expression computing the object defining the property being accessed, or{@code null} if this property access is part of a cascade expression.
+   * Return the expression computing the object defining the property being accessed, or
+   * `null` if this property access is part of a cascade expression.
+   *
    * @return the expression computing the object defining the property being accessed
    * @see #getRealTarget()
    */
   Expression get target => _target;
-  bool isAssignable() => true;
+  bool get isAssignable => true;
 
   /**
-   * Return {@code true} if this expression is cascaded. If it is, then the target of this
-   * expression is not stored locally but is stored in the nearest ancestor that is a{@link CascadeExpression}.
-   * @return {@code true} if this expression is cascaded
+   * Return `true` if this expression is cascaded. If it is, then the target of this
+   * expression is not stored locally but is stored in the nearest ancestor that is a
+   * [CascadeExpression].
+   *
+   * @return `true` if this expression is cascaded
    */
-  bool isCascaded() => _operator != null && identical(_operator.type, TokenType.PERIOD_PERIOD);
+  bool get isCascaded => _operator != null && identical(_operator.type, TokenType.PERIOD_PERIOD);
 
   /**
    * Set the property access operator to the given token.
+   *
    * @param operator the property access operator
    */
   void set operator(Token operator2) {
@@ -10215,6 +11523,7 @@ class PropertyAccess extends Expression {
 
   /**
    * Set the name of the property being accessed to the given identifier.
+   *
    * @param identifier the name of the property being accessed
    */
   void set propertyName(SimpleIdentifier identifier) {
@@ -10224,6 +11533,7 @@ class PropertyAccess extends Expression {
   /**
    * Set the expression computing the object defining the property being accessed to the given
    * expression.
+   *
    * @param expression the expression computing the object defining the property being accessed
    */
   void set target(Expression expression) {
@@ -10235,12 +11545,14 @@ class PropertyAccess extends Expression {
   }
 }
 /**
- * Instances of the class {@code RedirectingConstructorInvocation} represent the invocation of a
+ * Instances of the class `RedirectingConstructorInvocation` represent the invocation of a
  * another constructor in the same class from within a constructor's initialization list.
+ *
  * <pre>
  * redirectingConstructorInvocation ::=
- * 'this' ('.' identifier)? arguments
+ *     'this' ('.' identifier)? arguments
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class RedirectingConstructorInvocation extends ConstructorInitializer {
@@ -10251,12 +11563,13 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   Token _keyword;
 
   /**
-   * The token for the period before the name of the constructor that is being invoked, or{@code null} if the unnamed constructor is being invoked.
+   * The token for the period before the name of the constructor that is being invoked, or
+   * `null` if the unnamed constructor is being invoked.
    */
   Token _period;
 
   /**
-   * The name of the constructor that is being invoked, or {@code null} if the unnamed constructor
+   * The name of the constructor that is being invoked, or `null` if the unnamed constructor
    * is being invoked.
    */
   SimpleIdentifier _constructorName;
@@ -10267,12 +11580,14 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   ArgumentList _argumentList;
 
   /**
-   * The element associated with the constructor based on static type information, or {@code null}if the AST structure has not been resolved or if the constructor could not be resolved.
+   * The element associated with the constructor based on static type information, or `null`
+   * if the AST structure has not been resolved or if the constructor could not be resolved.
    */
   ConstructorElement _staticElement;
 
   /**
-   * The element associated with the constructor based on propagated type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * The element associated with the constructor based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
    */
   ConstructorElement _propagatedElement;
@@ -10280,6 +11595,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   /**
    * Initialize a newly created redirecting invocation to invoke the constructor with the given name
    * with the given arguments.
+   *
    * @param keyword the token for the 'this' keyword
    * @param period the token for the period before the name of the constructor that is being invoked
    * @param constructorName the name of the constructor that is being invoked
@@ -10295,6 +11611,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   /**
    * Initialize a newly created redirecting invocation to invoke the constructor with the given name
    * with the given arguments.
+   *
    * @param keyword the token for the 'this' keyword
    * @param period the token for the period before the name of the constructor that is being invoked
    * @param constructorName the name of the constructor that is being invoked
@@ -10305,21 +11622,25 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Return the list of arguments to the constructor.
+   *
    * @return the list of arguments to the constructor
    */
   ArgumentList get argumentList => _argumentList;
   Token get beginToken => _keyword;
 
   /**
-   * Return the name of the constructor that is being invoked, or {@code null} if the unnamed
+   * Return the name of the constructor that is being invoked, or `null` if the unnamed
    * constructor is being invoked.
+   *
    * @return the name of the constructor that is being invoked
    */
   SimpleIdentifier get constructorName => _constructorName;
 
   /**
-   * Return the element associated with the constructor based on propagated type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * Return the element associated with the constructor based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
+   *
    * @return the element associated with the super constructor
    */
   ConstructorElement get element => _propagatedElement;
@@ -10327,25 +11648,31 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Return the token for the 'this' keyword.
+   *
    * @return the token for the 'this' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the token for the period before the name of the constructor that is being invoked, or{@code null} if the unnamed constructor is being invoked.
+   * Return the token for the period before the name of the constructor that is being invoked, or
+   * `null` if the unnamed constructor is being invoked.
+   *
    * @return the token for the period before the name of the constructor that is being invoked
    */
   Token get period => _period;
 
   /**
-   * Return the element associated with the constructor based on static type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * Return the element associated with the constructor based on static type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
+   *
    * @return the element associated with the constructor
    */
   ConstructorElement get staticElement => _staticElement;
 
   /**
    * Set the list of arguments to the constructor to the given list.
+   *
    * @param argumentList the list of arguments to the constructor
    */
   void set argumentList(ArgumentList argumentList2) {
@@ -10354,6 +11681,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Set the name of the constructor that is being invoked to the given identifier.
+   *
    * @param identifier the name of the constructor that is being invoked
    */
   void set constructorName(SimpleIdentifier identifier) {
@@ -10363,6 +11691,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   /**
    * Set the element associated with the constructor based on propagated type information to the
    * given element.
+   *
    * @param element the element to be associated with the constructor
    */
   void set element(ConstructorElement element2) {
@@ -10371,6 +11700,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Set the token for the 'this' keyword to the given token.
+   *
    * @param keyword the token for the 'this' keyword
    */
   void set keyword(Token keyword2) {
@@ -10380,6 +11710,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   /**
    * Set the token for the period before the name of the constructor that is being invoked to the
    * given token.
+   *
    * @param period the token for the period before the name of the constructor that is being invoked
    */
   void set period(Token period2) {
@@ -10389,6 +11720,7 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   /**
    * Set the element associated with the constructor based on static type information to the given
    * element.
+   *
    * @param element the element to be associated with the constructor
    */
   void set staticElement(ConstructorElement element) {
@@ -10400,11 +11732,13 @@ class RedirectingConstructorInvocation extends ConstructorInitializer {
   }
 }
 /**
- * Instances of the class {@code RethrowExpression} represent a rethrow expression.
+ * Instances of the class `RethrowExpression` represent a rethrow expression.
+ *
  * <pre>
  * rethrowExpression ::=
- * 'rethrow'
+ *     'rethrow'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class RethrowExpression extends Expression {
@@ -10416,6 +11750,7 @@ class RethrowExpression extends Expression {
 
   /**
    * Initialize a newly created rethrow expression.
+   *
    * @param keyword the token representing the 'rethrow' keyword
    */
   RethrowExpression.full(Token keyword) {
@@ -10424,6 +11759,7 @@ class RethrowExpression extends Expression {
 
   /**
    * Initialize a newly created rethrow expression.
+   *
    * @param keyword the token representing the 'rethrow' keyword
    */
   RethrowExpression({Token keyword}) : this.full(keyword);
@@ -10433,12 +11769,14 @@ class RethrowExpression extends Expression {
 
   /**
    * Return the token representing the 'rethrow' keyword.
+   *
    * @return the token representing the 'rethrow' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Set the token representing the 'rethrow' keyword to the given token.
+   *
    * @param keyword the token representing the 'rethrow' keyword
    */
   void set keyword(Token keyword2) {
@@ -10448,11 +11786,13 @@ class RethrowExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code ReturnStatement} represent a return statement.
+ * Instances of the class `ReturnStatement` represent a return statement.
+ *
  * <pre>
  * returnStatement ::=
- * 'return' {@link Expression expression}? ';'
+ *     'return' [Expression]? ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ReturnStatement extends Statement {
@@ -10463,7 +11803,7 @@ class ReturnStatement extends Statement {
   Token _keyword;
 
   /**
-   * The expression computing the value to be returned, or {@code null} if no explicit value was
+   * The expression computing the value to be returned, or `null` if no explicit value was
    * provided.
    */
   Expression _expression;
@@ -10475,6 +11815,7 @@ class ReturnStatement extends Statement {
 
   /**
    * Initialize a newly created return statement.
+   *
    * @param keyword the token representing the 'return' keyword
    * @param expression the expression computing the value to be returned
    * @param semicolon the semicolon terminating the statement
@@ -10487,6 +11828,7 @@ class ReturnStatement extends Statement {
 
   /**
    * Initialize a newly created return statement.
+   *
    * @param keyword the token representing the 'return' keyword
    * @param expression the expression computing the value to be returned
    * @param semicolon the semicolon terminating the statement
@@ -10497,26 +11839,30 @@ class ReturnStatement extends Statement {
   Token get endToken => _semicolon;
 
   /**
-   * Return the expression computing the value to be returned, or {@code null} if no explicit value
+   * Return the expression computing the value to be returned, or `null` if no explicit value
    * was provided.
+   *
    * @return the expression computing the value to be returned
    */
   Expression get expression => _expression;
 
   /**
    * Return the token representing the 'return' keyword.
+   *
    * @return the token representing the 'return' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the expression computing the value to be returned to the given expression.
+   *
    * @param expression the expression computing the value to be returned
    */
   void set expression(Expression expression2) {
@@ -10525,6 +11871,7 @@ class ReturnStatement extends Statement {
 
   /**
    * Set the token representing the 'return' keyword to the given token.
+   *
    * @param keyword the token representing the 'return' keyword
    */
   void set keyword(Token keyword2) {
@@ -10533,6 +11880,7 @@ class ReturnStatement extends Statement {
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -10543,12 +11891,14 @@ class ReturnStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code ScriptTag} represent the script tag that can optionally occur at
+ * Instances of the class `ScriptTag` represent the script tag that can optionally occur at
  * the beginning of a compilation unit.
+ *
  * <pre>
  * scriptTag ::=
- * '#!' (~NEWLINE)* NEWLINE
+ *     '#!' (~NEWLINE)* NEWLINE
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ScriptTag extends ASTNode {
@@ -10560,6 +11910,7 @@ class ScriptTag extends ASTNode {
 
   /**
    * Initialize a newly created script tag.
+   *
    * @param scriptTag the token representing this script tag
    */
   ScriptTag.full(Token scriptTag) {
@@ -10568,6 +11919,7 @@ class ScriptTag extends ASTNode {
 
   /**
    * Initialize a newly created script tag.
+   *
    * @param scriptTag the token representing this script tag
    */
   ScriptTag({Token scriptTag}) : this.full(scriptTag);
@@ -10577,12 +11929,14 @@ class ScriptTag extends ASTNode {
 
   /**
    * Return the token representing this script tag.
+   *
    * @return the token representing this script tag
    */
   Token get scriptTag => _scriptTag;
 
   /**
    * Set the token representing this script tag to the given script tag.
+   *
    * @param scriptTag the token representing this script tag
    */
   void set scriptTag(Token scriptTag2) {
@@ -10592,12 +11946,14 @@ class ScriptTag extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code ShowCombinator} represent a combinator that restricts the names
+ * Instances of the class `ShowCombinator` represent a combinator that restricts the names
  * being imported to those in a given list.
+ *
  * <pre>
  * showCombinator ::=
- * 'show' {@link SimpleIdentifier identifier} (',' {@link SimpleIdentifier identifier})
+ *     'show' [SimpleIdentifier] (',' [SimpleIdentifier])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ShowCombinator extends Combinator {
@@ -10609,6 +11965,7 @@ class ShowCombinator extends Combinator {
 
   /**
    * Initialize a newly created import show combinator.
+   *
    * @param keyword the comma introducing the combinator
    * @param shownNames the list of names from the library that are made visible by this combinator
    */
@@ -10619,6 +11976,7 @@ class ShowCombinator extends Combinator {
 
   /**
    * Initialize a newly created import show combinator.
+   *
    * @param keyword the comma introducing the combinator
    * @param shownNames the list of names from the library that are made visible by this combinator
    */
@@ -10628,6 +11986,7 @@ class ShowCombinator extends Combinator {
 
   /**
    * Return the list of names from the library that are made visible by this combinator.
+   *
    * @return the list of names from the library that are made visible by this combinator
    */
   NodeList<SimpleIdentifier> get shownNames => _shownNames;
@@ -10636,28 +11995,32 @@ class ShowCombinator extends Combinator {
   }
 }
 /**
- * Instances of the class {@code SimpleFormalParameter} represent a simple formal parameter.
+ * Instances of the class `SimpleFormalParameter` represent a simple formal parameter.
+ *
  * <pre>
  * simpleFormalParameter ::=
- * ('final' {@link TypeName type} | 'var' | {@link TypeName type})? {@link SimpleIdentifier identifier}</pre>
+ *     ('final' [TypeName] | 'var' | [TypeName])? [SimpleIdentifier]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SimpleFormalParameter extends NormalFormalParameter {
 
   /**
-   * The token representing either the 'final', 'const' or 'var' keyword, or {@code null} if no
+   * The token representing either the 'final', 'const' or 'var' keyword, or `null` if no
    * keyword was used.
    */
   Token _keyword;
 
   /**
-   * The name of the declared type of the parameter, or {@code null} if the parameter does not have
+   * The name of the declared type of the parameter, or `null` if the parameter does not have
    * a declared type.
    */
   TypeName _type;
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
@@ -10671,6 +12034,7 @@ class SimpleFormalParameter extends NormalFormalParameter {
 
   /**
    * Initialize a newly created formal parameter.
+   *
    * @param comment the documentation comment associated with this parameter
    * @param metadata the annotations associated with this parameter
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
@@ -10691,21 +12055,24 @@ class SimpleFormalParameter extends NormalFormalParameter {
 
   /**
    * Return the token representing either the 'final', 'const' or 'var' keyword.
+   *
    * @return the token representing either the 'final', 'const' or 'var' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the name of the declared type of the parameter, or {@code null} if the parameter does
+   * Return the name of the declared type of the parameter, or `null` if the parameter does
    * not have a declared type.
+   *
    * @return the name of the declared type of the parameter
    */
   TypeName get type => _type;
-  bool isConst() => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
-  bool isFinal() => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
+  bool get isConst => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
+  bool get isFinal => (_keyword is KeywordToken) && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
 
   /**
    * Set the token representing either the 'final', 'const' or 'var' keyword to the given token.
+   *
    * @param keyword the token representing either the 'final', 'const' or 'var' keyword
    */
   void set keyword(Token keyword2) {
@@ -10714,6 +12081,7 @@ class SimpleFormalParameter extends NormalFormalParameter {
 
   /**
    * Set the name of the declared type of the parameter to the given type name.
+   *
    * @param typeName the name of the declared type of the parameter
    */
   void set type(TypeName typeName) {
@@ -10726,13 +12094,17 @@ class SimpleFormalParameter extends NormalFormalParameter {
   }
 }
 /**
- * Instances of the class {@code SimpleIdentifier} represent a simple identifier.
+ * Instances of the class `SimpleIdentifier` represent a simple identifier.
+ *
  * <pre>
  * simpleIdentifier ::=
- * initialCharacter internalCharacter
+ *     initialCharacter internalCharacter*
+ *
  * initialCharacter ::= '_' | '$' | letter
+ *
  * internalCharacter ::= '_' | '$' | letter | digit
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SimpleIdentifier extends Identifier {
@@ -10743,18 +12115,21 @@ class SimpleIdentifier extends Identifier {
   Token _token;
 
   /**
-   * The element associated with this identifier based on static type information, or {@code null}if the AST structure has not been resolved or if this identifier could not be resolved.
+   * The element associated with this identifier based on static type information, or `null`
+   * if the AST structure has not been resolved or if this identifier could not be resolved.
    */
   Element _staticElement;
 
   /**
-   * The element associated with this identifier based on propagated type information, or{@code null} if the AST structure has not been resolved or if this identifier could not be
+   * The element associated with this identifier based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if this identifier could not be
    * resolved.
    */
   Element _propagatedElement;
 
   /**
    * Initialize a newly created identifier.
+   *
    * @param token the token representing the identifier
    */
   SimpleIdentifier.full(Token token) {
@@ -10763,6 +12138,7 @@ class SimpleIdentifier extends Identifier {
 
   /**
    * Initialize a newly created identifier.
+   *
    * @param token the token representing the identifier
    */
   SimpleIdentifier({Token token}) : this.full(token);
@@ -10775,13 +12151,15 @@ class SimpleIdentifier extends Identifier {
 
   /**
    * Return the token representing the identifier.
+   *
    * @return the token representing the identifier
    */
   Token get token => _token;
 
   /**
-   * Return {@code true} if this identifier is the name being declared in a declaration.
-   * @return {@code true} if this identifier is the name being declared in a declaration
+   * Return `true` if this identifier is the name being declared in a declaration.
+   *
+   * @return `true` if this identifier is the name being declared in a declaration
    */
   bool inDeclarationContext() {
     ASTNode parent = this.parent;
@@ -10794,6 +12172,8 @@ class SimpleIdentifier extends Identifier {
       return identical(this, ((parent as ClassTypeAlias)).name);
     } else if (parent is ConstructorDeclaration) {
       return identical(this, ((parent as ConstructorDeclaration)).name);
+    } else if (parent is DeclaredIdentifier) {
+      return identical(this, ((parent as DeclaredIdentifier)).identifier);
     } else if (parent is FunctionDeclaration) {
       return identical(this, ((parent as FunctionDeclaration)).name);
     } else if (parent is FunctionTypeAlias) {
@@ -10813,11 +12193,13 @@ class SimpleIdentifier extends Identifier {
   }
 
   /**
-   * Return {@code true} if this expression is computing a right-hand value.
-   * <p>
-   * Note that {@link #inGetterContext()} and {@link #inSetterContext()} are not opposites, nor are
-   * they mutually exclusive. In other words, it is possible for both methods to return {@code true}when invoked on the same node.
-   * @return {@code true} if this expression is in a context where a getter will be invoked
+   * Return `true` if this expression is computing a right-hand value.
+   *
+   * Note that [inGetterContext] and [inSetterContext] are not opposites, nor are
+   * they mutually exclusive. In other words, it is possible for both methods to return `true`
+   * when invoked on the same node.
+   *
+   * @return `true` if this expression is in a context where a getter will be invoked
    */
   bool inGetterContext() {
     ASTNode parent = this.parent;
@@ -10850,11 +12232,13 @@ class SimpleIdentifier extends Identifier {
   }
 
   /**
-   * Return {@code true} if this expression is computing a left-hand value.
-   * <p>
-   * Note that {@link #inGetterContext()} and {@link #inSetterContext()} are not opposites, nor are
-   * they mutually exclusive. In other words, it is possible for both methods to return {@code true}when invoked on the same node.
-   * @return {@code true} if this expression is in a context where a setter will be invoked
+   * Return `true` if this expression is computing a left-hand value.
+   *
+   * Note that [inGetterContext] and [inSetterContext] are not opposites, nor are
+   * they mutually exclusive. In other words, it is possible for both methods to return `true`
+   * when invoked on the same node.
+   *
+   * @return `true` if this expression is in a context where a setter will be invoked
    */
   bool inSetterContext() {
     ASTNode parent = this.parent;
@@ -10875,7 +12259,7 @@ class SimpleIdentifier extends Identifier {
       target = access;
     }
     if (parent is PrefixExpression) {
-      return ((parent as PrefixExpression)).operator.type.isIncrementOperator();
+      return ((parent as PrefixExpression)).operator.type.isIncrementOperator;
     } else if (parent is PostfixExpression) {
       return true;
     } else if (parent is AssignmentExpression) {
@@ -10883,11 +12267,12 @@ class SimpleIdentifier extends Identifier {
     }
     return false;
   }
-  bool isSynthetic() => _token.isSynthetic();
+  bool get isSynthetic => _token.isSynthetic;
 
   /**
    * Set the element associated with this identifier based on propagated type information to the
    * given element.
+   *
    * @param element the element to be associated with this identifier
    */
   void set element(Element element2) {
@@ -10897,6 +12282,7 @@ class SimpleIdentifier extends Identifier {
   /**
    * Set the element associated with this identifier based on static type information to the given
    * element.
+   *
    * @param element the element to be associated with this identifier
    */
   void set staticElement(Element element) {
@@ -10905,6 +12291,7 @@ class SimpleIdentifier extends Identifier {
 
   /**
    * Set the token representing the identifier to the given token.
+   *
    * @param token the token representing the literal
    */
   void set token(Token token2) {
@@ -10914,24 +12301,30 @@ class SimpleIdentifier extends Identifier {
   }
 }
 /**
- * Instances of the class {@code SimpleStringLiteral} represent a string literal expression that
+ * Instances of the class `SimpleStringLiteral` represent a string literal expression that
  * does not contain any interpolations.
+ *
  * <pre>
  * simpleStringLiteral ::=
- * rawStringLiteral
- * | basicStringLiteral
+ *     rawStringLiteral
+ *   | basicStringLiteral
+ *
  * rawStringLiteral ::=
- * '@' basicStringLiteral
+ *     '@' basicStringLiteral
+ *
  * simpleStringLiteral ::=
- * multiLineStringLiteral
- * | singleLineStringLiteral
+ *     multiLineStringLiteral
+ *   | singleLineStringLiteral
+ *
  * multiLineStringLiteral ::=
- * "'''" characters "'''"
- * | '"""' characters '"""'
+ *     "'''" characters "'''"
+ *   | '"""' characters '"""'
+ *
  * singleLineStringLiteral ::=
- * "'" characters "'"
- * '"' characters '"'
+ *     "'" characters "'"
+ *     '"' characters '"'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SimpleStringLiteral extends StringLiteral {
@@ -10948,6 +12341,7 @@ class SimpleStringLiteral extends StringLiteral {
 
   /**
    * Initialize a newly created simple string literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -10958,6 +12352,7 @@ class SimpleStringLiteral extends StringLiteral {
 
   /**
    * Initialize a newly created simple string literal.
+   *
    * @param literal the token representing the literal
    * @param value the value of the literal
    */
@@ -10968,21 +12363,24 @@ class SimpleStringLiteral extends StringLiteral {
 
   /**
    * Return the token representing the literal.
+   *
    * @return the token representing the literal
    */
   Token get literal => _literal;
 
   /**
    * Return the value of the literal.
+   *
    * @return the value of the literal
    */
   String get value => _value;
 
   /**
-   * Return {@code true} if this string literal is a multi-line string.
-   * @return {@code true} if this string literal is a multi-line string
+   * Return `true` if this string literal is a multi-line string.
+   *
+   * @return `true` if this string literal is a multi-line string
    */
-  bool isMultiline() {
+  bool get isMultiline {
     if (_value.length < 6) {
       return false;
     }
@@ -10990,14 +12388,16 @@ class SimpleStringLiteral extends StringLiteral {
   }
 
   /**
-   * Return {@code true} if this string literal is a raw string.
-   * @return {@code true} if this string literal is a raw string
+   * Return `true` if this string literal is a raw string.
+   *
+   * @return `true` if this string literal is a raw string
    */
-  bool isRaw() => _value.codeUnitAt(0) == 0x40;
-  bool isSynthetic() => _literal.isSynthetic();
+  bool get isRaw => _value.codeUnitAt(0) == 0x40;
+  bool get isSynthetic => _literal.isSynthetic;
 
   /**
    * Set the token representing the literal to the given token.
+   *
    * @param literal the token representing the literal
    */
   void set literal(Token literal2) {
@@ -11006,6 +12406,7 @@ class SimpleStringLiteral extends StringLiteral {
 
   /**
    * Set the value of the literal to the given string.
+   *
    * @param string the value of the literal
    */
   void set value(String string) {
@@ -11018,21 +12419,40 @@ class SimpleStringLiteral extends StringLiteral {
   }
 }
 /**
- * Instances of the class {@code Statement} defines the behavior common to nodes that represent a
+ * Instances of the class `Statement` defines the behavior common to nodes that represent a
  * statement.
+ *
  * <pre>
- * statement ::={@link Block block}| {@link VariableDeclarationStatement initializedVariableDeclaration ';'}| {@link ForStatement forStatement}| {@link ForEachStatement forEachStatement}| {@link WhileStatement whileStatement}| {@link DoStatement doStatement}| {@link SwitchStatement switchStatement}| {@link IfStatement ifStatement}| {@link TryStatement tryStatement}| {@link BreakStatement breakStatement}| {@link ContinueStatement continueStatement}| {@link ReturnStatement returnStatement}| {@link ExpressionStatement expressionStatement}| {@link FunctionDeclarationStatement functionSignature functionBody}</pre>
+ * statement ::=
+ *     [Block]
+ *   | [VariableDeclarationStatement]
+ *   | [ForStatement]
+ *   | [ForEachStatement]
+ *   | [WhileStatement]
+ *   | [DoStatement]
+ *   | [SwitchStatement]
+ *   | [IfStatement]
+ *   | [TryStatement]
+ *   | [BreakStatement]
+ *   | [ContinueStatement]
+ *   | [ReturnStatement]
+ *   | [ExpressionStatement]
+ *   | [FunctionDeclarationStatement]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class Statement extends ASTNode {
 }
 /**
- * Instances of the class {@code StringInterpolation} represent a string interpolation literal.
+ * Instances of the class `StringInterpolation` represent a string interpolation literal.
+ *
  * <pre>
  * stringInterpolation ::=
- * ''' {@link InterpolationElement interpolationElement}* '''
- * | '"' {@link InterpolationElement interpolationElement}* '"'
+ *     ''' [InterpolationElement]* '''
+ *   | '"' [InterpolationElement]* '"'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class StringInterpolation extends StringLiteral {
@@ -11044,6 +12464,7 @@ class StringInterpolation extends StringLiteral {
 
   /**
    * Initialize a newly created string interpolation expression.
+   *
    * @param elements the elements that will be composed to produce the resulting string
    */
   StringInterpolation.full(List<InterpolationElement> elements) {
@@ -11053,6 +12474,7 @@ class StringInterpolation extends StringLiteral {
 
   /**
    * Initialize a newly created string interpolation expression.
+   *
    * @param elements the elements that will be composed to produce the resulting string
    */
   StringInterpolation({List<InterpolationElement> elements}) : this.full(elements);
@@ -11061,6 +12483,7 @@ class StringInterpolation extends StringLiteral {
 
   /**
    * Return the elements that will be composed to produce the resulting string.
+   *
    * @return the elements that will be composed to produce the resulting string
    */
   NodeList<InterpolationElement> get elements => _elements;
@@ -11073,16 +12496,23 @@ class StringInterpolation extends StringLiteral {
   }
 }
 /**
- * Instances of the class {@code StringLiteral} represent a string literal expression.
+ * Instances of the class `StringLiteral` represent a string literal expression.
+ *
  * <pre>
- * stringLiteral ::={@link SimpleStringLiteral simpleStringLiteral}| {@link AdjacentStrings adjacentStrings}| {@link StringInterpolation stringInterpolation}</pre>
+ * stringLiteral ::=
+ *     [SimpleStringLiteral]
+ *   | [AdjacentStrings]
+ *   | [StringInterpolation]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class StringLiteral extends Literal {
 
   /**
-   * Return the value of the string literal, or {@code null} if the string is not a constant string
+   * Return the value of the string literal, or `null` if the string is not a constant string
    * without any string interpolation.
+   *
    * @return the value of the string literal
    */
   String get stringValue {
@@ -11097,18 +12527,22 @@ abstract class StringLiteral extends Literal {
 
   /**
    * Append the value of the given string literal to the given string builder.
+   *
    * @param builder the builder to which the string's value is to be appended
    * @throws IllegalArgumentException if the string is not a constant string without any string
-   * interpolation
+   *           interpolation
    */
   void appendStringValue(JavaStringBuilder builder);
 }
 /**
- * Instances of the class {@code SuperConstructorInvocation} represent the invocation of a
+ * Instances of the class `SuperConstructorInvocation` represent the invocation of a
  * superclass' constructor from within a constructor's initialization list.
+ *
  * <pre>
  * superInvocation ::=
- * 'super' ('.' {@link SimpleIdentifier name})? {@link ArgumentList argumentList}</pre>
+ *     'super' ('.' [SimpleIdentifier])? [ArgumentList]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SuperConstructorInvocation extends ConstructorInitializer {
@@ -11119,12 +12553,13 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   Token _keyword;
 
   /**
-   * The token for the period before the name of the constructor that is being invoked, or{@code null} if the unnamed constructor is being invoked.
+   * The token for the period before the name of the constructor that is being invoked, or
+   * `null` if the unnamed constructor is being invoked.
    */
   Token _period;
 
   /**
-   * The name of the constructor that is being invoked, or {@code null} if the unnamed constructor
+   * The name of the constructor that is being invoked, or `null` if the unnamed constructor
    * is being invoked.
    */
   SimpleIdentifier _constructorName;
@@ -11135,12 +12570,13 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   ArgumentList _argumentList;
 
   /**
-   * The element associated with the constructor based on static type information, or {@code null}if the AST structure has not been resolved or if the constructor could not be resolved.
+   * The element associated with the constructor based on static type information, or `null`
+   * if the AST structure has not been resolved or if the constructor could not be resolved.
    */
   ConstructorElement _staticElement;
 
   /**
-   * The element associated with the constructor based on propagated type information, or {@code null} if the AST structure has not been
+   * The element associated with the constructor based on propagated type information, or `null` if the AST structure has not been
    * resolved or if the constructor could not be resolved.
    */
   ConstructorElement _propagatedElement;
@@ -11148,6 +12584,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   /**
    * Initialize a newly created super invocation to invoke the inherited constructor with the given
    * name with the given arguments.
+   *
    * @param keyword the token for the 'super' keyword
    * @param period the token for the period before the name of the constructor that is being invoked
    * @param constructorName the name of the constructor that is being invoked
@@ -11163,6 +12600,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   /**
    * Initialize a newly created super invocation to invoke the inherited constructor with the given
    * name with the given arguments.
+   *
    * @param keyword the token for the 'super' keyword
    * @param period the token for the period before the name of the constructor that is being invoked
    * @param constructorName the name of the constructor that is being invoked
@@ -11173,21 +12611,25 @@ class SuperConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Return the list of arguments to the constructor.
+   *
    * @return the list of arguments to the constructor
    */
   ArgumentList get argumentList => _argumentList;
   Token get beginToken => _keyword;
 
   /**
-   * Return the name of the constructor that is being invoked, or {@code null} if the unnamed
+   * Return the name of the constructor that is being invoked, or `null` if the unnamed
    * constructor is being invoked.
+   *
    * @return the name of the constructor that is being invoked
    */
   SimpleIdentifier get constructorName => _constructorName;
 
   /**
-   * Return the element associated with the constructor based on propagated type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * Return the element associated with the constructor based on propagated type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
+   *
    * @return the element associated with the super constructor
    */
   ConstructorElement get element => _propagatedElement;
@@ -11195,25 +12637,31 @@ class SuperConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Return the token for the 'super' keyword.
+   *
    * @return the token for the 'super' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the token for the period before the name of the constructor that is being invoked, or{@code null} if the unnamed constructor is being invoked.
+   * Return the token for the period before the name of the constructor that is being invoked, or
+   * `null` if the unnamed constructor is being invoked.
+   *
    * @return the token for the period before the name of the constructor that is being invoked
    */
   Token get period => _period;
 
   /**
-   * Return the element associated with the constructor based on static type information, or{@code null} if the AST structure has not been resolved or if the constructor could not be
+   * Return the element associated with the constructor based on static type information, or
+   * `null` if the AST structure has not been resolved or if the constructor could not be
    * resolved.
+   *
    * @return the element associated with the constructor
    */
   ConstructorElement get staticElement => _staticElement;
 
   /**
    * Set the list of arguments to the constructor to the given list.
+   *
    * @param argumentList the list of arguments to the constructor
    */
   void set argumentList(ArgumentList argumentList2) {
@@ -11222,6 +12670,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Set the name of the constructor that is being invoked to the given identifier.
+   *
    * @param identifier the name of the constructor that is being invoked
    */
   void set constructorName(SimpleIdentifier identifier) {
@@ -11231,6 +12680,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   /**
    * Set the element associated with the constructor based on propagated type information to the
    * given element.
+   *
    * @param element the element to be associated with the constructor
    */
   void set element(ConstructorElement element2) {
@@ -11239,6 +12689,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
 
   /**
    * Set the token for the 'super' keyword to the given token.
+   *
    * @param keyword the token for the 'super' keyword
    */
   void set keyword(Token keyword2) {
@@ -11248,6 +12699,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   /**
    * Set the token for the period before the name of the constructor that is being invoked to the
    * given token.
+   *
    * @param period the token for the period before the name of the constructor that is being invoked
    */
   void set period(Token period2) {
@@ -11257,6 +12709,7 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   /**
    * Set the element associated with the constructor based on static type information to the given
    * element.
+   *
    * @param element the element to be associated with the constructor
    */
   void set staticElement(ConstructorElement element) {
@@ -11268,11 +12721,13 @@ class SuperConstructorInvocation extends ConstructorInitializer {
   }
 }
 /**
- * Instances of the class {@code SuperExpression} represent a super expression.
+ * Instances of the class `SuperExpression` represent a super expression.
+ *
  * <pre>
  * superExpression ::=
- * 'super'
+ *     'super'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SuperExpression extends Expression {
@@ -11284,6 +12739,7 @@ class SuperExpression extends Expression {
 
   /**
    * Initialize a newly created super expression.
+   *
    * @param keyword the token representing the keyword
    */
   SuperExpression.full(Token keyword) {
@@ -11292,6 +12748,7 @@ class SuperExpression extends Expression {
 
   /**
    * Initialize a newly created super expression.
+   *
    * @param keyword the token representing the keyword
    */
   SuperExpression({Token keyword}) : this.full(keyword);
@@ -11301,12 +12758,14 @@ class SuperExpression extends Expression {
 
   /**
    * Return the token representing the keyword.
+   *
    * @return the token representing the keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Set the token representing the keyword to the given token.
+   *
    * @param keyword the token representing the keyword
    */
   void set keyword(Token keyword2) {
@@ -11316,9 +12775,13 @@ class SuperExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code SwitchCase} represent the case in a switch statement.
+ * Instances of the class `SwitchCase` represent the case in a switch statement.
+ *
  * <pre>
- * switchCase ::={@link SimpleIdentifier label}* 'case' {@link Expression expression} ':' {@link Statement statement}</pre>
+ * switchCase ::=
+ *     [SimpleIdentifier]* 'case' [Expression] ':' [Statement]*
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SwitchCase extends SwitchMember {
@@ -11330,6 +12793,7 @@ class SwitchCase extends SwitchMember {
 
   /**
    * Initialize a newly created switch case.
+   *
    * @param labels the labels associated with the switch member
    * @param keyword the token representing the 'case' or 'default' keyword
    * @param expression the expression controlling whether the statements will be executed
@@ -11342,6 +12806,7 @@ class SwitchCase extends SwitchMember {
 
   /**
    * Initialize a newly created switch case.
+   *
    * @param labels the labels associated with the switch member
    * @param keyword the token representing the 'case' or 'default' keyword
    * @param expression the expression controlling whether the statements will be executed
@@ -11353,12 +12818,14 @@ class SwitchCase extends SwitchMember {
 
   /**
    * Return the expression controlling whether the statements will be executed.
+   *
    * @return the expression controlling whether the statements will be executed
    */
   Expression get expression => _expression;
 
   /**
    * Set the expression controlling whether the statements will be executed to the given expression.
+   *
    * @param expression the expression controlling whether the statements will be executed
    */
   void set expression(Expression expression2) {
@@ -11371,25 +12838,30 @@ class SwitchCase extends SwitchMember {
   }
 }
 /**
- * Instances of the class {@code SwitchDefault} represent the default case in a switch statement.
+ * Instances of the class `SwitchDefault` represent the default case in a switch statement.
+ *
  * <pre>
- * switchDefault ::={@link SimpleIdentifier label}* 'default' ':' {@link Statement statement}</pre>
+ * switchDefault ::=
+ *     [SimpleIdentifier]* 'default' ':' [Statement]*
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SwitchDefault extends SwitchMember {
 
   /**
    * Initialize a newly created switch default.
+   *
    * @param labels the labels associated with the switch member
    * @param keyword the token representing the 'case' or 'default' keyword
    * @param colon the colon separating the keyword or the expression from the statements
    * @param statements the statements that will be executed if this switch member is selected
    */
-  SwitchDefault.full(List<Label> labels, Token keyword, Token colon, List<Statement> statements) : super.full(labels, keyword, colon, statements) {
-  }
+  SwitchDefault.full(List<Label> labels, Token keyword, Token colon, List<Statement> statements) : super.full(labels, keyword, colon, statements);
 
   /**
    * Initialize a newly created switch default.
+   *
    * @param labels the labels associated with the switch member
    * @param keyword the token representing the 'case' or 'default' keyword
    * @param colon the colon separating the keyword or the expression from the statements
@@ -11403,13 +12875,15 @@ class SwitchDefault extends SwitchMember {
   }
 }
 /**
- * The abstract class {@code SwitchMember} defines the behavior common to objects representing
+ * The abstract class `SwitchMember` defines the behavior common to objects representing
  * elements within a switch statement.
+ *
  * <pre>
  * switchMember ::=
- * switchCase
- * | switchDefault
+ *     switchCase
+ *   | switchDefault
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class SwitchMember extends ASTNode {
@@ -11436,6 +12910,7 @@ abstract class SwitchMember extends ASTNode {
 
   /**
    * Initialize a newly created switch member.
+   *
    * @param labels the labels associated with the switch member
    * @param keyword the token representing the 'case' or 'default' keyword
    * @param colon the colon separating the keyword or the expression from the statements
@@ -11452,6 +12927,7 @@ abstract class SwitchMember extends ASTNode {
 
   /**
    * Initialize a newly created switch member.
+   *
    * @param labels the labels associated with the switch member
    * @param keyword the token representing the 'case' or 'default' keyword
    * @param colon the colon separating the keyword or the expression from the statements
@@ -11467,6 +12943,7 @@ abstract class SwitchMember extends ASTNode {
 
   /**
    * Return the colon separating the keyword or the expression from the statements.
+   *
    * @return the colon separating the keyword or the expression from the statements
    */
   Token get colon => _colon;
@@ -11479,24 +12956,28 @@ abstract class SwitchMember extends ASTNode {
 
   /**
    * Return the token representing the 'case' or 'default' keyword.
+   *
    * @return the token representing the 'case' or 'default' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the labels associated with the switch member.
+   *
    * @return the labels associated with the switch member
    */
   NodeList<Label> get labels => _labels;
 
   /**
    * Return the statements that will be executed if this switch member is selected.
+   *
    * @return the statements that will be executed if this switch member is selected
    */
   NodeList<Statement> get statements => _statements;
 
   /**
    * Set the colon separating the keyword or the expression from the statements to the given token.
+   *
    * @param colon the colon separating the keyword or the expression from the statements
    */
   void set colon(Token colon2) {
@@ -11505,6 +12986,7 @@ abstract class SwitchMember extends ASTNode {
 
   /**
    * Set the token representing the 'case' or 'default' keyword to the given token.
+   *
    * @param keyword the token representing the 'case' or 'default' keyword
    */
   void set keyword(Token keyword2) {
@@ -11512,11 +12994,13 @@ abstract class SwitchMember extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code SwitchStatement} represent a switch statement.
+ * Instances of the class `SwitchStatement` represent a switch statement.
+ *
  * <pre>
  * switchStatement ::=
- * 'switch' '(' {@link Expression expression} ')' '{' {@link SwitchCase switchCase}* {@link SwitchDefault defaultCase}? '}'
+ *     'switch' '(' [Expression] ')' '{' [SwitchCase]* [SwitchDefault]? '}'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class SwitchStatement extends Statement {
@@ -11558,6 +13042,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Initialize a newly created switch statement.
+   *
    * @param keyword the token representing the 'switch' keyword
    * @param leftParenthesis the left parenthesis
    * @param expression the expression used to determine which of the switch members will be selected
@@ -11579,6 +13064,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Initialize a newly created switch statement.
+   *
    * @param keyword the token representing the 'switch' keyword
    * @param leftParenthesis the left parenthesis
    * @param expression the expression used to determine which of the switch members will be selected
@@ -11594,42 +13080,49 @@ class SwitchStatement extends Statement {
 
   /**
    * Return the expression used to determine which of the switch members will be selected.
+   *
    * @return the expression used to determine which of the switch members will be selected
    */
   Expression get expression => _expression;
 
   /**
    * Return the token representing the 'switch' keyword.
+   *
    * @return the token representing the 'switch' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the left curly bracket.
+   *
    * @return the left curly bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the switch members that can be selected by the expression.
+   *
    * @return the switch members that can be selected by the expression
    */
   NodeList<SwitchMember> get members => _members;
 
   /**
    * Return the right curly bracket.
+   *
    * @return the right curly bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
@@ -11637,6 +13130,7 @@ class SwitchStatement extends Statement {
   /**
    * Set the expression used to determine which of the switch members will be selected to the given
    * expression.
+   *
    * @param expression the expression used to determine which of the switch members will be selected
    */
   void set expression(Expression expression2) {
@@ -11645,6 +13139,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Set the token representing the 'switch' keyword to the given token.
+   *
    * @param keyword the token representing the 'switch' keyword
    */
   void set keyword(Token keyword2) {
@@ -11653,6 +13148,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Set the left curly bracket to the given token.
+   *
    * @param leftBracket the left curly bracket
    */
   void set leftBracket(Token leftBracket2) {
@@ -11661,6 +13157,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param leftParenthesis the left parenthesis
    */
   void set leftParenthesis(Token leftParenthesis2) {
@@ -11669,6 +13166,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Set the right curly bracket to the given token.
+   *
    * @param rightBracket the right curly bracket
    */
   void set rightBracket(Token rightBracket2) {
@@ -11677,6 +13175,7 @@ class SwitchStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param rightParenthesis the right parenthesis
    */
   void set rightParenthesis(Token rightParenthesis2) {
@@ -11688,11 +13187,84 @@ class SwitchStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code ThisExpression} represent a this expression.
+ * Instances of the class `SymbolLiteral` represent a symbol literal expression.
+ *
+ * <pre>
+ * symbolLiteral ::=
+ *     '#' [SimpleIdentifier] ('.' [SimpleIdentifier])*
+ * </pre>
+ *
+ * @coverage dart.engine.ast
+ */
+class SymbolLiteral extends Literal {
+
+  /**
+   * The token introducing the literal.
+   */
+  Token _poundSign;
+
+  /**
+   * The components of the literal.
+   */
+  NodeList<SimpleIdentifier> _components;
+
+  /**
+   * Initialize a newly created symbol literal.
+   *
+   * @param poundSign the token introducing the literal
+   * @param components the components of the literal
+   */
+  SymbolLiteral.full(Token poundSign, List<SimpleIdentifier> components) {
+    this._components = new NodeList<SimpleIdentifier>(this);
+    this._poundSign = poundSign;
+    this._components.addAll(components);
+  }
+
+  /**
+   * Initialize a newly created symbol literal.
+   *
+   * @param poundSign the token introducing the literal
+   * @param components the components of the literal
+   */
+  SymbolLiteral({Token poundSign, List<SimpleIdentifier> components}) : this.full(poundSign, components);
+  accept(ASTVisitor visitor) => visitor.visitSymbolLiteral(this);
+  Token get beginToken => _poundSign;
+
+  /**
+   * Return the components of the literal.
+   *
+   * @return the components of the literal
+   */
+  NodeList<SimpleIdentifier> get components => _components;
+  Token get endToken => _components.endToken;
+
+  /**
+   * Return the token introducing the literal.
+   *
+   * @return the token introducing the literal
+   */
+  Token get poundSign => _poundSign;
+
+  /**
+   * Set the token introducing the literal to the given token.
+   *
+   * @param poundSign the token introducing the literal
+   */
+  void set poundSign(Token poundSign2) {
+    this._poundSign = poundSign2;
+  }
+  void visitChildren(ASTVisitor<Object> visitor) {
+    _components.accept(visitor);
+  }
+}
+/**
+ * Instances of the class `ThisExpression` represent a this expression.
+ *
  * <pre>
  * thisExpression ::=
- * 'this'
+ *     'this'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ThisExpression extends Expression {
@@ -11704,6 +13276,7 @@ class ThisExpression extends Expression {
 
   /**
    * Initialize a newly created this expression.
+   *
    * @param keyword the token representing the keyword
    */
   ThisExpression.full(Token keyword) {
@@ -11712,6 +13285,7 @@ class ThisExpression extends Expression {
 
   /**
    * Initialize a newly created this expression.
+   *
    * @param keyword the token representing the keyword
    */
   ThisExpression({Token keyword}) : this.full(keyword);
@@ -11721,12 +13295,14 @@ class ThisExpression extends Expression {
 
   /**
    * Return the token representing the keyword.
+   *
    * @return the token representing the keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Set the token representing the keyword to the given token.
+   *
    * @param keyword the token representing the keyword
    */
   void set keyword(Token keyword2) {
@@ -11736,10 +13312,13 @@ class ThisExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code ThrowExpression} represent a throw expression.
+ * Instances of the class `ThrowExpression` represent a throw expression.
+ *
  * <pre>
  * throwExpression ::=
- * 'throw' {@link Expression expression}</pre>
+ *     'throw' [Expression]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class ThrowExpression extends Expression {
@@ -11756,6 +13335,7 @@ class ThrowExpression extends Expression {
 
   /**
    * Initialize a newly created throw expression.
+   *
    * @param keyword the token representing the 'throw' keyword
    * @param expression the expression computing the exception to be thrown
    */
@@ -11766,6 +13346,7 @@ class ThrowExpression extends Expression {
 
   /**
    * Initialize a newly created throw expression.
+   *
    * @param keyword the token representing the 'throw' keyword
    * @param expression the expression computing the exception to be thrown
    */
@@ -11781,18 +13362,21 @@ class ThrowExpression extends Expression {
 
   /**
    * Return the expression computing the exception to be thrown.
+   *
    * @return the expression computing the exception to be thrown
    */
   Expression get expression => _expression;
 
   /**
    * Return the token representing the 'throw' keyword.
+   *
    * @return the token representing the 'throw' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Set the expression computing the exception to be thrown to the given expression.
+   *
    * @param expression the expression computing the exception to be thrown
    */
   void set expression(Expression expression2) {
@@ -11801,6 +13385,7 @@ class ThrowExpression extends Expression {
 
   /**
    * Set the token representing the 'throw' keyword to the given token.
+   *
    * @param keyword the token representing the 'throw' keyword
    */
   void set keyword(Token keyword2) {
@@ -11811,13 +13396,15 @@ class ThrowExpression extends Expression {
   }
 }
 /**
- * Instances of the class {@code TopLevelVariableDeclaration} represent the declaration of one or
+ * Instances of the class `TopLevelVariableDeclaration` represent the declaration of one or
  * more top-level variables of the same type.
+ *
  * <pre>
  * topLevelVariableDeclaration ::=
- * ('final' | 'const') type? staticFinalDeclarationList ';'
- * | variableDeclaration ';'
+ *     ('final' | 'const') type? staticFinalDeclarationList ';'
+ *   | variableDeclaration ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class TopLevelVariableDeclaration extends CompilationUnitMember {
@@ -11834,6 +13421,7 @@ class TopLevelVariableDeclaration extends CompilationUnitMember {
 
   /**
    * Initialize a newly created top-level variable declaration.
+   *
    * @param comment the documentation comment associated with this variable
    * @param metadata the annotations associated with this variable
    * @param variableList the top-level variables being declared
@@ -11846,6 +13434,7 @@ class TopLevelVariableDeclaration extends CompilationUnitMember {
 
   /**
    * Initialize a newly created top-level variable declaration.
+   *
    * @param comment the documentation comment associated with this variable
    * @param metadata the annotations associated with this variable
    * @param variableList the top-level variables being declared
@@ -11858,18 +13447,21 @@ class TopLevelVariableDeclaration extends CompilationUnitMember {
 
   /**
    * Return the semicolon terminating the declaration.
+   *
    * @return the semicolon terminating the declaration
    */
   Token get semicolon => _semicolon;
 
   /**
    * Return the top-level variables being declared.
+   *
    * @return the top-level variables being declared
    */
   VariableDeclarationList get variables => _variableList;
 
   /**
    * Set the semicolon terminating the declaration to the given token.
+   *
    * @param semicolon the semicolon terminating the declaration
    */
   void set semicolon(Token semicolon2) {
@@ -11878,6 +13470,7 @@ class TopLevelVariableDeclaration extends CompilationUnitMember {
 
   /**
    * Set the top-level variables being declared to the given list of variables.
+   *
    * @param variableList the top-level variables being declared
    */
   void set variables(VariableDeclarationList variableList) {
@@ -11890,12 +13483,16 @@ class TopLevelVariableDeclaration extends CompilationUnitMember {
   Token get firstTokenAfterCommentAndMetadata => _variableList.beginToken;
 }
 /**
- * Instances of the class {@code TryStatement} represent a try statement.
+ * Instances of the class `TryStatement` represent a try statement.
+ *
  * <pre>
  * tryStatement ::=
- * 'try' {@link Block block} ({@link CatchClause catchClause}+ finallyClause? | finallyClause)
+ *     'try' [Block] ([CatchClause]+ finallyClause? | finallyClause)
+ *
  * finallyClause ::=
- * 'finally' {@link Block block}</pre>
+ *     'finally' [Block]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class TryStatement extends Statement {
@@ -11916,19 +13513,20 @@ class TryStatement extends Statement {
   NodeList<CatchClause> _catchClauses;
 
   /**
-   * The token representing the 'finally' keyword, or {@code null} if the statement does not contain
+   * The token representing the 'finally' keyword, or `null` if the statement does not contain
    * a finally clause.
    */
   Token _finallyKeyword;
 
   /**
-   * The finally clause contained in the try statement, or {@code null} if the statement does not
+   * The finally clause contained in the try statement, or `null` if the statement does not
    * contain a finally clause.
    */
   Block _finallyClause;
 
   /**
    * Initialize a newly created try statement.
+   *
    * @param tryKeyword the token representing the 'try' keyword
    * @param body the body of the statement
    * @param catchClauses the catch clauses contained in the try statement
@@ -11946,6 +13544,7 @@ class TryStatement extends Statement {
 
   /**
    * Initialize a newly created try statement.
+   *
    * @param tryKeyword the token representing the 'try' keyword
    * @param body the body of the statement
    * @param catchClauses the catch clauses contained in the try statement
@@ -11958,12 +13557,14 @@ class TryStatement extends Statement {
 
   /**
    * Return the body of the statement.
+   *
    * @return the body of the statement
    */
   Block get body => _body;
 
   /**
    * Return the catch clauses contained in the try statement.
+   *
    * @return the catch clauses contained in the try statement
    */
   NodeList<CatchClause> get catchClauses => _catchClauses;
@@ -11979,27 +13580,31 @@ class TryStatement extends Statement {
   }
 
   /**
-   * Return the finally clause contained in the try statement, or {@code null} if the statement does
+   * Return the finally clause contained in the try statement, or `null` if the statement does
    * not contain a finally clause.
+   *
    * @return the finally clause contained in the try statement
    */
   Block get finallyClause => _finallyClause;
 
   /**
-   * Return the token representing the 'finally' keyword, or {@code null} if the statement does not
+   * Return the token representing the 'finally' keyword, or `null` if the statement does not
    * contain a finally clause.
+   *
    * @return the token representing the 'finally' keyword
    */
   Token get finallyKeyword => _finallyKeyword;
 
   /**
    * Return the token representing the 'try' keyword.
+   *
    * @return the token representing the 'try' keyword
    */
   Token get tryKeyword => _tryKeyword;
 
   /**
    * Set the body of the statement to the given block.
+   *
    * @param block the body of the statement
    */
   void set body(Block block) {
@@ -12008,6 +13613,7 @@ class TryStatement extends Statement {
 
   /**
    * Set the finally clause contained in the try statement to the given block.
+   *
    * @param block the finally clause contained in the try statement
    */
   void set finallyClause(Block block) {
@@ -12016,6 +13622,7 @@ class TryStatement extends Statement {
 
   /**
    * Set the token representing the 'finally' keyword to the given token.
+   *
    * @param finallyKeyword the token representing the 'finally' keyword
    */
   void set finallyKeyword(Token finallyKeyword2) {
@@ -12024,6 +13631,7 @@ class TryStatement extends Statement {
 
   /**
    * Set the token representing the 'try' keyword to the given token.
+   *
    * @param tryKeyword the token representing the 'try' keyword
    */
   void set tryKeyword(Token tryKeyword2) {
@@ -12036,14 +13644,17 @@ class TryStatement extends Statement {
   }
 }
 /**
- * The abstract class {@code TypeAlias} defines the behavior common to declarations of type aliases.
+ * The abstract class `TypeAlias` defines the behavior common to declarations of type aliases.
+ *
  * <pre>
  * typeAlias ::=
- * 'typedef' typeAliasBody
+ *     'typedef' typeAliasBody
+ *
  * typeAliasBody ::=
- * classTypeAlias
- * | functionTypeAlias
+ *     classTypeAlias
+ *   | functionTypeAlias
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class TypeAlias extends CompilationUnitMember {
@@ -12060,6 +13671,7 @@ abstract class TypeAlias extends CompilationUnitMember {
 
   /**
    * Initialize a newly created type alias.
+   *
    * @param comment the documentation comment associated with this type alias
    * @param metadata the annotations associated with this type alias
    * @param keyword the token representing the 'typedef' keyword
@@ -12072,6 +13684,7 @@ abstract class TypeAlias extends CompilationUnitMember {
 
   /**
    * Initialize a newly created type alias.
+   *
    * @param comment the documentation comment associated with this type alias
    * @param metadata the annotations associated with this type alias
    * @param keyword the token representing the 'typedef' keyword
@@ -12082,18 +13695,21 @@ abstract class TypeAlias extends CompilationUnitMember {
 
   /**
    * Return the token representing the 'typedef' keyword.
+   *
    * @return the token representing the 'typedef' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the semicolon terminating the declaration.
+   *
    * @return the semicolon terminating the declaration
    */
   Token get semicolon => _semicolon;
 
   /**
    * Set the token representing the 'typedef' keyword to the given token.
+   *
    * @param keyword the token representing the 'typedef' keyword
    */
   void set keyword(Token keyword2) {
@@ -12102,6 +13718,7 @@ abstract class TypeAlias extends CompilationUnitMember {
 
   /**
    * Set the semicolon terminating the declaration to the given token.
+   *
    * @param semicolon the semicolon terminating the declaration
    */
   void set semicolon(Token semicolon2) {
@@ -12110,11 +13727,13 @@ abstract class TypeAlias extends CompilationUnitMember {
   Token get firstTokenAfterCommentAndMetadata => _keyword;
 }
 /**
- * Instances of the class {@code TypeArgumentList} represent a list of type arguments.
+ * Instances of the class `TypeArgumentList` represent a list of type arguments.
+ *
  * <pre>
  * typeArguments ::=
- * '<' typeName (',' typeName)* '>'
+ *     '<' typeName (',' typeName)* '>'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class TypeArgumentList extends ASTNode {
@@ -12136,6 +13755,7 @@ class TypeArgumentList extends ASTNode {
 
   /**
    * Initialize a newly created list of type arguments.
+   *
    * @param leftBracket the left bracket
    * @param arguments the type arguments associated with the type
    * @param rightBracket the right bracket
@@ -12149,6 +13769,7 @@ class TypeArgumentList extends ASTNode {
 
   /**
    * Initialize a newly created list of type arguments.
+   *
    * @param leftBracket the left bracket
    * @param arguments the type arguments associated with the type
    * @param rightBracket the right bracket
@@ -12158,6 +13779,7 @@ class TypeArgumentList extends ASTNode {
 
   /**
    * Return the type arguments associated with the type.
+   *
    * @return the type arguments associated with the type
    */
   NodeList<TypeName> get arguments => _arguments;
@@ -12166,18 +13788,21 @@ class TypeArgumentList extends ASTNode {
 
   /**
    * Return the left bracket.
+   *
    * @return the left bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the right bracket.
+   *
    * @return the right bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
    * Set the left bracket to the given token.
+   *
    * @param leftBracket the left bracket
    */
   void set leftBracket(Token leftBracket2) {
@@ -12186,6 +13811,7 @@ class TypeArgumentList extends ASTNode {
 
   /**
    * Set the right bracket to the given token.
+   *
    * @param rightBracket the right bracket
    */
   void set rightBracket(Token rightBracket2) {
@@ -12196,11 +13822,14 @@ class TypeArgumentList extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code TypeName} represent the name of a type, which can optionally
+ * Instances of the class `TypeName` represent the name of a type, which can optionally
  * include type arguments.
+ *
  * <pre>
- * typeName ::={@link Identifier identifier} typeArguments?
+ * typeName ::=
+ *     [Identifier] typeArguments?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class TypeName extends ASTNode {
@@ -12211,20 +13840,21 @@ class TypeName extends ASTNode {
   Identifier _name;
 
   /**
-   * The type arguments associated with the type, or {@code null} if there are no type arguments.
+   * The type arguments associated with the type, or `null` if there are no type arguments.
    */
   TypeArgumentList _typeArguments;
 
   /**
-   * The type being named, or {@code null} if the AST structure has not been resolved.
+   * The type being named, or `null` if the AST structure has not been resolved.
    */
   Type2 _type;
 
   /**
    * Initialize a newly created type name.
+   *
    * @param name the name of the type
-   * @param typeArguments the type arguments associated with the type, or {@code null} if there are
-   * no type arguments
+   * @param typeArguments the type arguments associated with the type, or `null` if there are
+   *          no type arguments
    */
   TypeName.full(Identifier name, TypeArgumentList typeArguments) {
     this._name = becomeParentOf(name);
@@ -12233,9 +13863,10 @@ class TypeName extends ASTNode {
 
   /**
    * Initialize a newly created type name.
+   *
    * @param name the name of the type
-   * @param typeArguments the type arguments associated with the type, or {@code null} if there are
-   * no type arguments
+   * @param typeArguments the type arguments associated with the type, or `null` if there are
+   *          no type arguments
    */
   TypeName({Identifier name, TypeArgumentList typeArguments}) : this.full(name, typeArguments);
   accept(ASTVisitor visitor) => visitor.visitTypeName(this);
@@ -12249,26 +13880,30 @@ class TypeName extends ASTNode {
 
   /**
    * Return the name of the type.
+   *
    * @return the name of the type
    */
   Identifier get name => _name;
 
   /**
-   * Return the type being named, or {@code null} if the AST structure has not been resolved.
+   * Return the type being named, or `null` if the AST structure has not been resolved.
+   *
    * @return the type being named
    */
   Type2 get type => _type;
 
   /**
-   * Return the type arguments associated with the type, or {@code null} if there are no type
+   * Return the type arguments associated with the type, or `null` if there are no type
    * arguments.
+   *
    * @return the type arguments associated with the type
    */
   TypeArgumentList get typeArguments => _typeArguments;
-  bool isSynthetic() => _name.isSynthetic() && _typeArguments == null;
+  bool get isSynthetic => _name.isSynthetic && _typeArguments == null;
 
   /**
    * Set the name of the type to the given identifier.
+   *
    * @param identifier the name of the type
    */
   void set name(Identifier identifier) {
@@ -12277,6 +13912,7 @@ class TypeName extends ASTNode {
 
   /**
    * Set the type being named to the given type.
+   *
    * @param type the type being named
    */
   void set type(Type2 type2) {
@@ -12285,6 +13921,7 @@ class TypeName extends ASTNode {
 
   /**
    * Set the type arguments associated with the type to the given type arguments.
+   *
    * @param typeArguments the type arguments associated with the type
    */
   void set typeArguments(TypeArgumentList typeArguments2) {
@@ -12296,10 +13933,13 @@ class TypeName extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code TypeParameter} represent a type parameter.
+ * Instances of the class `TypeParameter` represent a type parameter.
+ *
  * <pre>
- * typeParameter ::={@link SimpleIdentifier name} ('extends' {@link TypeName bound})?
+ * typeParameter ::=
+ *     [SimpleIdentifier] ('extends' [TypeName])?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class TypeParameter extends Declaration {
@@ -12310,19 +13950,20 @@ class TypeParameter extends Declaration {
   SimpleIdentifier _name;
 
   /**
-   * The token representing the 'extends' keyword, or {@code null} if there was no explicit upper
+   * The token representing the 'extends' keyword, or `null` if there was no explicit upper
    * bound.
    */
   Token _keyword;
 
   /**
-   * The name of the upper bound for legal arguments, or {@code null} if there was no explicit upper
+   * The name of the upper bound for legal arguments, or `null` if there was no explicit upper
    * bound.
    */
   TypeName _bound;
 
   /**
    * Initialize a newly created type parameter.
+   *
    * @param comment the documentation comment associated with the type parameter
    * @param metadata the annotations associated with the type parameter
    * @param name the name of the type parameter
@@ -12337,6 +13978,7 @@ class TypeParameter extends Declaration {
 
   /**
    * Initialize a newly created type parameter.
+   *
    * @param comment the documentation comment associated with the type parameter
    * @param metadata the annotations associated with the type parameter
    * @param name the name of the type parameter
@@ -12347,8 +13989,9 @@ class TypeParameter extends Declaration {
   accept(ASTVisitor visitor) => visitor.visitTypeParameter(this);
 
   /**
-   * Return the name of the upper bound for legal arguments, or {@code null} if there was no
+   * Return the name of the upper bound for legal arguments, or `null` if there was no
    * explicit upper bound.
+   *
    * @return the name of the upper bound for legal arguments
    */
   TypeName get bound => _bound;
@@ -12362,18 +14005,21 @@ class TypeParameter extends Declaration {
 
   /**
    * Return the token representing the 'assert' keyword.
+   *
    * @return the token representing the 'assert' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the name of the type parameter.
+   *
    * @return the name of the type parameter
    */
   SimpleIdentifier get name => _name;
 
   /**
    * Set the name of the upper bound for legal arguments to the given type name.
+   *
    * @param typeName the name of the upper bound for legal arguments
    */
   void set bound(TypeName typeName) {
@@ -12382,6 +14028,7 @@ class TypeParameter extends Declaration {
 
   /**
    * Set the token representing the 'assert' keyword to the given token.
+   *
    * @param keyword the token representing the 'assert' keyword
    */
   void set keyword(Token keyword2) {
@@ -12390,6 +14037,7 @@ class TypeParameter extends Declaration {
 
   /**
    * Set the name of the type parameter to the given identifier.
+   *
    * @param identifier the name of the type parameter
    */
   void set name(SimpleIdentifier identifier) {
@@ -12403,11 +14051,13 @@ class TypeParameter extends Declaration {
   Token get firstTokenAfterCommentAndMetadata => _name.beginToken;
 }
 /**
- * Instances of the class {@code TypeParameterList} represent type parameters within a declaration.
+ * Instances of the class `TypeParameterList` represent type parameters within a declaration.
+ *
  * <pre>
  * typeParameterList ::=
- * '<' {@link TypeParameter typeParameter} (',' {@link TypeParameter typeParameter})* '>'
+ *     '<' [TypeParameter] (',' [TypeParameter])* '>'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class TypeParameterList extends ASTNode {
@@ -12429,6 +14079,7 @@ class TypeParameterList extends ASTNode {
 
   /**
    * Initialize a newly created list of type parameters.
+   *
    * @param leftBracket the left angle bracket
    * @param typeParameters the type parameters in the list
    * @param rightBracket the right angle bracket
@@ -12442,6 +14093,7 @@ class TypeParameterList extends ASTNode {
 
   /**
    * Initialize a newly created list of type parameters.
+   *
    * @param leftBracket the left angle bracket
    * @param typeParameters the type parameters in the list
    * @param rightBracket the right angle bracket
@@ -12453,18 +14105,21 @@ class TypeParameterList extends ASTNode {
 
   /**
    * Return the left angle bracket.
+   *
    * @return the left angle bracket
    */
   Token get leftBracket => _leftBracket;
 
   /**
    * Return the right angle bracket.
+   *
    * @return the right angle bracket
    */
   Token get rightBracket => _rightBracket;
 
   /**
    * Return the type parameters for the type.
+   *
    * @return the type parameters for the type
    */
   NodeList<TypeParameter> get typeParameters => _typeParameters;
@@ -12473,31 +14128,37 @@ class TypeParameterList extends ASTNode {
   }
 }
 /**
- * The abstract class {@code TypedLiteral} defines the behavior common to literals that have a type
+ * The abstract class `TypedLiteral` defines the behavior common to literals that have a type
  * associated with them.
+ *
  * <pre>
- * listLiteral ::={@link ListLiteral listLiteral}| {@link MapLiteral mapLiteral}</pre>
+ * listLiteral ::=
+ *     [ListLiteral]
+ *   | [MapLiteral]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class TypedLiteral extends Literal {
 
   /**
-   * The const modifier associated with this literal, or {@code null} if the literal is not a
+   * The const modifier associated with this literal, or `null` if the literal is not a
    * constant.
    */
   Token _modifier;
 
   /**
-   * The type argument associated with this literal, or {@code null} if no type arguments were
+   * The type argument associated with this literal, or `null` if no type arguments were
    * declared.
    */
   TypeArgumentList _typeArguments;
 
   /**
    * Initialize a newly created typed literal.
+   *
    * @param modifier the const modifier associated with this literal
-   * @param typeArguments the type argument associated with this literal, or {@code null} if no type
-   * arguments were declared
+   * @param typeArguments the type argument associated with this literal, or `null` if no type
+   *          arguments were declared
    */
   TypedLiteral.full(Token modifier, TypeArgumentList typeArguments) {
     this._modifier = modifier;
@@ -12506,27 +14167,31 @@ abstract class TypedLiteral extends Literal {
 
   /**
    * Initialize a newly created typed literal.
+   *
    * @param modifier the const modifier associated with this literal
-   * @param typeArguments the type argument associated with this literal, or {@code null} if no type
-   * arguments were declared
+   * @param typeArguments the type argument associated with this literal, or `null` if no type
+   *          arguments were declared
    */
   TypedLiteral({Token modifier, TypeArgumentList typeArguments}) : this.full(modifier, typeArguments);
 
   /**
    * Return the const modifier associated with this literal.
+   *
    * @return the const modifier associated with this literal
    */
   Token get modifier => _modifier;
 
   /**
-   * Return the type argument associated with this literal, or {@code null} if no type arguments
+   * Return the type argument associated with this literal, or `null` if no type arguments
    * were declared.
+   *
    * @return the type argument associated with this literal
    */
   TypeArgumentList get typeArguments => _typeArguments;
 
   /**
    * Set the modifiers associated with this literal to the given modifiers.
+   *
    * @param modifiers the modifiers associated with this literal
    */
   void set modifier(Token modifier2) {
@@ -12535,6 +14200,7 @@ abstract class TypedLiteral extends Literal {
 
   /**
    * Set the type argument associated with this literal to the given arguments.
+   *
    * @param typeArguments the type argument associated with this literal
    */
   void set typeArguments(TypeArgumentList typeArguments2) {
@@ -12545,10 +14211,16 @@ abstract class TypedLiteral extends Literal {
   }
 }
 /**
- * The abstract class {@code UriBasedDirective} defines the behavior common to nodes that represent
+ * The abstract class `UriBasedDirective` defines the behavior common to nodes that represent
  * a directive that references a URI.
+ *
  * <pre>
- * uriBasedDirective ::={@link ExportDirective exportDirective}| {@link ImportDirective importDirective}| {@link PartDirective partDirective}</pre>
+ * uriBasedDirective ::=
+ *     [ExportDirective]
+ *   | [ImportDirective]
+ *   | [PartDirective]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 abstract class UriBasedDirective extends Directive {
@@ -12560,6 +14232,7 @@ abstract class UriBasedDirective extends Directive {
 
   /**
    * Initialize a newly create URI-based directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param uri the URI referenced by this directive
@@ -12570,6 +14243,7 @@ abstract class UriBasedDirective extends Directive {
 
   /**
    * Initialize a newly create URI-based directive.
+   *
    * @param comment the documentation comment associated with this directive
    * @param metadata the annotations associated with the directive
    * @param uri the URI referenced by this directive
@@ -12578,20 +14252,23 @@ abstract class UriBasedDirective extends Directive {
 
   /**
    * Return the URI referenced by this directive.
+   *
    * @return the URI referenced by this directive
    */
   StringLiteral get uri => _uri;
 
   /**
-   * Return the element associated with the URI of this directive, or {@code null} if the AST
+   * Return the element associated with the URI of this directive, or `null` if the AST
    * structure has not been resolved or if this URI could not be resolved. Examples of the latter
    * case include a directive that contains an invalid URL or a URL that does not exist.
+   *
    * @return the element associated with this directive
    */
   Element get uriElement;
 
   /**
    * Set the URI referenced by this directive to the given URI.
+   *
    * @param uri the URI referenced by this directive
    */
   void set uri(StringLiteral uri2) {
@@ -12603,11 +14280,15 @@ abstract class UriBasedDirective extends Directive {
   }
 }
 /**
- * Instances of the class {@code VariableDeclaration} represent an identifier that has an initial
- * value associated with it. Instances of this class are always children of the class{@link VariableDeclarationList}.
+ * Instances of the class `VariableDeclaration` represent an identifier that has an initial
+ * value associated with it. Instances of this class are always children of the class
+ * [VariableDeclarationList].
+ *
  * <pre>
- * variableDeclaration ::={@link SimpleIdentifier identifier} ('=' {@link Expression initialValue})?
+ * variableDeclaration ::=
+ *     [SimpleIdentifier] ('=' [Expression])?
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class VariableDeclaration extends Declaration {
@@ -12618,19 +14299,20 @@ class VariableDeclaration extends Declaration {
   SimpleIdentifier _name;
 
   /**
-   * The equal sign separating the variable name from the initial value, or {@code null} if the
+   * The equal sign separating the variable name from the initial value, or `null` if the
    * initial value was not specified.
    */
   Token _equals;
 
   /**
-   * The expression used to compute the initial value for the variable, or {@code null} if the
+   * The expression used to compute the initial value for the variable, or `null` if the
    * initial value was not specified.
    */
   Expression _initializer;
 
   /**
    * Initialize a newly created variable declaration.
+   *
    * @param comment the documentation comment associated with this declaration
    * @param metadata the annotations associated with this member
    * @param name the name of the variable being declared
@@ -12645,6 +14327,7 @@ class VariableDeclaration extends Declaration {
 
   /**
    * Initialize a newly created variable declaration.
+   *
    * @param comment the documentation comment associated with this declaration
    * @param metadata the annotations associated with this member
    * @param name the name of the variable being declared
@@ -12679,47 +14362,53 @@ class VariableDeclaration extends Declaration {
   }
 
   /**
-   * Return the equal sign separating the variable name from the initial value, or {@code null} if
+   * Return the equal sign separating the variable name from the initial value, or `null` if
    * the initial value was not specified.
+   *
    * @return the equal sign separating the variable name from the initial value
    */
   Token get equals => _equals;
 
   /**
-   * Return the expression used to compute the initial value for the variable, or {@code null} if
+   * Return the expression used to compute the initial value for the variable, or `null` if
    * the initial value was not specified.
+   *
    * @return the expression used to compute the initial value for the variable
    */
   Expression get initializer => _initializer;
 
   /**
    * Return the name of the variable being declared.
+   *
    * @return the name of the variable being declared
    */
   SimpleIdentifier get name => _name;
 
   /**
-   * Return {@code true} if this variable was declared with the 'const' modifier.
-   * @return {@code true} if this variable was declared with the 'const' modifier
+   * Return `true` if this variable was declared with the 'const' modifier.
+   *
+   * @return `true` if this variable was declared with the 'const' modifier
    */
-  bool isConst() {
+  bool get isConst {
     ASTNode parent = this.parent;
-    return parent is VariableDeclarationList && ((parent as VariableDeclarationList)).isConst();
+    return parent is VariableDeclarationList && ((parent as VariableDeclarationList)).isConst;
   }
 
   /**
-   * Return {@code true} if this variable was declared with the 'final' modifier. Variables that are
-   * declared with the 'const' modifier will return {@code false} even though they are implicitly
+   * Return `true` if this variable was declared with the 'final' modifier. Variables that are
+   * declared with the 'const' modifier will return `false` even though they are implicitly
    * final.
-   * @return {@code true} if this variable was declared with the 'final' modifier
+   *
+   * @return `true` if this variable was declared with the 'final' modifier
    */
-  bool isFinal() {
+  bool get isFinal {
     ASTNode parent = this.parent;
-    return parent is VariableDeclarationList && ((parent as VariableDeclarationList)).isFinal();
+    return parent is VariableDeclarationList && ((parent as VariableDeclarationList)).isFinal;
   }
 
   /**
    * Set the equal sign separating the variable name from the initial value to the given token.
+   *
    * @param equals the equal sign separating the variable name from the initial value
    */
   void set equals(Token equals2) {
@@ -12728,6 +14417,7 @@ class VariableDeclaration extends Declaration {
 
   /**
    * Set the expression used to compute the initial value for the variable to the given expression.
+   *
    * @param initializer the expression used to compute the initial value for the variable
    */
   void set initializer(Expression initializer2) {
@@ -12736,6 +14426,7 @@ class VariableDeclaration extends Declaration {
 
   /**
    * Set the name of the variable being declared to the given identifier.
+   *
    * @param name the name of the variable being declared
    */
   void set name(SimpleIdentifier name2) {
@@ -12749,28 +14440,32 @@ class VariableDeclaration extends Declaration {
   Token get firstTokenAfterCommentAndMetadata => _name.beginToken;
 }
 /**
- * Instances of the class {@code VariableDeclarationList} represent the declaration of one or more
+ * Instances of the class `VariableDeclarationList` represent the declaration of one or more
  * variables of the same type.
+ *
  * <pre>
  * variableDeclarationList ::=
- * finalConstVarOrType {@link VariableDeclaration variableDeclaration} (',' {@link VariableDeclaration variableDeclaration})
+ *     finalConstVarOrType [VariableDeclaration] (',' [VariableDeclaration])*
+ *
  * finalConstVarOrType ::=
- * | 'final' {@link TypeName type}?
- * | 'const' {@link TypeName type}?
- * | 'var'
- * | {@link TypeName type}</pre>
+ *   | 'final' [TypeName]?
+ *   | 'const' [TypeName]?
+ *   | 'var'
+ *   | [TypeName]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class VariableDeclarationList extends AnnotatedNode {
 
   /**
-   * The token representing the 'final', 'const' or 'var' keyword, or {@code null} if no keyword was
+   * The token representing the 'final', 'const' or 'var' keyword, or `null` if no keyword was
    * included.
    */
   Token _keyword;
 
   /**
-   * The type of the variables being declared, or {@code null} if no type was provided.
+   * The type of the variables being declared, or `null` if no type was provided.
    */
   TypeName _type;
 
@@ -12781,6 +14476,7 @@ class VariableDeclarationList extends AnnotatedNode {
 
   /**
    * Initialize a newly created variable declaration list.
+   *
    * @param comment the documentation comment associated with this declaration list
    * @param metadata the annotations associated with this declaration list
    * @param keyword the token representing the 'final', 'const' or 'var' keyword
@@ -12796,6 +14492,7 @@ class VariableDeclarationList extends AnnotatedNode {
 
   /**
    * Initialize a newly created variable declaration list.
+   *
    * @param comment the documentation comment associated with this declaration list
    * @param metadata the annotations associated with this declaration list
    * @param keyword the token representing the 'final', 'const' or 'var' keyword
@@ -12807,40 +14504,46 @@ class VariableDeclarationList extends AnnotatedNode {
   Token get endToken => _variables.endToken;
 
   /**
-   * Return the token representing the 'final', 'const' or 'var' keyword, or {@code null} if no
+   * Return the token representing the 'final', 'const' or 'var' keyword, or `null` if no
    * keyword was included.
+   *
    * @return the token representing the 'final', 'const' or 'var' keyword
    */
   Token get keyword => _keyword;
 
   /**
-   * Return the type of the variables being declared, or {@code null} if no type was provided.
+   * Return the type of the variables being declared, or `null` if no type was provided.
+   *
    * @return the type of the variables being declared
    */
   TypeName get type => _type;
 
   /**
    * Return a list containing the individual variables being declared.
+   *
    * @return a list containing the individual variables being declared
    */
   NodeList<VariableDeclaration> get variables => _variables;
 
   /**
-   * Return {@code true} if the variables in this list were declared with the 'const' modifier.
-   * @return {@code true} if the variables in this list were declared with the 'const' modifier
+   * Return `true` if the variables in this list were declared with the 'const' modifier.
+   *
+   * @return `true` if the variables in this list were declared with the 'const' modifier
    */
-  bool isConst() => _keyword is KeywordToken && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
+  bool get isConst => _keyword is KeywordToken && identical(((_keyword as KeywordToken)).keyword, Keyword.CONST);
 
   /**
-   * Return {@code true} if the variables in this list were declared with the 'final' modifier.
-   * Variables that are declared with the 'const' modifier will return {@code false} even though
+   * Return `true` if the variables in this list were declared with the 'final' modifier.
+   * Variables that are declared with the 'const' modifier will return `false` even though
    * they are implicitly final.
-   * @return {@code true} if the variables in this list were declared with the 'final' modifier
+   *
+   * @return `true` if the variables in this list were declared with the 'final' modifier
    */
-  bool isFinal() => _keyword is KeywordToken && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
+  bool get isFinal => _keyword is KeywordToken && identical(((_keyword as KeywordToken)).keyword, Keyword.FINAL);
 
   /**
    * Set the token representing the 'final', 'const' or 'var' keyword to the given token.
+   *
    * @param keyword the token representing the 'final', 'const' or 'var' keyword
    */
   void set keyword(Token keyword2) {
@@ -12849,6 +14552,7 @@ class VariableDeclarationList extends AnnotatedNode {
 
   /**
    * Set the type of the variables being declared to the given type name.
+   *
    * @param typeName the type of the variables being declared
    */
   void set type(TypeName typeName) {
@@ -12868,11 +14572,14 @@ class VariableDeclarationList extends AnnotatedNode {
   }
 }
 /**
- * Instances of the class {@code VariableDeclarationStatement} represent a list of variables that
+ * Instances of the class `VariableDeclarationStatement` represent a list of variables that
  * are being declared in a context where a statement is required.
+ *
  * <pre>
- * variableDeclarationStatement ::={@link VariableDeclarationList variableList} ';'
+ * variableDeclarationStatement ::=
+ *     [VariableDeclarationList] ';'
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class VariableDeclarationStatement extends Statement {
@@ -12889,6 +14596,7 @@ class VariableDeclarationStatement extends Statement {
 
   /**
    * Initialize a newly created variable declaration statement.
+   *
    * @param variableList the fields being declared
    * @param semicolon the semicolon terminating the statement
    */
@@ -12899,6 +14607,7 @@ class VariableDeclarationStatement extends Statement {
 
   /**
    * Initialize a newly created variable declaration statement.
+   *
    * @param variableList the fields being declared
    * @param semicolon the semicolon terminating the statement
    */
@@ -12909,18 +14618,21 @@ class VariableDeclarationStatement extends Statement {
 
   /**
    * Return the semicolon terminating the statement.
+   *
    * @return the semicolon terminating the statement
    */
   Token get semicolon => _semicolon;
 
   /**
    * Return the variables being declared.
+   *
    * @return the variables being declared
    */
   VariableDeclarationList get variables => _variableList;
 
   /**
    * Set the semicolon terminating the statement to the given token.
+   *
    * @param semicolon the semicolon terminating the statement
    */
   void set semicolon(Token semicolon2) {
@@ -12929,6 +14641,7 @@ class VariableDeclarationStatement extends Statement {
 
   /**
    * Set the variables being declared to the given list of variables.
+   *
    * @param variableList the variables being declared
    */
   void set variables(VariableDeclarationList variableList2) {
@@ -12939,10 +14652,13 @@ class VariableDeclarationStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code WhileStatement} represent a while statement.
+ * Instances of the class `WhileStatement` represent a while statement.
+ *
  * <pre>
  * whileStatement ::=
- * 'while' '(' {@link Expression condition} ')' {@link Statement body}</pre>
+ *     'while' '(' [Expression] ')' [Statement]
+ * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class WhileStatement extends Statement {
@@ -12974,6 +14690,7 @@ class WhileStatement extends Statement {
 
   /**
    * Initialize a newly created while statement.
+   *
    * @param keyword the token representing the 'while' keyword
    * @param leftParenthesis the left parenthesis
    * @param condition the expression used to determine whether to execute the body of the loop
@@ -12990,6 +14707,7 @@ class WhileStatement extends Statement {
 
   /**
    * Initialize a newly created while statement.
+   *
    * @param keyword the token representing the 'while' keyword
    * @param leftParenthesis the left parenthesis
    * @param condition the expression used to determine whether to execute the body of the loop
@@ -13002,12 +14720,14 @@ class WhileStatement extends Statement {
 
   /**
    * Return the body of the loop.
+   *
    * @return the body of the loop
    */
   Statement get body => _body;
 
   /**
    * Return the expression used to determine whether to execute the body of the loop.
+   *
    * @return the expression used to determine whether to execute the body of the loop
    */
   Expression get condition => _condition;
@@ -13015,24 +14735,28 @@ class WhileStatement extends Statement {
 
   /**
    * Return the token representing the 'while' keyword.
+   *
    * @return the token representing the 'while' keyword
    */
   Token get keyword => _keyword;
 
   /**
    * Return the left parenthesis.
+   *
    * @return the left parenthesis
    */
   Token get leftParenthesis => _leftParenthesis;
 
   /**
    * Return the right parenthesis.
+   *
    * @return the right parenthesis
    */
   Token get rightParenthesis => _rightParenthesis;
 
   /**
    * Set the body of the loop to the given statement.
+   *
    * @param statement the body of the loop
    */
   void set body(Statement statement) {
@@ -13042,6 +14766,7 @@ class WhileStatement extends Statement {
   /**
    * Set the expression used to determine whether to execute the body of the loop to the given
    * expression.
+   *
    * @param expression the expression used to determine whether to execute the body of the loop
    */
   void set condition(Expression expression) {
@@ -13050,6 +14775,7 @@ class WhileStatement extends Statement {
 
   /**
    * Set the token representing the 'while' keyword to the given token.
+   *
    * @param keyword the token representing the 'while' keyword
    */
   void set keyword(Token keyword2) {
@@ -13058,6 +14784,7 @@ class WhileStatement extends Statement {
 
   /**
    * Set the left parenthesis to the given token.
+   *
    * @param leftParenthesis the left parenthesis
    */
   void set leftParenthesis(Token leftParenthesis2) {
@@ -13066,6 +14793,7 @@ class WhileStatement extends Statement {
 
   /**
    * Set the right parenthesis to the given token.
+   *
    * @param rightParenthesis the right parenthesis
    */
   void set rightParenthesis(Token rightParenthesis2) {
@@ -13077,11 +14805,13 @@ class WhileStatement extends Statement {
   }
 }
 /**
- * Instances of the class {@code WithClause} represent the with clause in a class declaration.
+ * Instances of the class `WithClause` represent the with clause in a class declaration.
+ *
  * <pre>
  * withClause ::=
- * 'with' {@link TypeName mixin} (',' {@link TypeName mixin})
+ *     'with' [TypeName] (',' [TypeName])*
  * </pre>
+ *
  * @coverage dart.engine.ast
  */
 class WithClause extends ASTNode {
@@ -13098,6 +14828,7 @@ class WithClause extends ASTNode {
 
   /**
    * Initialize a newly created with clause.
+   *
    * @param withKeyword the token representing the 'with' keyword
    * @param mixinTypes the names of the mixins that were specified
    */
@@ -13109,6 +14840,7 @@ class WithClause extends ASTNode {
 
   /**
    * Initialize a newly created with clause.
+   *
    * @param withKeyword the token representing the 'with' keyword
    * @param mixinTypes the names of the mixins that were specified
    */
@@ -13119,18 +14851,21 @@ class WithClause extends ASTNode {
 
   /**
    * Return the names of the mixins that were specified.
+   *
    * @return the names of the mixins that were specified
    */
   NodeList<TypeName> get mixinTypes => _mixinTypes;
 
   /**
    * Return the token representing the 'with' keyword.
+   *
    * @return the token representing the 'with' keyword
    */
   Token get withKeyword => _withKeyword;
 
   /**
    * Set the token representing the 'with' keyword to the given token.
+   *
    * @param withKeyword the token representing the 'with' keyword
    */
   void set mixinKeyword(Token withKeyword2) {
@@ -13141,9 +14876,11 @@ class WithClause extends ASTNode {
   }
 }
 /**
- * Instances of the class {@code BreadthFirstVisitor} implement an AST visitor that will recursively
- * visit all of the nodes in an AST structure, similar to {@link GeneralizingASTVisitor}. This
- * visitor uses a breadth-first ordering rather than the depth-first ordering of{@link GeneralizingASTVisitor}.
+ * Instances of the class `BreadthFirstVisitor` implement an AST visitor that will recursively
+ * visit all of the nodes in an AST structure, similar to [GeneralizingASTVisitor]. This
+ * visitor uses a breadth-first ordering rather than the depth-first ordering of
+ * [GeneralizingASTVisitor].
+ *
  * @coverage dart.engine.ast
  */
 class BreadthFirstVisitor<R> extends GeneralizingASTVisitor<R> {
@@ -13151,7 +14888,8 @@ class BreadthFirstVisitor<R> extends GeneralizingASTVisitor<R> {
   GeneralizingASTVisitor<Object> _childVisitor;
 
   /**
-   * Visit all nodes in the tree starting at the given {@code root} node, in depth-first order.
+   * Visit all nodes in the tree starting at the given `root` node, in depth-first order.
+   *
    * @param root the root of the ASTNode tree
    */
   void visitAllNodes(ASTNode root) {
@@ -13178,35 +14916,44 @@ class GeneralizingASTVisitor_1 extends GeneralizingASTVisitor<Object> {
   }
 }
 /**
- * Instances of the class {@code ConstantEvaluator} evaluate constant expressions to produce their
+ * Instances of the class `ConstantEvaluator` evaluate constant expressions to produce their
  * compile-time value. According to the Dart Language Specification: <blockquote> A constant
  * expression is one of the following:
- * <ul>
- * <li>A literal number.</li>
- * <li>A literal boolean.</li>
- * <li>A literal string where any interpolated expression is a compile-time constant that evaluates
- * to a numeric, string or boolean value or to {@code null}.</li>
- * <li>{@code null}.</li>
- * <li>A reference to a static constant variable.</li>
- * <li>An identifier expression that denotes a constant variable, a class or a type variable.</li>
- * <li>A constant constructor invocation.</li>
- * <li>A constant list literal.</li>
- * <li>A constant map literal.</li>
- * <li>A simple or qualified identifier denoting a top-level function or a static method.</li>
- * <li>A parenthesized expression {@code (e)} where {@code e} is a constant expression.</li>
- * <li>An expression of one of the forms {@code identical(e1, e2)}, {@code e1 == e2},{@code e1 != e2} where {@code e1} and {@code e2} are constant expressions that evaluate to a
- * numeric, string or boolean value or to {@code null}.</li>
- * <li>An expression of one of the forms {@code !e}, {@code e1 && e2} or {@code e1 || e2}, where{@code e}, {@code e1} and {@code e2} are constant expressions that evaluate to a boolean value or
- * to {@code null}.</li>
- * <li>An expression of one of the forms {@code ~e}, {@code e1 ^ e2}, {@code e1 & e2},{@code e1 | e2}, {@code e1 >> e2} or {@code e1 << e2}, where {@code e}, {@code e1} and {@code e2}are constant expressions that evaluate to an integer value or to {@code null}.</li>
- * <li>An expression of one of the forms {@code -e}, {@code e1 + e2}, {@code e1 - e2},{@code e1 * e2}, {@code e1 / e2}, {@code e1 ~/ e2}, {@code e1 > e2}, {@code e1 < e2},{@code e1 >= e2}, {@code e1 <= e2} or {@code e1 % e2}, where {@code e}, {@code e1} and {@code e2}are constant expressions that evaluate to a numeric value or to {@code null}.</li>
- * </ul>
- * </blockquote> The values returned by instances of this class are therefore {@code null} and
- * instances of the classes {@code Boolean}, {@code BigInteger}, {@code Double}, {@code String}, and{@code DartObject}.
- * <p>
+ *
+ * * A literal number.
+ * * A literal boolean.
+ * * A literal string where any interpolated expression is a compile-time constant that evaluates
+ * to a numeric, string or boolean value or to `null`.
+ * * `null`.
+ * * A reference to a static constant variable.
+ * * An identifier expression that denotes a constant variable, a class or a type variable.
+ * * A constant constructor invocation.
+ * * A constant list literal.
+ * * A constant map literal.
+ * * A simple or qualified identifier denoting a top-level function or a static method.
+ * * A parenthesized expression `(e)` where `e` is a constant expression.
+ * * An expression of one of the forms `identical(e1, e2)`, `e1 == e2`,
+ * `e1 != e2` where `e1` and `e2` are constant expressions that evaluate to a
+ * numeric, string or boolean value or to `null`.
+ * * An expression of one of the forms `!e`, `e1 && e2` or `e1 || e2`, where
+ * `e`, `e1` and `e2` are constant expressions that evaluate to a boolean value or
+ * to `null`.
+ * * An expression of one of the forms `~e`, `e1 ^ e2`, `e1 & e2`,
+ * `e1 | e2`, `e1 >> e2` or `e1 << e2`, where `e`, `e1` and `e2`
+ * are constant expressions that evaluate to an integer value or to `null`.
+ * * An expression of one of the forms `-e`, `e1 + e2`, `e1 - e2`,
+ * `e1 * e2`, `e1 / e2`, `e1 ~/ e2`, `e1 > e2`, `e1 < e2`,
+ * `e1 >= e2`, `e1 <= e2` or `e1 % e2`, where `e`, `e1` and `e2`
+ * are constant expressions that evaluate to a numeric value or to `null`.
+ *
+ * </blockquote> The values returned by instances of this class are therefore `null` and
+ * instances of the classes `Boolean`, `BigInteger`, `Double`, `String`, and
+ * `DartObject`.
+ *
  * In addition, this class defines several values that can be returned to indicate various
  * conditions encountered during evaluation. These are documented with the static field that define
  * those values.
+ *
  * @coverage dart.engine.ast
  */
 class ConstantEvaluator extends GeneralizingASTVisitor<Object> {
@@ -13440,32 +15187,45 @@ class ConstantEvaluator extends GeneralizingASTVisitor<Object> {
     }
     return builder.toString();
   }
+  Object visitSymbolLiteral(SymbolLiteral node) {
+    JavaStringBuilder builder = new JavaStringBuilder();
+    for (SimpleIdentifier component in node.components) {
+      if (builder.length > 0) {
+        builder.appendChar(0x2E);
+      }
+      builder.append(component.name);
+    }
+    return builder.toString();
+  }
 
   /**
    * Return the constant value of the static constant represented by the given element.
+   *
    * @param element the element whose value is to be returned
    * @return the constant value of the static constant
    */
   Object getConstantValue(Element element) {
     if (element is FieldElement) {
       FieldElement field = element as FieldElement;
-      if (field.isStatic() && field.isConst()) {
+      if (field.isStatic && field.isConst) {
       }
     }
     return NOT_A_CONSTANT;
   }
 }
 /**
- * Instances of the class {@code ElementLocator} locate the {@link Element Dart model element}associated with a given {@link ASTNode AST node}.
+ * Instances of the class `ElementLocator` locate the [Element]
+ * associated with a given [ASTNode].
+ *
  * @coverage dart.engine.ast
  */
 class ElementLocator {
 
   /**
-   * Locate the {@link Element Dart model element} associated with the given {@link ASTNode AST
-   * node}.
-   * @param node the node (not {@code null})
-   * @return the associated element, or {@code null} if none is found
+   * Locate the [Element] associated with the given [ASTNode].
+   *
+   * @param node the node (not `null`)
+   * @return the associated element, or `null` if none is found
    */
   static Element locate(ASTNode node) {
     ElementLocator_ElementMapper mapper = new ElementLocator_ElementMapper();
@@ -13527,19 +15287,21 @@ class ElementLocator_ElementMapper extends GeneralizingASTVisitor<Element> {
   Element visitVariableDeclaration(VariableDeclaration node) => node.element;
 }
 /**
- * Instances of the class {@code GeneralizingASTVisitor} implement an AST visitor that will
- * recursively visit all of the nodes in an AST structure (like instances of the class{@link RecursiveASTVisitor}). In addition, when a node of a specific type is visited not only
+ * Instances of the class `GeneralizingASTVisitor` implement an AST visitor that will
+ * recursively visit all of the nodes in an AST structure (like instances of the class
+ * [RecursiveASTVisitor]). In addition, when a node of a specific type is visited not only
  * will the visit method for that specific type of node be invoked, but additional methods for the
  * superclasses of that node will also be invoked. For example, using an instance of this class to
- * visit a {@link Block} will cause the method {@link #visitBlock(Block)} to be invoked but will
- * also cause the methods {@link #visitStatement(Statement)} and {@link #visitNode(ASTNode)} to be
+ * visit a [Block] will cause the method [visitBlock] to be invoked but will
+ * also cause the methods [visitStatement] and [visitNode] to be
  * subsequently invoked. This allows visitors to be written that visit all statements without
- * needing to override the visit method for each of the specific subclasses of {@link Statement}.
- * <p>
+ * needing to override the visit method for each of the specific subclasses of [Statement].
+ *
  * Subclasses that override a visit method must either invoke the overridden visit method or
  * explicitly invoke the more general visit method. Failure to do so will cause the visit methods
  * for superclasses of the node to not be invoked and will cause the children of the visited node to
  * not be visited.
+ *
  * @coverage dart.engine.ast
  */
 class GeneralizingASTVisitor<R> implements ASTVisitor<R> {
@@ -13622,6 +15384,7 @@ class GeneralizingASTVisitor<R> implements ASTVisitor<R> {
   R visitMethodInvocation(MethodInvocation node) => visitExpression(node);
   R visitNamedExpression(NamedExpression node) => visitExpression(node);
   R visitNamespaceDirective(NamespaceDirective node) => visitUriBasedDirective(node);
+  R visitNativeClause(NativeClause node) => visitNode(node);
   R visitNativeFunctionBody(NativeFunctionBody node) => visitFunctionBody(node);
   R visitNode(ASTNode node) {
     node.visitChildren(this);
@@ -13653,6 +15416,7 @@ class GeneralizingASTVisitor<R> implements ASTVisitor<R> {
   R visitSwitchDefault(SwitchDefault node) => visitSwitchMember(node);
   R visitSwitchMember(SwitchMember node) => visitNode(node);
   R visitSwitchStatement(SwitchStatement node) => visitStatement(node);
+  R visitSymbolLiteral(SymbolLiteral node) => visitLiteral(node);
   R visitThisExpression(ThisExpression node) => visitExpression(node);
   R visitThrowExpression(ThrowExpression node) => visitExpression(node);
   R visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) => visitCompilationUnitMember(node);
@@ -13671,10 +15435,11 @@ class GeneralizingASTVisitor<R> implements ASTVisitor<R> {
   R visitWithClause(WithClause node) => visitNode(node);
 }
 /**
- * Instances of the class {@code NodeLocator} locate the {@link ASTNode AST node} associated with a
+ * Instances of the class `NodeLocator` locate the [ASTNode] associated with a
  * source range, given the AST structure built from the source. More specifically, they will return
- * the {@link ASTNode AST node} with the shortest length whose source range completely encompasses
+ * the [ASTNode] with the shortest length whose source range completely encompasses
  * the specified range.
+ *
  * @coverage dart.engine.ast
  */
 class NodeLocator extends GeneralizingASTVisitor<Object> {
@@ -13690,53 +15455,51 @@ class NodeLocator extends GeneralizingASTVisitor<Object> {
   int _endOffset = 0;
 
   /**
-   * The element that was found that corresponds to the given source range, or {@code null} if there
+   * The element that was found that corresponds to the given source range, or `null` if there
    * is no such element.
    */
   ASTNode _foundNode;
 
   /**
-   * Initialize a newly created locator to locate one or more {@link ASTNode AST nodes} by locating
+   * Initialize a newly created locator to locate one or more [ASTNode] by locating
    * the node within an AST structure that corresponds to the given offset in the source.
+   *
    * @param offset the offset used to identify the node
    */
-  NodeLocator.con1(int offset) {
-    _jtd_constructor_120_impl(offset);
-  }
-  _jtd_constructor_120_impl(int offset) {
-    _jtd_constructor_121_impl(offset, offset);
-  }
+  NodeLocator.con1(int offset) : this.con2(offset, offset);
 
   /**
-   * Initialize a newly created locator to locate one or more {@link ASTNode AST nodes} by locating
+   * Initialize a newly created locator to locate one or more [ASTNode] by locating
    * the node within an AST structure that corresponds to the given range of characters in the
    * source.
+   *
    * @param start the start offset of the range used to identify the node
    * @param end the end offset of the range used to identify the node
    */
   NodeLocator.con2(int start, int end) {
-    _jtd_constructor_121_impl(start, end);
-  }
-  _jtd_constructor_121_impl(int start, int end) {
     this._startOffset = start;
     this._endOffset = end;
   }
 
   /**
-   * Return the node that was found that corresponds to the given source range, or {@code null} if
+   * Return the node that was found that corresponds to the given source range, or `null` if
    * there is no such node.
+   *
    * @return the node that was found
    */
   ASTNode get foundNode => _foundNode;
 
   /**
-   * Search within the given AST node for an identifier representing a {@link DartElement Dart
-   * element} in the specified source range. Return the element that was found, or {@code null} if
+   * Search within the given AST node for an identifier representing a [DartElement] in the specified source range. Return the element that was found, or `null` if
    * no element was found.
+   *
    * @param node the AST node within which to search
    * @return the element that was found
    */
   ASTNode searchWithin(ASTNode node) {
+    if (node == null) {
+      return null;
+    }
     try {
       node.accept(this);
     } on NodeLocator_NodeFoundException catch (exception) {
@@ -13770,20 +15533,21 @@ class NodeLocator extends GeneralizingASTVisitor<Object> {
   }
 }
 /**
- * Instances of the class {@code NodeFoundException} are used to cancel visiting after a node has
+ * Instances of the class `NodeFoundException` are used to cancel visiting after a node has
  * been found.
  */
 class NodeLocator_NodeFoundException extends RuntimeException {
   static int _serialVersionUID = 1;
 }
 /**
- * Instances of the class {@code RecursiveASTVisitor} implement an AST visitor that will recursively
+ * Instances of the class `RecursiveASTVisitor` implement an AST visitor that will recursively
  * visit all of the nodes in an AST structure. For example, using an instance of this class to visit
- * a {@link Block} will also cause all of the statements in the block to be visited.
- * <p>
+ * a [Block] will also cause all of the statements in the block to be visited.
+ *
  * Subclasses that override a visit method must either invoke the overridden visit method or must
  * explicitly ask the visited node to visit its children. Failure to do so will cause the children
  * of the visited node to not be visited.
+ *
  * @coverage dart.engine.ast
  */
 class RecursiveASTVisitor<R> implements ASTVisitor<R> {
@@ -14047,6 +15811,10 @@ class RecursiveASTVisitor<R> implements ASTVisitor<R> {
     node.visitChildren(this);
     return null;
   }
+  R visitNativeClause(NativeClause node) {
+    node.visitChildren(this);
+    return null;
+  }
   R visitNativeFunctionBody(NativeFunctionBody node) {
     node.visitChildren(this);
     return null;
@@ -14139,6 +15907,10 @@ class RecursiveASTVisitor<R> implements ASTVisitor<R> {
     node.visitChildren(this);
     return null;
   }
+  R visitSymbolLiteral(SymbolLiteral node) {
+    node.visitChildren(this);
+    return null;
+  }
   R visitThisExpression(ThisExpression node) {
     node.visitChildren(this);
     return null;
@@ -14193,10 +15965,11 @@ class RecursiveASTVisitor<R> implements ASTVisitor<R> {
   }
 }
 /**
- * Instances of the class {@code SimpleASTVisitor} implement an AST visitor that will do nothing
+ * Instances of the class `SimpleASTVisitor` implement an AST visitor that will do nothing
  * when visiting an AST node. It is intended to be a superclass for classes that use the visitor
  * pattern primarily as a dispatch mechanism (and hence don't need to recursively visit a whole
  * structure) and that only need to visit a small number of node types.
+ *
  * @coverage dart.engine.ast
  */
 class SimpleASTVisitor<R> implements ASTVisitor<R> {
@@ -14265,6 +16038,7 @@ class SimpleASTVisitor<R> implements ASTVisitor<R> {
   R visitMethodDeclaration(MethodDeclaration node) => null;
   R visitMethodInvocation(MethodInvocation node) => null;
   R visitNamedExpression(NamedExpression node) => null;
+  R visitNativeClause(NativeClause node) => null;
   R visitNativeFunctionBody(NativeFunctionBody node) => null;
   R visitNullLiteral(NullLiteral node) => null;
   R visitParenthesizedExpression(ParenthesizedExpression node) => null;
@@ -14288,6 +16062,7 @@ class SimpleASTVisitor<R> implements ASTVisitor<R> {
   R visitSwitchCase(SwitchCase node) => null;
   R visitSwitchDefault(SwitchDefault node) => null;
   R visitSwitchStatement(SwitchStatement node) => null;
+  R visitSymbolLiteral(SymbolLiteral node) => null;
   R visitThisExpression(ThisExpression node) => null;
   R visitThrowExpression(ThrowExpression node) => null;
   R visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) => null;
@@ -14303,8 +16078,9 @@ class SimpleASTVisitor<R> implements ASTVisitor<R> {
   R visitWithClause(WithClause node) => null;
 }
 /**
- * Instances of the class {@code ToSourceVisitor} write a source representation of a visited AST
+ * Instances of the class `ToSourceVisitor` write a source representation of a visited AST
  * node (and all of it's children) to a writer.
+ *
  * @coverage dart.engine.ast
  */
 class ToSourceVisitor implements ASTVisitor<Object> {
@@ -14317,6 +16093,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
   /**
    * Initialize a newly created visitor to write source code representing the visited nodes to the
    * given writer.
+   *
    * @param writer the writer to which the source is to be written
    */
   ToSourceVisitor(PrintWriter writer) {
@@ -14561,6 +16338,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
     visit2(node.type, " ");
     _writer.print("this.");
     visit(node.identifier);
+    visit(node.parameters);
     return null;
   }
   Object visitForEachStatement(ForEachStatement node) {
@@ -14680,7 +16458,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
     return null;
   }
   Object visitIndexExpression(IndexExpression node) {
-    if (node.isCascaded()) {
+    if (node.isCascaded) {
       _writer.print("..");
     } else {
       visit(node.array);
@@ -14780,14 +16558,14 @@ class ToSourceVisitor implements ASTVisitor<Object> {
     visit5(node.propertyKeyword, " ");
     visit5(node.operatorKeyword, " ");
     visit(node.name);
-    if (!node.isGetter()) {
+    if (!node.isGetter) {
       visit(node.parameters);
     }
     visit4(" ", node.body);
     return null;
   }
   Object visitMethodInvocation(MethodInvocation node) {
-    if (node.isCascaded()) {
+    if (node.isCascaded) {
       _writer.print("..");
     } else {
       visit2(node.target, ".");
@@ -14799,6 +16577,11 @@ class ToSourceVisitor implements ASTVisitor<Object> {
   Object visitNamedExpression(NamedExpression node) {
     visit(node.name);
     visit3(" ", node.expression);
+    return null;
+  }
+  Object visitNativeClause(NativeClause node) {
+    _writer.print("native ");
+    visit(node.name);
     return null;
   }
   Object visitNativeFunctionBody(NativeFunctionBody node) {
@@ -14846,7 +16629,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
     return null;
   }
   Object visitPropertyAccess(PropertyAccess node) {
-    if (node.isCascaded()) {
+    if (node.isCascaded) {
       _writer.print("..");
     } else {
       visit(node.target);
@@ -14935,6 +16718,11 @@ class ToSourceVisitor implements ASTVisitor<Object> {
     _writer.print("}");
     return null;
   }
+  Object visitSymbolLiteral(SymbolLiteral node) {
+    _writer.print("#");
+    visitList2(node.components, ".");
+    return null;
+  }
   Object visitThisExpression(ThisExpression node) {
     _writer.print("this");
     return null;
@@ -15008,6 +16796,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
 
   /**
    * Safely visit the given node.
+   *
    * @param node the node to be visited
    */
   void visit(ASTNode node) {
@@ -15017,7 +16806,8 @@ class ToSourceVisitor implements ASTVisitor<Object> {
   }
 
   /**
-   * Safely visit the given node, printing the suffix after the node if it is non-{@code null}.
+   * Safely visit the given node, printing the suffix after the node if it is non-`null`.
+   *
    * @param suffix the suffix to be printed if there is a node to visit
    * @param node the node to be visited
    */
@@ -15029,7 +16819,8 @@ class ToSourceVisitor implements ASTVisitor<Object> {
   }
 
   /**
-   * Safely visit the given node, printing the prefix before the node if it is non-{@code null}.
+   * Safely visit the given node, printing the prefix before the node if it is non-`null`.
+   *
    * @param prefix the prefix to be printed if there is a node to visit
    * @param node the node to be visited
    */
@@ -15042,6 +16833,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
 
   /**
    * Visit the given function body, printing the prefix before if given body is not empty.
+   *
    * @param prefix the prefix to be printed if there is a node to visit
    * @param body the function body to be visited
    */
@@ -15053,7 +16845,8 @@ class ToSourceVisitor implements ASTVisitor<Object> {
   }
 
   /**
-   * Safely visit the given node, printing the suffix after the node if it is non-{@code null}.
+   * Safely visit the given node, printing the suffix after the node if it is non-`null`.
+   *
    * @param suffix the suffix to be printed if there is a node to visit
    * @param node the node to be visited
    */
@@ -15066,6 +16859,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
 
   /**
    * Print a list of nodes without any separation.
+   *
    * @param nodes the nodes to be printed
    * @param separator the separator to be printed between adjacent nodes
    */
@@ -15075,6 +16869,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
 
   /**
    * Print a list of nodes, separated by the given separator.
+   *
    * @param nodes the nodes to be printed
    * @param separator the separator to be printed between adjacent nodes
    */
@@ -15092,6 +16887,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
 
   /**
    * Print a list of nodes, separated by the given separator.
+   *
    * @param nodes the nodes to be printed
    * @param separator the separator to be printed between adjacent nodes
    * @param suffix the suffix to be printed if the list is not empty
@@ -15113,6 +16909,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
 
   /**
    * Print a list of nodes, separated by the given separator.
+   *
    * @param prefix the prefix to be printed if the list is not empty
    * @param nodes the nodes to be printed
    * @param separator the separator to be printed between adjacent nodes
@@ -15133,7 +16930,7 @@ class ToSourceVisitor implements ASTVisitor<Object> {
   }
 }
 /**
- * Instances of the class {@code ASTCloner} implement an object that will clone any AST structure
+ * Instances of the class `ASTCloner` implement an object that will clone any AST structure
  * that it visits. The cloner will only clone the structure, it will not preserve any resolution
  * results or properties associated with the nodes.
  */
@@ -15152,12 +16949,16 @@ class ASTCloner implements ASTVisitor<ASTNode> {
   BreakStatement visitBreakStatement(BreakStatement node) => new BreakStatement.full(node.keyword, clone2(node.label), node.semicolon);
   CascadeExpression visitCascadeExpression(CascadeExpression node) => new CascadeExpression.full(clone2(node.target), clone3(node.cascadeSections));
   CatchClause visitCatchClause(CatchClause node) => new CatchClause.full(node.onKeyword, clone2(node.exceptionType), node.catchKeyword, node.leftParenthesis, clone2(node.exceptionParameter), node.comma, clone2(node.stackTraceParameter), node.rightParenthesis, clone2(node.body));
-  ClassDeclaration visitClassDeclaration(ClassDeclaration node) => new ClassDeclaration.full(clone2(node.documentationComment), clone3(node.metadata), node.abstractKeyword, node.classKeyword, clone2(node.name), clone2(node.typeParameters), clone2(node.extendsClause), clone2(node.withClause), clone2(node.implementsClause), node.leftBracket, clone3(node.members), node.rightBracket);
+  ClassDeclaration visitClassDeclaration(ClassDeclaration node) {
+    ClassDeclaration copy = new ClassDeclaration.full(clone2(node.documentationComment), clone3(node.metadata), node.abstractKeyword, node.classKeyword, clone2(node.name), clone2(node.typeParameters), clone2(node.extendsClause), clone2(node.withClause), clone2(node.implementsClause), node.leftBracket, clone3(node.members), node.rightBracket);
+    copy.nativeClause = clone2(node.nativeClause);
+    return copy;
+  }
   ClassTypeAlias visitClassTypeAlias(ClassTypeAlias node) => new ClassTypeAlias.full(clone2(node.documentationComment), clone3(node.metadata), node.keyword, clone2(node.name), clone2(node.typeParameters), node.equals, node.abstractKeyword, clone2(node.superclass), clone2(node.withClause), clone2(node.implementsClause), node.semicolon);
   Comment visitComment(Comment node) {
-    if (node.isDocumentation()) {
+    if (node.isDocumentation) {
       return Comment.createDocumentationComment2(node.tokens, clone3(node.references));
-    } else if (node.isBlock()) {
+    } else if (node.isBlock) {
       return Comment.createBlockComment(node.tokens);
     }
     return Comment.createEndOfLineComment(node.tokens);
@@ -15186,7 +16987,7 @@ class ASTCloner implements ASTVisitor<ASTNode> {
   ExpressionStatement visitExpressionStatement(ExpressionStatement node) => new ExpressionStatement.full(clone2(node.expression), node.semicolon);
   ExtendsClause visitExtendsClause(ExtendsClause node) => new ExtendsClause.full(node.keyword, clone2(node.superclass));
   FieldDeclaration visitFieldDeclaration(FieldDeclaration node) => new FieldDeclaration.full(clone2(node.documentationComment), clone3(node.metadata), node.keyword, clone2(node.fields), node.semicolon);
-  FieldFormalParameter visitFieldFormalParameter(FieldFormalParameter node) => new FieldFormalParameter.full(clone2(node.documentationComment), clone3(node.metadata), node.keyword, clone2(node.type), node.thisToken, node.period, clone2(node.identifier));
+  FieldFormalParameter visitFieldFormalParameter(FieldFormalParameter node) => new FieldFormalParameter.full(clone2(node.documentationComment), clone3(node.metadata), node.keyword, clone2(node.type), node.thisToken, node.period, clone2(node.identifier), clone2(node.parameters));
   ForEachStatement visitForEachStatement(ForEachStatement node) => new ForEachStatement.full(node.forKeyword, node.leftParenthesis, clone2(node.loopVariable), node.inKeyword, clone2(node.iterator), node.rightParenthesis, clone2(node.body));
   FormalParameterList visitFormalParameterList(FormalParameterList node) => new FormalParameterList.full(node.leftParenthesis, clone3(node.parameters), node.leftDelimiter, node.rightDelimiter, node.rightParenthesis);
   ForStatement visitForStatement(ForStatement node) => new ForStatement.full(node.forKeyword, node.leftParenthesis, clone2(node.variables), clone2(node.initialization), node.leftSeparator, clone2(node.condition), node.rightSeparator, clone3(node.updaters), node.rightParenthesis, clone2(node.body));
@@ -15223,6 +17024,7 @@ class ASTCloner implements ASTVisitor<ASTNode> {
   MethodDeclaration visitMethodDeclaration(MethodDeclaration node) => new MethodDeclaration.full(clone2(node.documentationComment), clone3(node.metadata), node.externalKeyword, node.modifierKeyword, clone2(node.returnType), node.propertyKeyword, node.operatorKeyword, clone2(node.name), clone2(node.parameters), clone2(node.body));
   MethodInvocation visitMethodInvocation(MethodInvocation node) => new MethodInvocation.full(clone2(node.target), node.period, clone2(node.methodName), clone2(node.argumentList));
   NamedExpression visitNamedExpression(NamedExpression node) => new NamedExpression.full(clone2(node.name), clone2(node.expression));
+  ASTNode visitNativeClause(NativeClause node) => new NativeClause.full(node.keyword, clone2(node.name));
   NativeFunctionBody visitNativeFunctionBody(NativeFunctionBody node) => new NativeFunctionBody.full(node.nativeToken, clone2(node.stringLiteral), node.semicolon);
   NullLiteral visitNullLiteral(NullLiteral node) => new NullLiteral.full(node.literal);
   ParenthesizedExpression visitParenthesizedExpression(ParenthesizedExpression node) => new ParenthesizedExpression.full(node.leftParenthesis, clone2(node.expression), node.rightParenthesis);
@@ -15246,6 +17048,7 @@ class ASTCloner implements ASTVisitor<ASTNode> {
   SwitchCase visitSwitchCase(SwitchCase node) => new SwitchCase.full(clone3(node.labels), node.keyword, clone2(node.expression), node.colon, clone3(node.statements));
   SwitchDefault visitSwitchDefault(SwitchDefault node) => new SwitchDefault.full(clone3(node.labels), node.keyword, node.colon, clone3(node.statements));
   SwitchStatement visitSwitchStatement(SwitchStatement node) => new SwitchStatement.full(node.keyword, node.leftParenthesis, clone2(node.expression), node.rightParenthesis, node.leftBracket, clone3(node.members), node.rightBracket);
+  ASTNode visitSymbolLiteral(SymbolLiteral node) => new SymbolLiteral.full(node.poundSign, clone3(node.components));
   ThisExpression visitThisExpression(ThisExpression node) => new ThisExpression.full(node.keyword);
   ThrowExpression visitThrowExpression(ThrowExpression node) => new ThrowExpression.full(node.keyword, clone2(node.expression));
   TopLevelVariableDeclaration visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) => new TopLevelVariableDeclaration.full(clone2(node.documentationComment), clone3(node.metadata), clone2(node.variables), node.semicolon);
@@ -15277,9 +17080,10 @@ class ASTCloner implements ASTVisitor<ASTNode> {
  * Traverse the AST from initial child node to successive parents, building a collection of local
  * variable and parameter names visible to the initial child node. In case of name shadowing, the
  * first name seen is the most specific one so names are not redefined.
- * <p>
+ *
  * Completion test code coverage is 95%. The two basic blocks that are not executed cannot be
  * executed. They are included for future reference.
+ *
  * @coverage com.google.dart.engine.services.completion
  */
 class ScopedNameFinder extends GeneralizingASTVisitor<Object> {
@@ -15391,6 +17195,7 @@ class ScopedNameFinder extends GeneralizingASTVisitor<Object> {
 
   /**
    * Some statements define names that are visible downstream. There aren't many of these.
+   *
    * @param statements the list of statements to check for name definitions
    */
   void checkStatements(List<Statement> statements) {

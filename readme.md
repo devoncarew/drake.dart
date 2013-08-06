@@ -1,4 +1,6 @@
-Drake - a Chrome app based web development environment
+# Drake
+
+A Chrome app based web development environment
 
 Entry Point
 -----------

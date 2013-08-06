@@ -63,21 +63,21 @@ class JobManager {
   }
   
   _jobStarted(Job job) {
-    _streamController.add(new JobManagerEvent(this, job, _started: true));
+    _streamController.add(new JobManagerEvent(this, job, started: true));
   }
   
   _monitorWorked(_ProgressMonitorImpl monitor, Job job) {
     _streamController.add(new JobManagerEvent(this, job,
-        _indeterminate: monitor.indeterminate, _progress: monitor.progress));
+        indeterminate: monitor.indeterminate, progress: monitor.progress));
   }
   
   _monitorDone(_ProgressMonitorImpl monitor, Job job) {
     _streamController.add(new JobManagerEvent(this, job,
-        _indeterminate: monitor.indeterminate, _progress: monitor.progress));
+        indeterminate: monitor.indeterminate, progress: monitor.progress));
   }
   
   _jobFinished(Job job) {
-    _streamController.add(new JobManagerEvent(this, job, _finished: true));
+    _streamController.add(new JobManagerEvent(this, job, finished: true));
   }
 }
 
@@ -85,21 +85,13 @@ class JobManagerEvent {
   final JobManager manager;
   final Job job;
   
-  bool _started;
-  bool _finished;
-  bool _indeterminate;
-  double _progress = 1.0;
+  final bool started;
+  final bool finished;
+  final bool indeterminate;
+  final double progress;
   
   JobManagerEvent(this.manager, this.job,
-      {this._started, this._finished, this._indeterminate, this._progress});
-  
-  bool get started => _started;
-  
-  bool get finished => _finished;
-  
-  bool get indeterminate => _indeterminate;
-  
-  double get progress => _progress;
+      {this.started, this.finished, this.indeterminate, this.progress: 1.0});
   
   String toString() {
     if (started) {

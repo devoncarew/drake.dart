@@ -1085,6 +1085,9 @@ class AceEditorPart extends TextEditorPart {
         aceEditor.navigateFileStart();
         dirty = false;
         fireReconcileEvent();
+        
+        // TODO: we need the ability to turn on and off ignoring dirty changes
+        Timer.run(() => dirty = false);
       });
     }
     
@@ -1221,6 +1224,10 @@ class AstLabelProvider extends TreeLabelProvider {
       MethodDeclaration m = node as MethodDeclaration;
       
       text = '${m.name}()';
+    } else if (node is FunctionTypeAlias) {
+      FunctionTypeAlias f = node as FunctionTypeAlias;
+      
+      text = '${f.name}';
     } else {
       print(node.runtimeType.toString());
       text = node.toString();

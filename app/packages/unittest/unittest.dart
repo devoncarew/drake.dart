@@ -138,29 +138,6 @@
  * features or fixes to the current spec (e.g. see
  * [Issue 2706](http://dartbug.com/2706)).
  *
- * Meanwhile, we plan to add this alternative API for callbacks of more than 2
- * arguments or that take named parameters. (this is not implemented yet,
- * but will be coming here soon).
- *
- *     import 'package:unittest/unittest.dart';
- *     import 'dart:isolate';
- *     main() {
- *       test('callback is executed', () {
- *         // indicate ahead of time that an async callback is expected.
- *         var async = startAsync();
- *         Timer.run(() {
- *           // Guard the body of the callback, so errors are propagated
- *           // correctly.
- *           guardAsync(() {
- *             int x = 2 + 3;
- *             expect(x, equals(5));
- *           });
- *           // indicate that the asynchronous callback was invoked.
- *           async.complete();
- *         });
- *       });
- *     }
- *
  * [pub]: http://pub.dartlang.org
  * [pkg]: http://pub.dartlang.org/packages/unittest
  */
@@ -173,6 +150,9 @@ import 'dart:math' show max;
 import 'matcher.dart';
 export 'matcher.dart';
 
+import 'package:stack_trace/stack_trace.dart';
+
+import 'src/utils.dart';
 part 'src/config.dart';
 part 'src/test_case.dart';
 
@@ -218,6 +198,12 @@ final List<TestCase> _testCases = new List<TestCase>();
 
 /** Tests executed in this suite. */
 final List<TestCase> testCases = new UnmodifiableListView<TestCase>(_testCases);
+
+/**
+ * Interval (in msecs) after which synchronous tests will insert an async
+ * delay to allow DOM or other updates.
+ */
+const int BREATH_INTERVAL = 200;
 
 /**
  * The set of tests to run can be restricted by using [solo_test] and
@@ -312,6 +298,9 @@ TestCase get currentTestCase =>
 bool _initialized = false;
 
 String _uncaughtErrorMessage = null;
+
+/** Time since we last gave non-sync code a chance to be scheduled. */
+var _lastBreath = new DateTime.now().millisecondsSinceEpoch;
 
 /** Test case result strings. */
 // TODO(gram) we should change these constants to use a different string
@@ -453,7 +442,7 @@ class _SpreadArgsHelper {
         testCase.error(
             'Callback ${id}called ($actualCalls) after test case '
             '${testCase.description} has already been marked as '
-            '${testCase.result}.', '');
+            '${testCase.result}.');
       }
       return false;
     } else if (maxExpectedCalls >= 0 && actualCalls > maxExpectedCalls) {
@@ -664,17 +653,15 @@ void tearDown(Function teardownTest) {
 
 /** Advance to the next test case. */
 void _nextTestCase() {
-  runAsync(() {
-    _currentTestCaseIndex++;
-    _nextBatch();
-  });
+  _currentTestCaseIndex++;
+  _runTest();
 }
 
 /**
  * Utility function that can be used to notify the test framework that an
  *  error was caught outside of this library.
  */
-void _reportTestError(String msg, String trace) {
+void _reportTestError(String msg, trace) {
  if (_currentTestCaseIndex < testCases.length) {
     final testCase = testCases[_currentTestCaseIndex];
     testCase.error(msg, trace);
@@ -711,12 +698,8 @@ void filterTests(testFilter) {
 void runTests() {
   _ensureInitialized(false);
   _currentTestCaseIndex = 0;
-
   _config.onStart();
-
-  runAsync(() {
-    _nextBatch();
-  });
+  _runTest();
 }
 
 /**
@@ -751,7 +734,6 @@ void registerException(e, [trace]) {
  * Registers that an exception was caught for the current test.
  */
 void _registerException(TestCase testCase, e, [trace]) {
-  trace = trace == null ? '' : trace.toString();
   String message = (e is TestFailure) ? e.message : 'Caught $e';
   if (testCase.result == null) {
     testCase.fail(message, trace);
@@ -761,25 +743,23 @@ void _registerException(TestCase testCase, e, [trace]) {
 }
 
 /**
- * Runs a batch of tests, yielding whenever an asynchronous test starts
- * running. Tests will resume executing when such asynchronous test calls
- * [done] or if it fails with an exception.
+ * Runs the next test.
  */
-void _nextBatch() {
-  while (true) {
-    if (_currentTestCaseIndex >= testCases.length) {
-      _completeTests();
-      break;
-    }
+void _runTest() {
+  if (_currentTestCaseIndex >= testCases.length) {
+    _completeTests();
+  } else {
     final testCase = testCases[_currentTestCaseIndex];
     var f = _guardAsync(testCase._run, null, testCase);
-    if (f != null) {
-      f.whenComplete(() {
-        _nextTestCase(); // Schedule the next test.
-      });
-      break;
-    }
-    _currentTestCaseIndex++;
+    f.whenComplete(() {
+      var now = new DateTime.now().millisecondsSinceEpoch;
+      if ((now - _lastBreath) >= BREATH_INTERVAL) {
+        _lastBreath = now;
+        Timer.run(_nextTestCase);
+      } else {
+        runAsync(_nextTestCase); // Schedule the next test.
+      }
+    });
   }
 }
 
@@ -864,85 +844,31 @@ void disableTest(int testId) => _setTestEnabledState(testId, false);
 typedef dynamic TestFunction();
 
 /**
- * A flag that controls whether we hide unittest details in exception stacks.
+ * A flag that controls whether we hide unittest and core library details in
+ * exception stacks.
+ *
  * Useful to disable when debugging unittest or matcher customizations.
  */
 bool formatStacks = true;
 
-// Stack formatting utility. Strips extraneous content from a stack trace.
-// Stack frame lines are parsed with a regexp, which has been tested
-// in Chrome, Firefox and the VM. If a line fails to be parsed it is
-// included in the output to be conservative.
-//
-// The output stack consists of everything after the call to TestCase._run.
-// If we see an 'expect' in the frame we will prune everything above that
-// as well.
-final _frameRegExp = new RegExp(
-    r'^\s*' // Skip leading spaces.
-    r'(?:'  // Group of choices for the prefix.
-      r'(?:#\d+\s*)|' // Skip VM's #<frameNumber>.
-      r'(?:at )|'     // Skip Firefox's 'at '.
-      r'(?:))'        // Other environments have nothing here.
-    r'(.+)'           // Extract the function/method.
-    r'\s*[@\(]'       // Skip space and @ or (.
-    r'('              // This group of choices is for the source file.
-      r'(?:.+:\/\/.+\/[^:]*)|' // Handle file:// or http:// URLs.
-      r'(?:dart:[^:]*)|'  // Handle dart:<lib>.
-      r'(?:package:[^:]*)' // Handle package:<path>
-    r'):([:\d]+)[\)]?$'); // Get the line number and optional column number.
-
-String _formatStack(stack) {
-  if (!formatStacks) return "$stack";
-  var lines;
-  if (stack is StackTrace) {
-    lines = stack.toString().split('\n');
-  } else if (stack is String) {
-    lines = stack.split('\n');
+/** Returns a Trace object from a StackTrace object or a String. */
+Trace _getTrace(stack) {
+  Trace trace;
+  if (stack == null) return null;
+  if (stack is String) {
+    trace = new Trace.parse(stack);
+  } else if (stack is StackTrace) {
+    trace = new Trace.from(stack);
   } else {
-    return stack.toString();
+    throw new Exception('Invalid stack type ${stack.runtimeType} for $stack.');
   }
 
-  // Calculate the max width of first column so we can
-  // pad to align the second columns.
-  int padding = lines.fold(0, (n, line) {
-    var match = _frameRegExp.firstMatch(line);
-    if (match == null) return n;
-    return max(n, match[1].length + 1);
-  });
+  if (!formatStacks) return trace;
 
-  // We remove all entries that have a location in unittest.
-  // We strip out anything before _nextBatch too.
-  var sb = new StringBuffer();
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    if (line == '') continue;
-    var match = _frameRegExp.firstMatch(line);
-    if (match == null) {
-      sb.write(line);
-      sb.write('\n');
-    } else {
-      var member = match[1];
-      var location = match[2];
-      var position = match[3];
-      if (member.indexOf('TestCase._runTest') >= 0) {
-        // Don't include anything after this.
-        break;
-      } else if (member.indexOf('expect') >= 0) {
-        // It looks like this was an expect() failure;
-        // drop all the frames up to here.
-        sb.clear();
-      } else {
-        sb.write(member);
-        // Pad second column to a fixed position.
-        for (var j = 0; j <= padding - member.length; j++) {
-          sb.write(' ');
-        }
-        sb.write(location);
-        sb.write(' ');
-        sb.write(position);
-        sb.write('\n');
-      }
-    }
-  }
-  return sb.toString();
+  // Format the stack trace by removing everything above TestCase._runTest,
+  // which is usually going to be irrelevant. Also fold together unittest and
+  // core library calls so only the function the user called is visible.
+  return new Trace(trace.frames.takeWhile((frame) {
+    return frame.package != 'unittest' || frame.member != 'TestCase._runTest';
+  })).terse.foldFrames((frame) => frame.package == 'unittest' || frame.isCore);
 }

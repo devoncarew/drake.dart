@@ -41,9 +41,9 @@ class TestCase {
    */
   String get result => _result;
 
-  String _stackTrace;
+  Trace _stackTrace;
   /** Stack trace associated with this test, or [null] if it succeeded. */
-  String get stackTrace => _stackTrace;
+  Trace get stackTrace => _stackTrace;
 
   /** The group (or groups) under which this test is running. */
   final String currentGroup;
@@ -67,37 +67,16 @@ class TestCase {
 
   bool get isComplete => !enabled || result != null;
 
-  void _prepTest() {
-    _config.onTestStart(this);
-    _startTime = new DateTime.now();
-    _runningTime = null;
-  }
-
-  Future _runTest() {
-    _prepTest();
-    // Increment/decrement callbackFunctionsOutstanding to prevent
-    // synchronous 'async' callbacks from causing the  test to be
-    // marked as complete before the body is completely executed.
-    ++_callbackFunctionsOutstanding;
-    var f = testFunction();
-    --_callbackFunctionsOutstanding;
-    if (f is Future) {
-      return f.then((_) => _finishTest())
-        .catchError((error) {
-          var stack = getAttachedStackTrace(error);
-          _registerException(this, error, stack);
-        });
-    } else {
-      _finishTest();
-      return null;
+  Function _errorHandler(String stage) => (e) {
+    var stack = getAttachedStackTrace(e);
+    if (result == null || result == PASS) {
+      if (e is TestFailure) {
+        fail("$e", stack);
+      } else {
+        error("$stage failed: Caught $e", stack);
+      }
     }
-  }
-
-  void _finishTest() {
-    if (result == null && _callbackFunctionsOutstanding == 0) {
-      pass();
-    }
-  }
+  };
 
   /**
    * Perform any associated [_setUp] function and run the test. Returns
@@ -106,50 +85,47 @@ class TestCase {
    * tell unittest to schedule the next test immediately.
    */
   Future _run() {
-    if (!enabled) return null;
+    if (!enabled) return new Future.value();
 
     _result = _stackTrace = null;
     _message = '';
-    _doneTeardown = false;
-    var rtn = setUp == null ? null : setUp();
-    if (rtn is Future) {
-      rtn.then((_) => _runTest())
-         .catchError((e) {
-          _prepTest();
-          // Calling error() will result in the tearDown being done.
-          // One could debate whether tearDown should be done after
-          // a failed setUp. There is no right answer, but doing it
-          // seems to be the more conservative approach, because
-          // unittest will not stop at a test failure.
-          var stack = getAttachedStackTrace(e);
-          if (stack == null) stack = '';
-          error("$description: Test setup failed: $e", "$stack");
-        });
-    } else {
-      var f = _runTest();
-      if (f != null) {
-        return f;
-      }
-    }
-    if (result == null) { // Not complete.
-      _testComplete = new Completer();
-      return _testComplete.future;
-    }
-    return null;
-  }
 
-  void _notifyComplete() {
-    if (_testComplete != null) {
-      _testComplete.complete(this);
-      _testComplete = null;
-    }
+    // Avoid calling [new Future] to avoid issue 11911.
+    return new Future.value().then((_) {
+      if (setUp != null) return setUp();
+    }).catchError(_errorHandler('Setup'))
+        .then((_) {
+          // Skip the test if setup failed.
+          if (result != null) return new Future.value();
+          _config.onTestStart(this);
+          _startTime = new DateTime.now();
+          _runningTime = null;
+          ++_callbackFunctionsOutstanding;
+          return testFunction();
+        })
+        .catchError(_errorHandler('Test'))
+        .then((_) {
+          _markCallbackComplete();
+          if (result == null) {
+            // Outstanding callbacks exist; we need to return a Future.
+            _testComplete = new Completer();
+            return _testComplete.future.whenComplete(() {
+              if (tearDown != null) {
+                return tearDown();
+              }
+            }).catchError(_errorHandler('Teardown'));
+          } else if (tearDown != null) {
+            return tearDown();
+          }
+        })
+        .catchError(_errorHandler('Teardown'));
   }
 
   // Set the results, notify the config, and return true if this
   // is the first time the result is being set.
-  void _setResult(String testResult, String messageText, String stack) {
+  void _setResult(String testResult, String messageText, stack) {
     _message = messageText;
-    _stackTrace = _formatStack(stack);
+    _stackTrace = _getTrace(stack);
     if (result == null) {
       _result = testResult;
       _config.onTestResult(this);
@@ -159,9 +135,7 @@ class TestCase {
     }
   }
 
-  void _complete(String testResult,
-                [String messageText = '',
-                 String stack = '']) {
+  void _complete(String testResult, [String messageText = '', stack]) {
     if (runningTime == null) {
       // The startTime can be `null` if an error happened during setup. In this
       // case we simply report a running time of 0.
@@ -172,35 +146,18 @@ class TestCase {
       }
     }
     _setResult(testResult, messageText, stack);
-    if (!_doneTeardown) {
-      _doneTeardown = true;
-      if (tearDown != null) {
-        var rtn = tearDown();
-        if (rtn is Future) {
-          rtn.then((_) {
-            _notifyComplete();
-          })
-          .catchError((error) {
-            var trace = getAttachedStackTrace(error);
-            // We don't call fail() as that will potentially result in
-            // spurious messages like 'test failed more than once'.
-            _setResult(ERROR, "$description: Test teardown failed: ${error}",
-                trace == null ? "" : trace.toString());
-            _notifyComplete();
-          });
-          return;
-        }
-      }
+    if (_testComplete != null) {
+      var t = _testComplete;
+      _testComplete = null;
+      t.complete(this);
     }
-    _notifyComplete();
   }
 
   void pass() {
     _complete(PASS);
   }
 
-  void fail(String messageText, [String stack = '']) {
-    assert(stack != null);
+  void fail(String messageText, [stack]) {
     if (result != null) {
       String newMessage = (result == PASS)
           ? 'Test failed after initially passing: $messageText'
@@ -212,8 +169,7 @@ class TestCase {
     }
   }
 
-  void error(String messageText, [String stack = '']) {
-    assert(stack != null);
+  void error(String messageText, [stack]) {
     _complete(ERROR, messageText, stack);
   }
 

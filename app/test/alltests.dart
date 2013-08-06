@@ -72,7 +72,7 @@ class WorkbenchTestConfiguration extends Configuration {
       }
 
       if (test.stackTrace != null && test.stackTrace != '') {
-        workbench.console.append(indent(test.stackTrace));
+        workbench.console.append(indent(test.stackTrace.toString()));
       }
     }
 

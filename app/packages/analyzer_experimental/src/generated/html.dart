@@ -10,8 +10,9 @@ import 'instrumentation.dart';
 import 'element.dart' show HtmlElementImpl;
 import 'engine.dart' show AnalysisEngine;
 /**
- * Instances of the class {@code Token} represent a token that was scanned from the input. Each
+ * Instances of the class `Token` represent a token that was scanned from the input. Each
  * token knows which token follows it, acting as the head of a linked list of tokens.
+ *
  * @coverage dart.engine.html
  */
 class Token {
@@ -43,86 +44,89 @@ class Token {
 
   /**
    * Initialize a newly created token.
-   * @param type the token type (not {@code null})
+   *
+   * @param type the token type (not `null`)
    * @param offset the offset from the beginning of the file to the first character in the token
    */
-  Token.con1(TokenType type, int offset) {
-    _jtd_constructor_155_impl(type, offset);
-  }
-  _jtd_constructor_155_impl(TokenType type, int offset) {
-    _jtd_constructor_156_impl(type, offset, type.lexeme);
-  }
+  Token.con1(TokenType type, int offset) : this.con2(type, offset, type.lexeme);
 
   /**
    * Initialize a newly created token.
-   * @param type the token type (not {@code null})
+   *
+   * @param type the token type (not `null`)
    * @param offset the offset from the beginning of the file to the first character in the token
-   * @param value the lexeme represented by this token (not {@code null})
+   * @param value the lexeme represented by this token (not `null`)
    */
-  Token.con2(TokenType type2, int offset2, String value2) {
-    _jtd_constructor_156_impl(type2, offset2, value2);
-  }
-  _jtd_constructor_156_impl(TokenType type2, int offset2, String value2) {
-    this._type = type2;
-    this._value = StringUtilities.intern(value2);
-    this._offset = offset2;
+  Token.con2(TokenType type, int offset, String value) {
+    this._type = type;
+    this._value = StringUtilities.intern(value);
+    this._offset = offset;
   }
 
   /**
    * Return the offset from the beginning of the file to the character after last character of the
    * token.
+   *
    * @return the offset from the beginning of the file to the first character after last character
-   * of the token
+   *         of the token
    */
   int get end => _offset + length;
 
   /**
    * Return the number of characters in the node's source range.
+   *
    * @return the number of characters in the node's source range
    */
   int get length => lexeme.length;
 
   /**
    * Return the lexeme that represents this token.
-   * @return the lexeme (not {@code null})
+   *
+   * @return the lexeme (not `null`)
    */
   String get lexeme => _value;
 
   /**
    * Return the next token in the token stream.
+   *
    * @return the next token in the token stream
    */
   Token get next => _next;
 
   /**
    * Return the offset from the beginning of the file to the first character in the token.
+   *
    * @return the offset from the beginning of the file to the first character in the token
    */
   int get offset => _offset;
 
   /**
    * Return the previous token in the token stream.
+   *
    * @return the previous token in the token stream
    */
   Token get previous => _previous;
 
   /**
    * Answer the token type for the receiver.
-   * @return the token type (not {@code null})
+   *
+   * @return the token type (not `null`)
    */
   TokenType get type => _type;
 
   /**
-   * Return {@code true} if this token is a synthetic token. A synthetic token is a token that was
+   * Return `true` if this token is a synthetic token. A synthetic token is a token that was
    * introduced by the parser in order to recover from an error in the code. Synthetic tokens always
-   * have a length of zero ({@code 0}).
-   * @return {@code true} if this token is a synthetic token
+   * have a length of zero (`0`).
+   *
+   * @return `true` if this token is a synthetic token
    */
-  bool isSynthetic() => length == 0;
+  bool get isSynthetic => length == 0;
 
   /**
    * Set the next token in the token stream to the given token. This has the side-effect of setting
    * this token to be the previous token for the given token.
+   *
    * @param token the next token in the token stream
    * @return the token that was passed in
    */
@@ -135,6 +139,7 @@ class Token {
 
   /**
    * Set the previous token in the token stream to the given token.
+   *
    * @param previous the previous token in the token stream
    */
   void set previous(Token previous2) {
@@ -142,13 +147,14 @@ class Token {
   }
 }
 /**
- * Instances of {@code HtmlParseResult} hold the result of parsing an HTML file.
+ * Instances of `HtmlParseResult` hold the result of parsing an HTML file.
+ *
  * @coverage dart.engine.html
  */
 class HtmlParseResult extends HtmlScanResult {
 
   /**
-   * The unit containing the parsed information (not {@code null}).
+   * The unit containing the parsed information (not `null`).
    */
   HtmlUnit _unit;
   HtmlParseResult(int modificationTime, Token token, List<int> lineStarts, HtmlUnit unit) : super(modificationTime, token, lineStarts) {
@@ -157,18 +163,21 @@ class HtmlParseResult extends HtmlScanResult {
 
   /**
    * Answer the unit generated by parsing the source
-   * @return the unit (not {@code null})
+   *
+   * @return the unit (not `null`)
    */
   HtmlUnit get htmlUnit => _unit;
 }
 /**
- * Instances of the class {@code RecursiveXmlVisitor} implement an XML visitor that will recursively
+ * Instances of the class `RecursiveXmlVisitor` implement an XML visitor that will recursively
  * visit all of the nodes in an XML structure. For example, using an instance of this class to visit
- * a {@link XmlTagNode} will also cause all of the contained {@link XmlAttributeNode}s and{@link XmlTagNode}s to be visited.
- * <p>
+ * a [XmlTagNode] will also cause all of the contained [XmlAttributeNode]s and
+ * [XmlTagNode]s to be visited.
+ *
  * Subclasses that override a visit method must either invoke the overridden visit method or must
  * explicitly ask the visited node to visit its children. Failure to do so will cause the children
  * of the visited node to not be visited.
+ *
  * @coverage dart.engine.html
  */
 class RecursiveXmlVisitor<R> implements XmlVisitor<R> {
@@ -186,18 +195,20 @@ class RecursiveXmlVisitor<R> implements XmlVisitor<R> {
   }
 }
 /**
- * The abstract class {@code XmlNode} defines behavior common to all XML/HTML nodes.
+ * The abstract class `XmlNode` defines behavior common to all XML/HTML nodes.
+ *
  * @coverage dart.engine.html
  */
 abstract class XmlNode {
 
   /**
-   * The parent of the node, or {@code null} if the node is the root of an AST structure.
+   * The parent of the node, or `null` if the node is the root of an AST structure.
    */
   XmlNode _parent;
 
   /**
    * Use the given visitor to visit this node.
+   *
    * @param visitor the visitor that will visit this node
    * @return the value returned by the visitor as a result of visiting this node
    */
@@ -205,26 +216,30 @@ abstract class XmlNode {
 
   /**
    * Return the first token included in this node's source range.
-   * @return the first token or {@code null} if none
+   *
+   * @return the first token or `null` if none
    */
   Token get beginToken;
 
   /**
    * Return the offset of the character immediately following the last character of this node's
-   * source range. This is equivalent to {@code node.getOffset() + node.getLength()}. For an html
+   * source range. This is equivalent to `node.getOffset() + node.getLength()`. For an html
    * unit this will be equal to the length of the unit's source.
+   *
    * @return the offset of the character just past the node's source range
    */
   int get end => offset + length;
 
   /**
    * Return the last token included in this node's source range.
-   * @return the last token or {@code null} if none
+   *
+   * @return the last token or `null` if none
    */
   Token get endToken;
 
   /**
    * Return the number of characters in the node's source range.
+   *
    * @return the number of characters in the node's source range
    */
   int get length {
@@ -239,8 +254,9 @@ abstract class XmlNode {
   /**
    * Return the offset from the beginning of the file to the first character in the node's source
    * range.
+   *
    * @return the offset from the beginning of the file to the first character in the node's source
-   * range
+   *         range
    */
   int get offset {
     Token beginToken = this.beginToken;
@@ -251,11 +267,12 @@ abstract class XmlNode {
   }
 
   /**
-   * Return this node's parent node, or {@code null} if this node is the root of an AST structure.
-   * <p>
+   * Return this node's parent node, or `null` if this node is the root of an AST structure.
+   *
    * Note that the relationship between an AST node and its parent node may change over the lifetime
    * of a node.
-   * @return the parent of this node, or {@code null} if none
+   *
+   * @return the parent of this node, or `null` if none
    */
   XmlNode get parent => _parent;
   String toString() {
@@ -267,12 +284,14 @@ abstract class XmlNode {
   /**
    * Use the given visitor to visit all of the children of this node. The children will be visited
    * in source order.
+   *
    * @param visitor the visitor that will be used to visit the children of this node
    */
   void visitChildren(XmlVisitor<Object> visitor);
 
   /**
    * Make this node the parent of the given child nodes.
+   *
    * @param children the nodes that will become the children of this node
    * @return the nodes that were made children of this node
    */
@@ -289,6 +308,7 @@ abstract class XmlNode {
 
   /**
    * Make this node the parent of the given child node.
+   *
    * @param child the node that will become a child of this node
    * @return the node that was made a child of this node
    */
@@ -338,6 +358,7 @@ abstract class XmlNode {
 
   /**
    * Set the parent of this node to the given node.
+   *
    * @param newParent the node that is to be made the parent of this node
    */
   void set parent(XmlNode newParent) {
@@ -353,7 +374,7 @@ abstract class XmlNode {
   }
 }
 /**
- * Instances of the class {@code SimpleXmlVisitor} implement an AST visitor that will do nothing
+ * Instances of the class `SimpleXmlVisitor` implement an AST visitor that will do nothing
  * when visiting an AST node. It is intended to be a superclass for classes that use the visitor
  * pattern primarily as a dispatch mechanism (and hence don't need to recursively visit a whole
  * structure) and that only need to visit a small number of node types.
@@ -364,8 +385,9 @@ class SimpleXmlVisitor<R> implements XmlVisitor<R> {
   R visitXmlTagNode(XmlTagNode xmlTagNode) => null;
 }
 /**
- * The abstract class {@code AbstractScanner} implements a scanner for HTML code. Subclasses are
+ * The abstract class `AbstractScanner` implements a scanner for HTML code. Subclasses are
  * required to implement the interface used to access the characters being scanned.
+ *
  * @coverage dart.engine.html
  */
 abstract class AbstractScanner {
@@ -398,6 +420,7 @@ abstract class AbstractScanner {
 
   /**
    * Initialize a newly created scanner.
+   *
    * @param source the source being scanned
    */
   AbstractScanner(Source source) {
@@ -410,6 +433,7 @@ abstract class AbstractScanner {
 
   /**
    * Return an array containing the offsets of the first character of each line in the source code.
+   *
    * @return an array containing the offsets of the first character of each line in the source code
    */
   List<int> get lineStarts => _lineStarts;
@@ -418,13 +442,15 @@ abstract class AbstractScanner {
    * Return the current offset relative to the beginning of the file. Return the initial offset if
    * the scanner has not yet scanned the source code, and one (1) past the end of the source code if
    * the source code has been scanned.
+   *
    * @return the current offset of the scanner in the source
    */
   int get offset;
 
   /**
    * Answer the source being scanned.
-   * @return the source or {@code null} if undefined
+   *
+   * @return the source or `null` if undefined
    */
   Source get source => _source;
 
@@ -437,6 +463,7 @@ abstract class AbstractScanner {
 
   /**
    * Scan the source code to produce a list of tokens representing the source.
+   *
    * @return the first token in the list of tokens that were produced
    */
   Token tokenize() {
@@ -447,6 +474,7 @@ abstract class AbstractScanner {
 
   /**
    * Advance the current position and return the character at the new current position.
+   *
    * @return the character at the new current position
    */
   int advance();
@@ -454,16 +482,18 @@ abstract class AbstractScanner {
   /**
    * Return the substring of the source code between the start offset and the modified current
    * position. The current position is modified by adding the end delta.
+   *
    * @param start the offset to the beginning of the string, relative to the start of the file
    * @param endDelta the number of character after the current location to be included in the
-   * string, or the number of characters before the current location to be excluded if the
-   * offset is negative
+   *          string, or the number of characters before the current location to be excluded if the
+   *          offset is negative
    * @return the specified substring of the source code
    */
   String getString(int start, int endDelta);
 
   /**
    * Return the character at the current position without changing the current position.
+   *
    * @return the character at the current position
    */
   int peek();
@@ -504,7 +534,7 @@ abstract class AbstractScanner {
   }
   void scan() {
     bool inBrackets = false;
-    bool passThrough = false;
+    String endPassThrough = null;
     int c = advance();
     while (c >= 0) {
       int start = offset;
@@ -576,7 +606,7 @@ abstract class AbstractScanner {
             String tag = _tail.lexeme;
             for (String str in _passThroughElements) {
               if (str == tag) {
-                passThrough = true;
+                endPassThrough = "</${str}>";
                 break;
               }
             }
@@ -586,14 +616,39 @@ abstract class AbstractScanner {
         emit2(TokenType.GT, start);
         inBrackets = false;
         c = advance();
-        if (passThrough) {
-          while (c >= 0 && (c != 0x3C || peek() != 0x2F)) {
+        if (endPassThrough != null) {
+          bool endFound = false;
+          int len = endPassThrough.length;
+          int firstC = endPassThrough.codeUnitAt(0);
+          int index = 0;
+          int nextC = firstC;
+          while (c >= 0) {
+            if (c == nextC) {
+              index++;
+              if (index == len) {
+                endFound = true;
+                break;
+              }
+              nextC = endPassThrough.codeUnitAt(index);
+            } else if (c == firstC) {
+              index = 1;
+              nextC = endPassThrough.codeUnitAt(1);
+            } else {
+              index = 0;
+              nextC = firstC;
+            }
             c = recordStartOfLineAndAdvance(c);
           }
           if (start + 1 < offset) {
-            emit3(TokenType.TEXT, start + 1, -1);
+            if (endFound) {
+              emit3(TokenType.TEXT, start + 1, -len);
+              emit2(TokenType.LT_SLASH, offset - len + 1);
+              emit3(TokenType.TAG, offset - len + 3, -1);
+            } else {
+              emit3(TokenType.TEXT, start + 1, -1);
+            }
           }
-          passThrough = false;
+          endPassThrough = null;
         }
       } else if (c == 0x2F && peek() == 0x3E) {
         advance();
@@ -638,7 +693,8 @@ abstract class AbstractScanner {
   }
 }
 /**
- * Instances of {@code HtmlScanResult} hold the result of scanning an HTML file.
+ * Instances of `HtmlScanResult` hold the result of scanning an HTML file.
+ *
  * @coverage dart.engine.html
  */
 class HtmlScanResult {
@@ -649,7 +705,7 @@ class HtmlScanResult {
   int _modificationTime = 0;
 
   /**
-   * The first token in the token stream (not {@code null}).
+   * The first token in the token stream (not `null`).
    */
   Token _token;
 
@@ -665,25 +721,29 @@ class HtmlScanResult {
 
   /**
    * Answer the line start information that was produced.
-   * @return an array of line starts (not {@code null})
+   *
+   * @return an array of line starts (not `null`)
    */
   List<int> get lineStarts => _lineStarts;
 
   /**
    * Return the time at which the contents of the source were last set.
+   *
    * @return the time at which the contents of the source were last set
    */
   int get modificationTime => _modificationTime;
 
   /**
    * Answer the first token in the token stream.
-   * @return the token (not {@code null})
+   *
+   * @return the token (not `null`)
    */
   Token get token => _token;
 }
 /**
- * Instances of the class {@code StringScanner} implement a scanner that reads from a string. The
+ * Instances of the class `StringScanner` implement a scanner that reads from a string. The
  * scanning logic is in the superclass.
+ *
  * @coverage dart.engine.html
  */
 class StringScanner extends AbstractScanner {
@@ -705,6 +765,7 @@ class StringScanner extends AbstractScanner {
 
   /**
    * Initialize a newly created scanner to scan the characters in the given string.
+   *
    * @param source the source being scanned
    * @param string the string from which characters will be read
    */
@@ -733,8 +794,9 @@ class StringScanner extends AbstractScanner {
   }
 }
 /**
- * Instances of the class {@code CharBufferScanner} implement a scanner that reads from a character
+ * Instances of the class `CharBufferScanner` implement a scanner that reads from a character
  * buffer. The scanning logic is in the superclass.
+ *
  * @coverage dart.engine.html
  */
 class CharBufferScanner extends AbstractScanner {
@@ -756,6 +818,7 @@ class CharBufferScanner extends AbstractScanner {
 
   /**
    * Initialize a newly created scanner to scan the characters in the given character buffer.
+   *
    * @param source the source being scanned
    * @param buffer the buffer from which characters will be read
    */
@@ -781,8 +844,9 @@ class CharBufferScanner extends AbstractScanner {
   }
 }
 /**
- * Instances of the class {@code ToSourceVisitor} write a source representation of a visited XML
+ * Instances of the class `ToSourceVisitor` write a source representation of a visited XML
  * node (and all of it's children) to a writer.
+ *
  * @coverage dart.engine.html
  */
 class ToSourceVisitor implements XmlVisitor<Object> {
@@ -795,6 +859,7 @@ class ToSourceVisitor implements XmlVisitor<Object> {
   /**
    * Initialize a newly created visitor to write source code representing the visited nodes to the
    * given writer.
+   *
    * @param writer the writer to which the source is to be written
    */
   ToSourceVisitor(PrintWriter writer) {
@@ -844,6 +909,7 @@ class ToSourceVisitor implements XmlVisitor<Object> {
 
   /**
    * Safely visit the given node.
+   *
    * @param node the node to be visited
    */
   void visit(XmlNode node) {
@@ -853,8 +919,9 @@ class ToSourceVisitor implements XmlVisitor<Object> {
   }
 }
 /**
- * The enumeration {@code TokenType} defines the types of tokens that can be returned by the
+ * The enumeration `TokenType` defines the types of tokens that can be returned by the
  * scanner.
+ *
  * @coverage dart.engine.html
  */
 class TokenType implements Comparable<TokenType> {
@@ -874,7 +941,19 @@ class TokenType implements Comparable<TokenType> {
   static final TokenType STRING = new TokenType('STRING', 9, null);
   static final TokenType TAG = new TokenType('TAG', 10, null);
   static final TokenType TEXT = new TokenType('TEXT', 11, null);
-  static final List<TokenType> values = [EOF, EQ, GT, LT_SLASH, LT, SLASH_GT, COMMENT, DECLARATION, DIRECTIVE, STRING, TAG, TEXT];
+  static final List<TokenType> values = [
+      EOF,
+      EQ,
+      GT,
+      LT_SLASH,
+      LT,
+      SLASH_GT,
+      COMMENT,
+      DECLARATION,
+      DIRECTIVE,
+      STRING,
+      TAG,
+      TEXT];
 
   /// The name of this enum constant, as declared in the enum declaration.
   final String name;
@@ -883,7 +962,7 @@ class TokenType implements Comparable<TokenType> {
   final int ordinal;
 
   /**
-   * The lexeme that defines this type of token, or {@code null} if there is more than one possible
+   * The lexeme that defines this type of token, or `null` if there is more than one possible
    * lexeme for this type of token.
    */
   String _lexeme;
@@ -892,8 +971,9 @@ class TokenType implements Comparable<TokenType> {
   }
 
   /**
-   * Return the lexeme that defines this type of token, or {@code null} if there is more than one
+   * Return the lexeme that defines this type of token, or `null` if there is more than one
    * possible lexeme for this type of token.
+   *
    * @return the lexeme that defines this type of token
    */
   String get lexeme => _lexeme;
@@ -906,7 +986,8 @@ class TokenType_EOF extends TokenType {
   String toString() => "-eof-";
 }
 /**
- * Instances of {@code XmlAttributeNode} represent name/value pairs owned by an {@link XmlTagNode}.
+ * Instances of `XmlAttributeNode` represent name/value pairs owned by an [XmlTagNode].
+ *
  * @coverage dart.engine.html
  */
 class XmlAttributeNode extends XmlNode {
@@ -916,10 +997,11 @@ class XmlAttributeNode extends XmlNode {
 
   /**
    * Construct a new instance representing an XML attribute.
-   * @param name the name token (not {@code null}). This may be a zero length token if the attribute
-   * is badly formed.
-   * @param equals the equals sign or {@code null} if none
-   * @param value the value token (not {@code null})
+   *
+   * @param name the name token (not `null`). This may be a zero length token if the attribute
+   *          is badly formed.
+   * @param equals the equals sign or `null` if none
+   * @param value the value token (not `null`)
    */
   XmlAttributeNode(Token name, Token equals, Token value) {
     this._name = name;
@@ -931,20 +1013,24 @@ class XmlAttributeNode extends XmlNode {
   Token get endToken => _value;
 
   /**
-   * Answer the equals sign token that appears between the name and value tokens. This may be{@code null} if the attribute is badly formed.
-   * @return the token or {@code null} if there is no equals sign between the name and value
+   * Answer the equals sign token that appears between the name and value tokens. This may be
+   * `null` if the attribute is badly formed.
+   *
+   * @return the token or `null` if there is no equals sign between the name and value
    */
   Token get equals => _equals;
 
   /**
    * Answer the attribute name. This may be a zero length token if the attribute is badly formed.
-   * @return the name (not {@code null})
+   *
+   * @return the name (not `null`)
    */
   Token get name => _name;
 
   /**
    * Answer the lexeme for the value token without the leading and trailing quotes.
-   * @return the text or {@code null} if the value is not specified
+   *
+   * @return the text or `null` if the value is not specified
    */
   String get text {
     if (_value == null) {
@@ -973,14 +1059,17 @@ class XmlAttributeNode extends XmlNode {
   /**
    * Answer the attribute value. A properly formed value will start and end with matching quote
    * characters, but the value returned may not be properly formed.
-   * @return the value or {@code null} if this represents a badly formed attribute
+   *
+   * @return the value or `null` if this represents a badly formed attribute
    */
   Token get value => _value;
   void visitChildren(XmlVisitor<Object> visitor) {
   }
 }
 /**
- * The interface {@code XmlVisitor} defines the behavior of objects that can be used to visit an{@link XmlNode} structure.
+ * The interface `XmlVisitor` defines the behavior of objects that can be used to visit an
+ * [XmlNode] structure.
+ *
  * @coverage dart.engine.html
  */
 abstract class XmlVisitor<R> {
@@ -989,20 +1078,22 @@ abstract class XmlVisitor<R> {
   R visitXmlTagNode(XmlTagNode xmlTagNode);
 }
 /**
- * Instances of {@code HtmlScanner} receive and scan HTML content from a {@link Source}.<br/>
+ * Instances of `HtmlScanner` receive and scan HTML content from a [Source].<br/>
  * For example, the following code scans HTML source and returns the result:
+ *
  * <pre>
- * HtmlScanner scanner = new HtmlScanner(source);
- * source.getContents(scanner);
- * return scanner.getResult();
+ *   HtmlScanner scanner = new HtmlScanner(source);
+ *   source.getContents(scanner);
+ *   return scanner.getResult();
  * </pre>
+ *
  * @coverage dart.engine.html
  */
 class HtmlScanner implements Source_ContentReceiver {
   List<String> _SCRIPT_TAG = <String> ["script"];
 
   /**
-   * The source being scanned (not {@code null})
+   * The source being scanned (not `null`)
    */
   Source _source;
 
@@ -1023,7 +1114,8 @@ class HtmlScanner implements Source_ContentReceiver {
 
   /**
    * Construct a new instance to scan the specified source.
-   * @param source the source to be scanned (not {@code null})
+   *
+   * @param source the source to be scanned (not `null`)
    */
   HtmlScanner(Source source) {
     this._source = source;
@@ -1043,13 +1135,15 @@ class HtmlScanner implements Source_ContentReceiver {
 
   /**
    * Answer the result of scanning the source
-   * @return the result (not {@code null})
+   *
+   * @return the result (not `null`)
    */
   HtmlScanResult get result => new HtmlScanResult(_modificationTime, _token, _scanner.lineStarts);
 }
 /**
- * Instances of the class {@code XmlParser} are used to parse tokens into a AST structure comprised
- * of {@link XmlNode}s.
+ * Instances of the class `XmlParser` are used to parse tokens into a AST structure comprised
+ * of [XmlNode]s.
+ *
  * @coverage dart.engine.html
  */
 class XmlParser {
@@ -1066,6 +1160,7 @@ class XmlParser {
 
   /**
    * Construct a parser for the specified source.
+   *
    * @param source the source being parsed
    */
   XmlParser(Source source) {
@@ -1074,22 +1169,25 @@ class XmlParser {
 
   /**
    * Answer the source being parsed.
+   *
    * @return the source
    */
   Source get source => _source;
 
   /**
-   * Answer {@code true} if the specified tag is self closing and thus should never have content or
+   * Answer `true` if the specified tag is self closing and thus should never have content or
    * child tag nodes.
-   * @param tag the tag (not {@code null})
-   * @return {@code true} if self closing
+   *
+   * @param tag the tag (not `null`)
+   * @return `true` if self closing
    */
   bool isSelfClosing(Token tag) => false;
 
   /**
    * Parse the entire token stream and in the process, advance the current token to the end of the
    * token stream.
-   * @return the list of tag nodes found (not {@code null}, contains no {@code null})
+   *
+   * @return the list of tag nodes found (not `null`, contains no `null`)
    */
   List<XmlTagNode> parseTopTagNodes(Token firstToken) {
     _currentToken = firstToken;
@@ -1113,14 +1211,16 @@ class XmlParser {
 
   /**
    * Answer the current token.
+   *
    * @return the current token
    */
   Token get currentToken => _currentToken;
 
   /**
    * Insert a synthetic token of the specified type before the current token
-   * @param type the type of token to be inserted (not {@code null})
-   * @return the synthetic token that was inserted (not {@code null})
+   *
+   * @param type the type of token to be inserted (not `null`)
+   * @return the synthetic token that was inserted (not `null`)
    */
   Token insertSyntheticToken(TokenType type) {
     Token token = new Token.con2(type, _currentToken.offset, "");
@@ -1131,8 +1231,9 @@ class XmlParser {
 
   /**
    * Parse the token stream for an attribute. This method advances the current token over the
-   * attribute, but should not be called if the {@link #currentToken} is not {@link TokenType#TAG}.
-   * @return the attribute (not {@code null})
+   * attribute, but should not be called if the [currentToken] is not [TokenType#TAG].
+   *
+   * @return the attribute (not `null`)
    */
   XmlAttributeNode parseAttribute() {
     Token name = _currentToken;
@@ -1158,8 +1259,9 @@ class XmlParser {
 
   /**
    * Parse the stream for a sequence of attributes. This method advances the current token to the
-   * next {@link TokenType#GT}, {@link TokenType#SLASH_GT}, or {@link TokenType#EOF}.
-   * @return a collection of zero or more attributes (not {@code null}, contains no {@code null}s)
+   * next [TokenType#GT], [TokenType#SLASH_GT], or [TokenType#EOF].
+   *
+   * @return a collection of zero or more attributes (not `null`, contains no `null`s)
    */
   List<XmlAttributeNode> parseAttributes() {
     TokenType type = _currentToken.type;
@@ -1184,8 +1286,9 @@ class XmlParser {
 
   /**
    * Parse the stream for a sequence of tag nodes existing within a parent tag node. This method
-   * advances the current token to the next {@link TokenType#LT_SLASH} or {@link TokenType#EOF}.
-   * @return a list of nodes (not {@code null}, contains no {@code null}s)
+   * advances the current token to the next [TokenType#LT_SLASH] or [TokenType#EOF].
+   *
+   * @return a list of nodes (not `null`, contains no `null`s)
    */
   List<XmlTagNode> parseChildTagNodes() {
     TokenType type = _currentToken.type;
@@ -1212,8 +1315,9 @@ class XmlParser {
 
   /**
    * Parse the token stream for the next tag node. This method advances current token over the
-   * parsed tag node, but should only be called if the current token is {@link TokenType#LT}
-   * @return the tag node or {@code null} if none found
+   * parsed tag node, but should only be called if the current token is [TokenType#LT]
+   *
+   * @return the tag node or `null` if none found
    */
   XmlTagNode parseTagNode() {
     Token nodeStart = _currentToken;
@@ -1273,7 +1377,9 @@ class XmlParser {
   }
 }
 /**
- * Instances of {@code XmlTagNode} represent XML or HTML elements such as {@code <p>} and{@code <body foo="bar"> ... </body>}.
+ * Instances of `XmlTagNode` represent XML or HTML elements such as `` and
+ * `<body foo="bar"> ... </body>`.
+ *
  * @coverage dart.engine.html
  */
 class XmlTagNode extends XmlNode {
@@ -1289,75 +1395,81 @@ class XmlTagNode extends XmlNode {
   static List<XmlTagNode> NO_TAG_NODES = new UnmodifiableListView(new List<XmlTagNode>());
 
   /**
-   * The starting {@link TokenType#LT} token (not {@code null}).
+   * The starting [TokenType#LT] token (not `null`).
    */
   Token _nodeStart;
 
   /**
-   * The {@link TokenType#TAG} token after the starting '&lt;' (not {@code null}).
+   * The [TokenType#TAG] token after the starting '&lt;' (not `null`).
    */
   Token _tag;
 
   /**
-   * The attributes contained by the receiver (not {@code null}, contains no {@code null}s).
+   * The attributes contained by the receiver (not `null`, contains no `null`s).
    */
   List<XmlAttributeNode> _attributes;
 
   /**
-   * The {@link TokenType#GT} or {@link TokenType#SLASH_GT} token after the attributes (not{@code null}). The token may be the same token as {@link #nodeEnd} if there are no child{@link #tagNodes}.
+   * The [TokenType#GT] or [TokenType#SLASH_GT] token after the attributes (not
+   * `null`). The token may be the same token as [nodeEnd] if there are no child
+   * [tagNodes].
    */
   Token _attributeEnd;
 
   /**
-   * The tag nodes contained in the receiver (not {@code null}, contains no {@code null}s).
+   * The tag nodes contained in the receiver (not `null`, contains no `null`s).
    */
   List<XmlTagNode> _tagNodes;
 
   /**
-   * The token (not {@code null}) after the content, which may be
-   * <ul>
-   * <li>(1) {@link TokenType#LT_SLASH} for nodes with open and close tags, or</li>
-   * <li>(2) the {@link TokenType#LT} nodeStart of the next sibling node if this node is self
-   * closing or the attributeEnd is {@link TokenType#SLASH_GT}, or</li>
-   * <li>(3) {@link TokenType#EOF} if the node does not have a closing tag and is the last node in
-   * the stream {@link TokenType#LT_SLASH} token after the content, or {@code null} if there is no
-   * content and the attributes ended with {@link TokenType#SLASH_GT}.</li>
-   * </ul>
+   * The token (not `null`) after the content, which may be
+   *
+   * * (1) [TokenType#LT_SLASH] for nodes with open and close tags, or
+   * * (2) the [TokenType#LT] nodeStart of the next sibling node if this node is self
+   * closing or the attributeEnd is [TokenType#SLASH_GT], or
+   * * (3) [TokenType#EOF] if the node does not have a closing tag and is the last node in
+   * the stream [TokenType#LT_SLASH] token after the content, or `null` if there is no
+   * content and the attributes ended with [TokenType#SLASH_GT].
+   *
    */
   Token _contentEnd;
 
   /**
-   * The closing {@link TokenType#TAG} after the child elements or {@code null} if there is no
-   * content and the attributes ended with {@link TokenType#SLASH_GT}
+   * The closing [TokenType#TAG] after the child elements or `null` if there is no
+   * content and the attributes ended with [TokenType#SLASH_GT]
    */
   Token _closingTag;
 
   /**
-   * The ending {@link TokenType#GT} or {@link TokenType#SLASH_GT} token (not {@code null}).
+   * The ending [TokenType#GT] or [TokenType#SLASH_GT] token (not `null`).
    */
   Token _nodeEnd;
 
   /**
    * Construct a new instance representing an XML or HTML element
-   * @param nodeStart the starting {@link TokenType#LT} token (not {@code null})
-   * @param tag the {@link TokenType#TAG} token after the starting '&lt;' (not {@code null}).
-   * @param attributes the attributes associated with this element or {@link #NO_ATTRIBUTES} (not{@code null}, contains no {@code null}s)
-   * @param attributeEnd The {@link TokenType#GT} or {@link TokenType#SLASH_GT} token after the
-   * attributes (not {@code null}). The token may be the same token as {@link #nodeEnd} if
-   * there are no child {@link #tagNodes}.
-   * @param tagNodes child tag nodes of the receiver or {@link #NO_TAG_NODES} (not {@code null},
-   * contains no {@code null}s)
-   * @param contentEnd the token (not {@code null}) after the content, which may be
-   * <ul>
-   * <li>(1) {@link TokenType#LT_SLASH} for nodes with open and close tags, or</li>
-   * <li>(2) the {@link TokenType#LT} nodeStart of the next sibling node if this node is
-   * self closing or the attributeEnd is {@link TokenType#SLASH_GT}, or</li>
-   * <li>(3) {@link TokenType#EOF} if the node does not have a closing tag and is the last
-   * node in the stream {@link TokenType#LT_SLASH} token after the content, or {@code null}if there is no content and the attributes ended with {@link TokenType#SLASH_GT}.</li>
-   * </ul>
-   * @param closingTag the closing {@link TokenType#TAG} after the child elements or {@code null} if
-   * there is no content and the attributes ended with {@link TokenType#SLASH_GT}
-   * @param nodeEnd the ending {@link TokenType#GT} or {@link TokenType#SLASH_GT} token (not{@code null})
+   *
+   * @param nodeStart the starting [TokenType#LT] token (not `null`)
+   * @param tag the [TokenType#TAG] token after the starting '&lt;' (not `null`).
+   * @param attributes the attributes associated with this element or [NO_ATTRIBUTES] (not
+   *          `null`, contains no `null`s)
+   * @param attributeEnd The [TokenType#GT] or [TokenType#SLASH_GT] token after the
+   *          attributes (not `null`). The token may be the same token as [nodeEnd] if
+   *          there are no child [tagNodes].
+   * @param tagNodes child tag nodes of the receiver or [NO_TAG_NODES] (not `null`,
+   *          contains no `null`s)
+   * @param contentEnd the token (not `null`) after the content, which may be
+   *
+   *          * (1) [TokenType#LT_SLASH] for nodes with open and close tags, or
+   *          * (2) the [TokenType#LT] nodeStart of the next sibling node if this node is
+   *          self closing or the attributeEnd is [TokenType#SLASH_GT], or
+   *          * (3) [TokenType#EOF] if the node does not have a closing tag and is the last
+   *          node in the stream [TokenType#LT_SLASH] token after the content, or `null`
+   *          if there is no content and the attributes ended with [TokenType#SLASH_GT].
+   *
+   * @param closingTag the closing [TokenType#TAG] after the child elements or `null` if
+   *          there is no content and the attributes ended with [TokenType#SLASH_GT]
+   * @param nodeEnd the ending [TokenType#GT] or [TokenType#SLASH_GT] token (not
+   *          `null`)
    */
   XmlTagNode(Token nodeStart, Token tag, List<XmlAttributeNode> attributes, Token attributeEnd, List<XmlTagNode> tagNodes, Token contentEnd, Token closingTag, Token nodeEnd) {
     this._nodeStart = nodeStart;
@@ -1373,8 +1485,9 @@ class XmlTagNode extends XmlNode {
 
   /**
    * Answer the attribute with the specified name.
+   *
    * @param name the attribute name
-   * @return the attribute or {@code null} if no matching attribute is found
+   * @return the attribute or `null` if no matching attribute is found
    */
   XmlAttributeNode getAttribute(String name2) {
     for (XmlAttributeNode attribute in _attributes) {
@@ -1386,23 +1499,29 @@ class XmlTagNode extends XmlNode {
   }
 
   /**
-   * The {@link TokenType#GT} or {@link TokenType#SLASH_GT} token after the attributes (not{@code null}). The token may be the same token as {@link #nodeEnd} if there are no child{@link #tagNodes}.
-   * @return the token (not {@code null})
+   * The [TokenType#GT] or [TokenType#SLASH_GT] token after the attributes (not
+   * `null`). The token may be the same token as [nodeEnd] if there are no child
+   * [tagNodes].
+   *
+   * @return the token (not `null`)
    */
   Token get attributeEnd => _attributeEnd;
 
   /**
    * Answer the receiver's attributes. Callers should not manipulate the returned list to edit the
    * AST structure.
-   * @return the attributes (not {@code null}, contains no {@code null}s)
+   *
+   * @return the attributes (not `null`, contains no `null`s)
    */
   List<XmlAttributeNode> get attributes => _attributes;
 
   /**
-   * Find the attribute with the given name (see {@link #getAttribute(String)} and answer the lexeme
-   * for the attribute's value token without the leading and trailing quotes (see{@link XmlAttributeNode#getText()}).
+   * Find the attribute with the given name (see [getAttribute] and answer the lexeme
+   * for the attribute's value token without the leading and trailing quotes (see
+   * [XmlAttributeNode#getText]).
+   *
    * @param name the attribute name
-   * @return the attribute text or {@code null} if no matching attribute is found
+   * @return the attribute text or `null` if no matching attribute is found
    */
   String getAttributeText(String name) {
     XmlAttributeNode attribute = getAttribute(name);
@@ -1411,17 +1530,19 @@ class XmlTagNode extends XmlNode {
   Token get beginToken => _nodeStart;
 
   /**
-   * The the closing {@link TokenType#TAG} after the child elements or {@code null} if there is no
-   * content and the attributes ended with {@link TokenType#SLASH_GT}
-   * @return the closing tag or {@code null}
+   * The the closing [TokenType#TAG] after the child elements or `null` if there is no
+   * content and the attributes ended with [TokenType#SLASH_GT]
+   *
+   * @return the closing tag or `null`
    */
   Token get closingTag => _closingTag;
 
   /**
    * Answer a string representing the content contained in the receiver. This includes the textual
-   * representation of any child tag nodes ({@link #getTagNodes()}). Whitespace between '&lt;',
+   * representation of any child tag nodes ([getTagNodes]). Whitespace between '&lt;',
    * '&lt;/', and '>', '/>' is discarded, but all other whitespace is preserved.
-   * @return the content (not {@code null})
+   *
+   * @return the content (not `null`)
    */
   String get content {
     Token token = _attributeEnd.next;
@@ -1442,16 +1563,17 @@ class XmlTagNode extends XmlNode {
   }
 
   /**
-   * Answer the token (not {@code null}) after the content, which may be
-   * <ul>
-   * <li>(1) {@link TokenType#LT_SLASH} for nodes with open and close tags, or</li>
-   * <li>(2) the {@link TokenType#LT} nodeStart of the next sibling node if this node is self
-   * closing or the attributeEnd is {@link TokenType#SLASH_GT}, or</li>
-   * <li>(3) {@link TokenType#EOF} if the node does not have a closing tag and is the last node in
-   * the stream {@link TokenType#LT_SLASH} token after the content, or {@code null} if there is no
-   * content and the attributes ended with {@link TokenType#SLASH_GT}.</li>
-   * </ul>
-   * @return the token (not {@code null})
+   * Answer the token (not `null`) after the content, which may be
+   *
+   * * (1) [TokenType#LT_SLASH] for nodes with open and close tags, or
+   * * (2) the [TokenType#LT] nodeStart of the next sibling node if this node is self
+   * closing or the attributeEnd is [TokenType#SLASH_GT], or
+   * * (3) [TokenType#EOF] if the node does not have a closing tag and is the last node in
+   * the stream [TokenType#LT_SLASH] token after the content, or `null` if there is no
+   * content and the attributes ended with [TokenType#SLASH_GT].
+   *
+   *
+   * @return the token (not `null`)
    */
   Token get contentEnd => _contentEnd;
   Token get endToken {
@@ -1477,27 +1599,31 @@ class XmlTagNode extends XmlNode {
   }
 
   /**
-   * Answer the ending {@link TokenType#GT} or {@link TokenType#SLASH_GT} token.
-   * @return the token (not {@code null})
+   * Answer the ending [TokenType#GT] or [TokenType#SLASH_GT] token.
+   *
+   * @return the token (not `null`)
    */
   Token get nodeEnd => _nodeEnd;
 
   /**
-   * Answer the starting {@link TokenType#LT} token.
-   * @return the token (not {@code null})
+   * Answer the starting [TokenType#LT] token.
+   *
+   * @return the token (not `null`)
    */
   Token get nodeStart => _nodeStart;
 
   /**
-   * Answer the {@link TokenType#TAG} token after the starting '&lt;'.
-   * @return the token (not {@code null})
+   * Answer the [TokenType#TAG] token after the starting '&lt;'.
+   *
+   * @return the token (not `null`)
    */
   Token get tag => _tag;
 
   /**
    * Answer the tag nodes contained in the receiver. Callers should not manipulate the returned list
    * to edit the AST structure.
-   * @return the children (not {@code null}, contains no {@code null}s)
+   *
+   * @return the children (not `null`, contains no `null`s)
    */
   List<XmlTagNode> get tagNodes => _tagNodes;
   void visitChildren(XmlVisitor<Object> visitor) {
@@ -1510,7 +1636,7 @@ class XmlTagNode extends XmlNode {
   }
 
   /**
-   * Same as {@link #becomeParentOf(List)}, but returns given "ifEmpty" if "children" is empty
+   * Same as [becomeParentOf], but returns given "ifEmpty" if "children" is empty
    */
   List becomeParentOfEmpty(List children, List ifEmpty) {
     if (children != null && children.isEmpty) {
@@ -1520,8 +1646,9 @@ class XmlTagNode extends XmlNode {
   }
 }
 /**
- * Instances of the class {@code HtmlParser} are used to parse tokens into a AST structure comprised
- * of {@link XmlNode}s.
+ * Instances of the class `HtmlParser` are used to parse tokens into a AST structure comprised
+ * of [XmlNode]s.
+ *
  * @coverage dart.engine.html
  */
 class HtmlParser extends XmlParser {
@@ -1529,15 +1656,16 @@ class HtmlParser extends XmlParser {
 
   /**
    * Construct a parser for the specified source.
+   *
    * @param source the source being parsed
    */
-  HtmlParser(Source source) : super(source) {
-  }
+  HtmlParser(Source source) : super(source);
 
   /**
    * Parse the tokens specified by the given scan result.
-   * @param scanResult the result of scanning an HTML source (not {@code null})
-   * @return the parse result (not {@code null})
+   *
+   * @param scanResult the result of scanning an HTML source (not `null`)
+   * @return the parse result (not `null`)
    */
   HtmlParseResult parse(HtmlScanResult scanResult) {
     Token firstToken = scanResult.token;
@@ -1548,8 +1676,9 @@ class HtmlParser extends XmlParser {
 
   /**
    * Scan then parse the specified source.
-   * @param source the source to be scanned and parsed (not {@code null})
-   * @return the parse result (not {@code null})
+   *
+   * @param source the source to be scanned and parsed (not `null`)
+   * @return the parse result (not `null`)
    */
   HtmlParseResult parse2(Source source) {
     HtmlScanner scanner = new HtmlScanner(source);
@@ -1559,7 +1688,8 @@ class HtmlParser extends XmlParser {
   bool isSelfClosing(Token tag) => SELF_CLOSING.contains(tag.lexeme);
 }
 /**
- * Instances of the class {@code HtmlUnit} represent the contents of an HTML file.
+ * Instances of the class `HtmlUnit` represent the contents of an HTML file.
+ *
  * @coverage dart.engine.html
  */
 class HtmlUnit extends XmlNode {
@@ -1571,25 +1701,27 @@ class HtmlUnit extends XmlNode {
 
   /**
    * The last token in the token stream that was parsed to form this compilation unit. This token
-   * should always have a type of {@link TokenType.EOF}.
+   * should always have a type of [TokenType.EOF].
    */
   Token _endToken;
 
   /**
-   * The tag nodes contained in the receiver (not {@code null}, contains no {@code null}s).
+   * The tag nodes contained in the receiver (not `null`, contains no `null`s).
    */
   List<XmlTagNode> _tagNodes;
 
   /**
-   * The element associated with this HTML unit or {@code null} if the receiver is not resolved.
+   * The element associated with this HTML unit or `null` if the receiver is not resolved.
    */
   HtmlElementImpl _element;
 
   /**
    * Construct a new instance representing the content of an HTML file.
-   * @param beginToken the first token in the file (not {@code null})
-   * @param tagNodes child tag nodes of the receiver (not {@code null}, contains no {@code null}s)
-   * @param endToken the last token in the token stream which should be of type{@link TokenType.EOF}
+   *
+   * @param beginToken the first token in the file (not `null`)
+   * @param tagNodes child tag nodes of the receiver (not `null`, contains no `null`s)
+   * @param endToken the last token in the token stream which should be of type
+   *          [TokenType.EOF]
    */
   HtmlUnit(Token beginToken, List<XmlTagNode> tagNodes, Token endToken) {
     this._beginToken = beginToken;
@@ -1601,7 +1733,8 @@ class HtmlUnit extends XmlNode {
 
   /**
    * Return the element associated with this HTML unit.
-   * @return the element or {@code null} if the receiver is not resolved
+   *
+   * @return the element or `null` if the receiver is not resolved
    */
   HtmlElementImpl get element => _element;
   Token get endToken => _endToken;
@@ -1609,12 +1742,14 @@ class HtmlUnit extends XmlNode {
   /**
    * Answer the tag nodes contained in the receiver. Callers should not manipulate the returned list
    * to edit the AST structure.
-   * @return the children (not {@code null}, contains no {@code null}s)
+   *
+   * @return the children (not `null`, contains no `null`s)
    */
   List<XmlTagNode> get tagNodes => _tagNodes;
 
   /**
    * Set the element associated with this HTML unit.
+   *
    * @param element the element
    */
   void set element(HtmlElementImpl element2) {

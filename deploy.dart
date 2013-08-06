@@ -16,6 +16,8 @@ void main() {
   copyDirectory(directory('packages/js'), directory('app/packages/js'));
   copyDirectory(directory('packages/logging'), directory('app/packages/logging'));
   copyDirectory(directory('packages/meta'), directory('app/packages/meta'));
+  copyDirectory(directory('packages/path'), directory('app/packages/path'));
+  copyDirectory(directory('packages/stack_trace'), directory('app/packages/stack_trace'));
   copyDirectory(directory('packages/unittest'), directory('app/packages/unittest'));
   
   // copy over the sdk
