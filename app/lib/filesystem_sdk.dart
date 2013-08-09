@@ -64,7 +64,7 @@ class SdkFileSystem extends FileSystem {
   }
 
   Future<String> readContents(String path) {
-    return html.HttpRequest.getString(chrome.Runtime.getURL(path));
+    return html.HttpRequest.getString(chrome.runtime.getURL(path));
   }
 }
 
