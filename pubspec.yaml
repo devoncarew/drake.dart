@@ -3,7 +3,7 @@ version: 0.4.0-dev
 author: devoncarew@google.com
 description: A Chrome app based web development environment
 dependencies:
-  compiler_unsupported: 0.6.6
+  compiler_unsupported: any
   analyzer_experimental: any
   browser: any
   chrome: any
