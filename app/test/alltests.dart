@@ -16,7 +16,7 @@ import 'preferences_test.dart' as preferences_test;
 import 'workbench_test.dart' as workbench_test;
 import 'workspace_test.dart' as workspace_test;
 
-bool _testsDefined;
+bool _testsDefined = false;
 
 main() {
   ace_test.main();
@@ -36,30 +36,30 @@ void runTests(Workbench workbench) {
     rerunTests();
   } else {
     unittestConfiguration = new WorkbenchTestConfiguration(workbench);
-    
+
     main();
-    
+
     _testsDefined = true;
   }
 }
 
 class WorkbenchTestConfiguration extends Configuration {
   Workbench workbench;
-  
+
   WorkbenchTestConfiguration(this.workbench);
-  
+
   void onInit() {
-    
+
   }
-  
+
   void onDone(bool success) {
-    
+
   }
- 
+
   void onLogMessage(TestCase testCase, String message) {
     workbench.console.append(message);
   }
-  
+
   void onSummary(int passed, int failed, int errors,
                  List<TestCase> results, String uncaughtError) {
     for (TestCase test in results) {
@@ -77,7 +77,7 @@ class WorkbenchTestConfiguration extends Configuration {
     }
 
     workbench.messageArea.clearAlerts();
-    
+
     if (passed == 0 && failed == 0 && errors == 0 && uncaughtError == null) {
       workbench.messageArea.showWarningAlert("Tests", 'No tests found.');
     } else if (failed == 0 && errors == 0 && uncaughtError == null) {
@@ -88,14 +88,14 @@ class WorkbenchTestConfiguration extends Configuration {
         workbench.messageArea.showErrorAlert(
             "Tests", 'Top-level uncaught error: $uncaughtError');
       }
-      
+
       workbench.messageArea.showErrorAlert(
           "Tests", '$passed PASSED, $failed FAILED, $errors ERRORS');
-    }    
-  }  
-  
+    }
+  }
+
   String indent(String str) {
     return str.split("\n").map((line) => "  $line").join("\n");
   }
-  
+
 }

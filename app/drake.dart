@@ -295,7 +295,7 @@ class Drake {
     return menuItem;
   }
 
-  void _handleWindowClosed() {
+  void _handleWindowClosed(data) {
     // TODO:
     //print('_handleWindowClosed');
   }
