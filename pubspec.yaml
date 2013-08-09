@@ -9,4 +9,5 @@ dependencies:
   chrome: any
   js: any
   path: any
+  args: any
   unittest: any

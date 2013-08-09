@@ -2,12 +2,40 @@
 import 'dart:io';
 import 'dart:json' as json;
 import 'package:path/path.dart';
+import "package:args/args.dart";
 
 bool get isWindows => Platform.operatingSystem == 'windows';
-String get sdkBinPath => "/Applications/dart/dart-sdk/bin/";// dirname(new Options().executable);
-String get sdkPath => join(sdkBinPath, '..');
+
+String sdkPath;
+const _argHelp = 'help';
+const _argSdkHome = 'dart-sdk';
 
 void main() {
+  var parser = _getParser();
+  var result = _getParserResults(parser);
+  bool help = result[_argHelp];
+
+  if (result.rest.isNotEmpty) {
+    print('Unexpected arguments: ${result.rest}');
+    printUsage(parser);
+    exit(1);
+    return;
+  }
+
+  if (help) {
+    printUsage(parser);
+    return;
+  }
+
+  sdkPath = result[_argSdkHome];
+
+  if (sdkPath == null) {
+    print("Missing arguments\n");
+    printUsage(parser);
+    exit(1);
+    return;
+  }
+
   // update the chrome app packages
   copyDirectory('packages/analyzer_experimental',
       'app/packages/analyzer_experimental');
@@ -30,6 +58,29 @@ void main() {
   // create application documentation
   // TODO:
 }
+
+void printUsage(parser) {
+  print("""
+deploy.dart --dart-sdk <SDK_HOME>
+""");
+  print(parser.getUsage());
+}
+
+ArgParser _getParser() => new ArgParser()
+  ..addFlag(_argHelp, abbr: "h", help: "Display this information and exit", negatable: false)
+  ..addOption(_argSdkHome, help: "Home Path of Dart SDK", defaultsTo: join(dirname(new Options().executable), ".."));
+
+ArgResults _getParserResults(ArgParser parser) {
+  final options = new Options();
+  try {
+    return parser.parse(options.arguments);
+  } on FormatException catch (e) {
+    print("Error parsing arguments:\n${e.message}\n");
+    printUsage(parser);
+    exit(1);
+  }
+}
+
 
 void copyDirectory(String srcDirPath, String destDirPath,
                    [bool quiet = false]) {
