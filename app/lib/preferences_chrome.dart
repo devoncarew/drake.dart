@@ -27,7 +27,7 @@ class ChromePreferenceStore extends PreferenceStore {
 
   Future<String> getValue(String key) {
     return _storageArea.get([key]).then((Map<String, String> map) {
-      return new Future.value(map[key]);
+      return new Future.value(map == null ? null : map[key]);
     });
   }
 

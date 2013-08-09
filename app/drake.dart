@@ -44,7 +44,7 @@ class Drake {
     createMenubar();
     createToolbar();
 
-    chrome.app.window.onClosed(_handleWindowClosed);
+    chrome.app.window.current.onClosed.listen(_handleWindowClosed);
   }
 
   void createActions() {
@@ -168,7 +168,7 @@ class Drake {
   void createAboutPopover(Element relativeTo) {
     String appName = i18n("app_name");
     String appDescription = i18n("app_description");
-    String version = chrome.Runtime.getManifest()['version'];
+    String version = chrome.runtime.getManifest()['version'];
 
     aboutPopover = new BPopover(relativeTo);
     aboutPopover.setTitle("About");
