@@ -1,88 +1,89 @@
 
 import 'dart:io';
 import 'dart:json' as json;
+import 'package:path/path.dart';
 
 bool get isWindows => Platform.operatingSystem == 'windows';
-Path get sdkBinPath => new Path(new Options().executable).directoryPath;
-Path get sdkPath => sdkBinPath.join(new Path('..')).canonicalize();
+String get sdkBinPath => "/Applications/dart/dart-sdk/bin/";// dirname(new Options().executable);
+String get sdkPath => join(sdkBinPath, '..');
 
 void main() {
   // update the chrome app packages
-  copyDirectory(
-      directory('packages/analyzer_experimental'), 
-      directory('app/packages/analyzer_experimental'));
-  copyDirectory(directory('packages/browser'), directory('app/packages/browser'));
-  copyDirectory(directory('packages/chrome'), directory('app/packages/chrome'));
-  copyDirectory(directory('packages/js'), directory('app/packages/js'));
-  copyDirectory(directory('packages/logging'), directory('app/packages/logging'));
-  copyDirectory(directory('packages/meta'), directory('app/packages/meta'));
-  copyDirectory(directory('packages/path'), directory('app/packages/path'));
-  copyDirectory(directory('packages/stack_trace'), directory('app/packages/stack_trace'));
-  copyDirectory(directory('packages/unittest'), directory('app/packages/unittest'));
-  
+  copyDirectory('packages/analyzer_experimental',
+      'app/packages/analyzer_experimental');
+  copyDirectory('packages/compiler_unsupported',
+      'app/packages/compiler_unsupported');
+  copyDirectory('packages/browser', 'app/packages/browser');
+  copyDirectory('packages/chrome', 'app/packages/chrome');
+  copyDirectory('packages/js', 'app/packages/js');
+  copyDirectory('packages/logging', 'app/packages/logging');
+  copyDirectory('packages/meta', 'app/packages/meta');
+  copyDirectory('packages/path', 'app/packages/path');
+  copyDirectory('packages/stack_trace', 'app/packages/stack_trace');
+  copyDirectory('packages/unittest', 'app/packages/unittest');
+
   // copy over the sdk
-  copyFile(sdkPath.join(new Path('version')), new Path('app/sdk'));
-  copyDirectory(sdkPath.join(new Path('lib')), new Path('app/sdk/lib'));
-  createFileListings(new Path('app/sdk'));
-  
+  copyFile(join(sdkPath, 'version'), join('app', 'sdk'));
+  copyDirectory(join(sdkPath, 'lib'), join('app', 'sdk', 'lib'));
+  createFileListings(join('app', 'sdk'));
+
   // create application documentation
   // TODO:
 }
 
-void copyDirectory(Path srcDirPath, Path destDirPath, [bool quiet = false]) {
+void copyDirectory(String srcDirPath, String destDirPath,
+                   [bool quiet = false]) {
   if (!quiet) {
     print("copying ${srcDirPath} ==> ${destDirPath}");
   }
 
-  Directory srcDir = new Directory.fromPath(srcDirPath);
-  
+  Directory srcDir = new Directory(srcDirPath);
+
   for (FileSystemEntity entity in srcDir.listSync()) {
-    String name = new Path(entity.path).filename;
-    
+    String name = entity.path;
+
     if (entity is File) {
-      copyFile(srcDirPath.join(new Path(name)), destDirPath);
+      copyFile(name, destDirPath);
     } else {
       copyDirectory(
-          srcDirPath.join(new Path(name)),
-          destDirPath.join(new Path(name)),
+          name,
+          join(destDirPath, basename(name)),
           true);
     }
   }
 }
 
-void copyFile(Path srcFilePath, Path destDirPath) {
-  File srcFile = new File.fromPath(srcFilePath);
-  File destFile = new File.fromPath(
-      destDirPath.join(new Path(srcFilePath.filename)));
-  
-  new Directory.fromPath(destDirPath).createSync(recursive: true);
-  
-  destFile.writeAsBytesSync(srcFile.readAsBytesSync());
+void copyFile(String srcFilePath, String destDirPath) {
+  File srcFile = new File(srcFilePath);
+  File destFile = new File(
+      join(destDirPath, basename(srcFilePath)));
+
+  //print("creating directory $destDirPath");
+  new Directory(destDirPath).createSync(recursive: true);
+
+  List<int> srcData = srcFile.readAsBytesSync();
+  destFile.writeAsBytesSync(srcData);
 }
 
-void createFileListings(Path directoryPath) {
-  Directory dir = new Directory.fromPath(directoryPath);
+void createFileListings(String directoryPath) {
+  Directory dir = new Directory(directoryPath);
   List<FileSystemEntity> entities = dir.listSync();
-  
+
   List<String> names = new List<String>();
-  
+
   for (FileSystemEntity entity in entities) {
-    String name = new Path(entity.path).filename;
-    
-    if (name != 'files.json' && !name.startsWith('.')) {    
+    String name = entity.path;
+
+    if (name != 'files.json' && !name.startsWith('.')) {
       if (entity is Directory) {
-        names.add(name + '/');
-        createFileListings(directoryPath.join(new Path(name)));
+        //names.add(name + '/');
+        createFileListings(name);
       } else {
-        names.add(name);        
+        names.add(name);
       }
     }
   }
-  
-  File jsonFile = new File.fromPath(directoryPath.join(new Path('files.json')));
-  jsonFile.writeAsStringSync(json.stringify(names));
-}
 
-Path directory(String path) {
-  return new Path(path);
+  File jsonFile = new File(join(directoryPath, 'files.json'));
+  jsonFile.writeAsStringSync(json.stringify(names));
 }

@@ -4,7 +4,7 @@ library utils;
 import 'dart:html';
 import 'dart:web_audio';
 
-import '../packages/chrome/chrome.dart' as chrome;
+import '../packages/chrome/app.dart' as chrome;
 import '../packages/js/js.dart' as js;
 
 /**
@@ -28,15 +28,15 @@ String stripQuotes(String str) {
   if (str.length < 2) {
     return str;
   }
-  
+
   if (str.startsWith("'") && str.endsWith("'")) {
     return str.substring(1, str.length - 1);
   }
-  
+
   if (str.startsWith('"') && str.endsWith('"')) {
     return str.substring(1, str.length - 1);
   }
-  
+
   return str;
 }
 
@@ -48,9 +48,9 @@ void jsRelease(js.Proxy proxy) {
     try {
       print("Exception call js.release() on ${proxy}");
     } catch (_) {
-      
+
     }
-    
+
     print(ex);
   }
 }
@@ -69,7 +69,7 @@ bool isWin() {
 
 String _platform() {
   String str = window.navigator.platform;
-  
+
   return (str != null) ? str.toLowerCase() : '';
 }
 
@@ -79,7 +79,7 @@ void beep() {
   if (_ctx == null) {
     _ctx = new AudioContext();
   }
-  
+
   OscillatorNode osc = _ctx.createOscillator();
 
   osc.connectNode(_ctx.destination, 0, 0);
