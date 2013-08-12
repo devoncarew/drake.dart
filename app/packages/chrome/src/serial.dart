@@ -1,4 +1,4 @@
-library chrome_serial;
+library chrome.serial;
 
 import 'dart:async';
 import 'dart:json' as JSON;
@@ -98,8 +98,8 @@ class Serial {
 
   /// callbacks need to check lastError
   static _safeExecute(completer, f) {
-    var lastError = Runtime.lastError;
-    if (!lastError.message.isEmpty) {
+    var lastError = runtime.lastError;
+    if (lastError != null) {
       completer.completeException(lastError);
       return;
     } else {

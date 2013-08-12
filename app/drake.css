@@ -173,6 +173,10 @@ header div.navbar {
   margin-bottom: 10px;
 }
 
+ul.dropdown-menu {
+  min-width: 230px;
+}
+  
 header div.navbar-inner {
   border-radius: 0px;
 }

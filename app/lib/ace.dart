@@ -17,7 +17,7 @@ class AceEditor {
   Element _otherContainer;
   AceEditSession _session;
 
-  js.Proxy _aceEditor;
+  var _aceEditor;
 
   AceEditor(BTabContainer tabContainer) {
     _otherContainer = tabContainer.content;
@@ -150,7 +150,7 @@ class AceEditSession {
   StreamController<SessionChangeEvent> streamController =
       new StreamController<SessionChangeEvent>();
 
-  js.Proxy proxy;
+  var proxy;
   js.Callback changeListener;
 
   AceDocument document;
@@ -255,9 +255,9 @@ class AceEditSession {
 }
 
 class AceSelection {
-  js.Proxy proxy;
+  var proxy;
 
-  AceSelection(js.Proxy sessionProxy) {
+  AceSelection(var sessionProxy) {
     proxy = sessionProxy.getSelection();
     js.retain(proxy);
   }
@@ -294,26 +294,26 @@ class AceSelection {
 }
 
 class AceDocument {
-  js.Proxy documentProxy;
+  var documentProxy;
 
-  AceDocument(js.Proxy sessionProxy) {
+  AceDocument(var sessionProxy) {
     documentProxy = sessionProxy.getDocument();
     js.retain(documentProxy);
   }
 
   String getValue() {
-    return (documentProxy as js.Proxy).getValue();
+    return documentProxy.getValue();
   }
 
   void setValue(String contents) {
-    (documentProxy as js.Proxy).setValue(contents);
+    documentProxy.setValue(contents);
   }
 
   /**
    * Converts an index position in a document to a {row, column} object.
    */
   Point indexToPosition(int index) {
-    var obj = (documentProxy as js.Proxy).indexToPosition(index, 0);
+    var obj = documentProxy.indexToPosition(index, 0);
 
     return new Point(obj.column, obj.row);
   }
@@ -324,9 +324,9 @@ class AceDocument {
 }
 
 class AceUndoManager {
-  js.Proxy proxy;
+  var proxy;
 
-  AceUndoManager(js.Proxy sessionProxy) {
+  AceUndoManager(var sessionProxy) {
     proxy = sessionProxy.getUndoManager();
     js.retain(proxy);
   }

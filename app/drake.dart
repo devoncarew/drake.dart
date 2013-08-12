@@ -555,7 +555,7 @@ class FileExitAction extends WorkbenchAction {
   }
 
   void invoke() {
-    chrome.app.window.current().close();
+    chrome.app.window.current.close();
   }
 }
 
