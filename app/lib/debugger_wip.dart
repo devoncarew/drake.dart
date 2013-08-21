@@ -276,7 +276,7 @@ class WipPage extends WipDomain {
 }
 
 class WipRuntime extends WipDomain { 
-  WipPage(WipConnection connection): super(connection) {
+  WipRuntime(WipConnection connection): super(connection) {
     connection._registerDomain('Page', this);
   }
   
