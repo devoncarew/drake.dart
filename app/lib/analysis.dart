@@ -37,8 +37,8 @@ Future<AnalysisResult> analysisParseString(String contents, [chrome.ChromeFileEn
 
   AnalysisContext context = AnalysisEngine.instance.createAnalysisContext();
 
-  context.sourceFactory = new SourceFactory.con2(
-      [new DartUriResolver(dartSdk)]);
+//  context.sourceFactory = new SourceFactory.con2(
+//      [new DartUriResolver(dartSdk)]);
 
   CompilationUnit unit;
 
