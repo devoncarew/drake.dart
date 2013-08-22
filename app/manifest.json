@@ -1,24 +1,24 @@
 {
   "name": "__MSG_app_name__",
   "description" : "__MSG_app_description__",
-  
-  "version": "0.5.11.0",
+
+  "version": "0.6.19.0",
   "minimum_chrome_version": "27",
   "manifest_version": 2,
-  
+
   "default_locale": "en",
-  
+
   "icons": {
     "128": "images/drake.png"
   },
-  
+
   "app": {
     "background": {
       "scripts": ["background.js"],
       "persistent": false
     }
   },
-  
+
   "permissions": [
     "clipboardRead",
     "clipboardWrite", {
@@ -28,7 +28,7 @@
     "storage",
     "webview"
   ],
-  
+
   "file_handlers": {
     "text": {
       "types": [

@@ -6,6 +6,7 @@ import 'dart:async';
 import '../packages/analyzer_experimental/src/generated/ast.dart';
 import '../packages/analyzer_experimental/src/generated/engine.dart';
 import '../packages/analyzer_experimental/src/generated/error.dart';
+import '../packages/analyzer_experimental/src/generated/sdk.dart';
 import '../packages/analyzer_experimental/src/generated/source.dart';
 
 export '../packages/analyzer_experimental/src/generated/ast.dart';
@@ -14,6 +15,12 @@ export '../packages/analyzer_experimental/src/generated/error.dart';
 import '../packages/chrome/app.dart' as chrome;
 
 import 'utils.dart';
+
+DartSdk get dartSdk {
+  // TODO: create a ChromeDartSdk
+
+  return null;
+}
 
 String analysisLiteralToString(StringLiteral literal) {
   if (literal is SimpleStringLiteral) {
@@ -29,6 +36,9 @@ Future<AnalysisResult> analysisParseString(String contents, [chrome.ChromeFileEn
   // TODO: do this work on a web worker
 
   AnalysisContext context = AnalysisEngine.instance.createAnalysisContext();
+
+  context.sourceFactory = new SourceFactory.con2(
+      [new DartUriResolver(dartSdk)]);
 
   CompilationUnit unit;
 

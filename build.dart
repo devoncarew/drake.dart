@@ -1,13 +1,16 @@
+
 import "dart:io";
 
-final List<Path> WATCHED_FILES = [
-  /*new Path.raw("chrome-app/background.dart"),*/
-  new Path.raw("app/webitor.dart")
+import "package:path/path.dart";
+
+final List<String> WATCHED_FILES = [
+  /*normalize("chrome-app/background.dart"),*/
+  normalize("app/drake.dart")
 ];
 
 bool get isWindows => Platform.operatingSystem == 'windows';
-Path get sdkBinPath => new Path(new Options().executable).directoryPath;
-Path get dart2jsPath => sdkBinPath.append(isWindows ? 'dart2js.bat' : 'dart2js');
+String get sdkBinPath => dirname(new Options().executable);
+String get dart2jsPath => join(sdkBinPath, isWindows ? 'dart2js.bat' : 'dart2js');
 
 /// This quick and dirty build script watches for changes to any .dart files
 /// and re-compiles packy.dart using dart2js. The --disallow-unsafe-eval
@@ -20,20 +23,21 @@ void main() {
       (arg) => arg.startsWith("--changed=app") && arg.endsWith(".dart"));
 
   if (fullBuild || dartFilesChanged) {
-    for (Path path in WATCHED_FILES) {
-      callDart2js(path.toNativePath());
+    for (String path in WATCHED_FILES) {
+      callDart2js(path);
     }
   }
 }
 
 void callDart2js(String path) {
   print("dart2js --disallow-unsafe-eval ${path}");
-  
-  String name = new Path(path).filename;
-  Path outPath = new Path(path).directoryPath.join(new Path('output/${name}'));
 
-  Process.run(dart2jsPath.toNativePath(),
-    ['--disallow-unsafe-eval', '-o${outPath}.js', path]
+  String name = basename(path);
+  String outPath = join(dirname(path), 'output', name);
+
+  Process.run(
+      dart2jsPath,
+      ['--disallow-unsafe-eval', '-o${outPath}.js', path]
   ).then((result) {
     if (result.stdout.length > 0) {
       print("${result.stdout.replaceAll('\r\n', '\n')}");
