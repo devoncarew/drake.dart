@@ -1192,7 +1192,7 @@ class AstLabelProvider extends TreeLabelProvider {
     } else if (node is LibraryDirective) {
       LibraryDirective directive = node as LibraryDirective;
 
-      text = '${node.keyword} ${directive.name}';
+      text = '${directive.keyword} ${directive.name}';
     } else if (node is PartOfDirective) {
       PartOfDirective directive = node as PartOfDirective;
 
@@ -1200,7 +1200,7 @@ class AstLabelProvider extends TreeLabelProvider {
     } else if (node is UriBasedDirective) {
       UriBasedDirective directive = node as UriBasedDirective;
 
-      text = '${node.keyword} ${analysisLiteralToString(directive.uri)}';
+      text = '${directive.keyword} ${analysisLiteralToString(directive.uri)}';
     } else if (node is FieldDeclaration) {
       FieldDeclaration field = node as FieldDeclaration;
 

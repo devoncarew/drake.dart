@@ -63,8 +63,9 @@ class Drake {
     workbench.registerAction(new EditGotoLineAction(workbench));
 
     // run
-    workbench.registerAction(new RunRunAction(workbench));
-    workbench.registerAction(new RemoteDebugAction(workbench));
+    // TODO: disabled until these features are better supported
+//    workbench.registerAction(new RunRunAction(workbench));
+//    workbench.registerAction(new RemoteDebugAction(workbench));
 
     // misc
     workbench.registerAction(new GlobalSearchAction(this, workbench));
@@ -101,18 +102,19 @@ class Drake {
 
     menubar.add(editMenu);
 
-    // refactor menu
-    BMenu refactorMenu = new BMenu('Refactor');
-    refactorMenu.add(new BMenuItem('Rename'));
-
-    menubar.add(refactorMenu);
-
-    // run menu
-    BMenu runMenu = new BMenu('Run');
-    runMenu.add(createMenuItem(workbench.getAction('run-run')));
-    runMenu.add(createMenuItem(workbench.getAction('run-remoteDebug')));
-
-    menubar.add(runMenu);
+    // TODO: disabled until these features are better supported
+//    // refactor menu
+//    BMenu refactorMenu = new BMenu('Refactor');
+//    refactorMenu.add(new BMenuItem('Rename'));
+//
+//    menubar.add(refactorMenu);
+//
+//    // run menu
+//    BMenu runMenu = new BMenu('Run');
+//    runMenu.add(createMenuItem(workbench.getAction('run-run')));
+//    runMenu.add(createMenuItem(workbench.getAction('run-remoteDebug')));
+//
+//    menubar.add(runMenu);
 
     // tools menu
     BMenu toolsMenu = new BMenu('Tools');

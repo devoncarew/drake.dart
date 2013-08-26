@@ -5,3 +5,4 @@ pubspec.lock
 .svn
 .DS_Store
 .buildlog
+*.js.map

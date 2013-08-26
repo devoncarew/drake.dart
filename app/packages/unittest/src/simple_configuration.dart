@@ -22,7 +22,7 @@ class _ExpectFailureHandler extends DefaultFailureHandler {
  * advantage of the platform can create a subclass and override methods from
  * this class.
  */
-class SimpleConfiguration implements Configuration {
+class SimpleConfiguration extends Configuration {
   // The VM won't shut down if a receive port is open. Use this to make sure
   // we correctly wait for asynchronous tests.
   ReceivePort _receivePort;
@@ -32,7 +32,7 @@ class SimpleConfiguration implements Configuration {
    * Particularly useful in cases where we have parent/child configurations
    * such as layout tests.
    */
-  final String name = 'Configuration';
+  String get name => 'Configuration';
 
   bool get autoStart => true;
 
@@ -50,22 +50,24 @@ class SimpleConfiguration implements Configuration {
 
   // If stopTestOnExpectFailure is false, we need to capture failures, which
   // we do with this List.
-  final _testLogBuffer = <Pair<String, Trace>>[];
+  final _testLogBuffer = <Pair<String, StackTrace>>[];
 
   /**
    * The constructor sets up a failure handler for [expect] that redirects
    * [expect] failures to [onExpectFailure].
    */
-  SimpleConfiguration() {
+  SimpleConfiguration() : super.blank() {
     configureExpectFailureHandler(new _ExpectFailureHandler(this));
   }
 
   void onInit() {
+    // For Dart internal tests, we don't want stack frame filtering.
+    // We turn it off here in the default config, but by default turn
+    // it back on in the vm and html configs.
+    filterStacks = false;
     _receivePort = new ReceivePort();
     _postMessage('unittest-suite-wait-for-done');
   }
-
-  void onStart() {}
 
   /**
    * Called when each test starts. Useful to show intermediate progress on
@@ -137,8 +139,9 @@ class SimpleConfiguration implements Configuration {
       try {
         throw '';
       } catch (_, stack) {
-        _testLogBuffer.add(
-            new Pair<String, Trace>(reason, new Trace.from(stack)));
+        var trace = _getTrace(stack);
+        if (trace == null) trace = stack;
+        _testLogBuffer.add(new Pair<String, StackTrace>(reason, trace));
       }
     }
   }

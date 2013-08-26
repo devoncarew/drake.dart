@@ -49,9 +49,7 @@ Future<AnalysisResult> analysisParseString(String contents, [chrome.ChromeFileEn
     unit = new CompilationUnit();
   }
 
-  AnalysisResult result = new AnalysisResult()
-    ..ast = unit
-    ..errors = unit.errors;
+  AnalysisResult result = new AnalysisResult(unit);
 
   completer.complete(result);
 
@@ -59,8 +57,17 @@ Future<AnalysisResult> analysisParseString(String contents, [chrome.ChromeFileEn
 }
 
 class AnalysisResult {
-  List<AnalysisError> errors = [];
   CompilationUnit ast;
+
+  AnalysisResult(this.ast);
+
+  List<AnalysisError> get errors {
+    if (ast != null) {
+      return ast.errors;
+    } else {
+      return [];
+    }
+  }
 }
 
 // TODO: implement this
