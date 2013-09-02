@@ -1,5 +1,7 @@
 # Drake
 
+[![Build Status](https://drone.io/github.com/devoncarew/drake.dart/status.png)](https://drone.io/github.com/devoncarew/drake.dart/latest)
+
 A Chrome app based web development environment
 
 Entry Point

@@ -6,3 +6,7 @@ pubspec.lock
 .DS_Store
 .buildlog
 *.js.map
+*.js.deps
+*.js.map
+app/drake.dart.js
+
