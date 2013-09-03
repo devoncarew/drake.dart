@@ -2,8 +2,8 @@
   "name": "__MSG_app_name__",
   "description" : "__MSG_app_description__",
 
-  "version": "0.6.21.3",
-  "minimum_chrome_version": "27",
+  "version": "0.7.1.0",
+  "minimum_chrome_version": "29",
   "manifest_version": 2,
 
   "default_locale": "en",
@@ -22,7 +22,7 @@
   "permissions": [
     "clipboardRead",
     "clipboardWrite",
-    { "fileSystem": ["write", "retainEntries"] },
+    { "fileSystem": ["write"] },
     { "socket" : ["tcp-connect", "tcp-listen", "udp-bind", "udp-send-to"] },
     "storage",
     "webview"

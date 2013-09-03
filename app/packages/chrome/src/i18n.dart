@@ -4,11 +4,10 @@ import 'dart:async';
 
 import 'package:js/js.dart' as js;
 import 'package:js/js_wrapping.dart' as js_wrapping;
-import 'package:logging/logging.dart';
 
 import 'common.dart';
 
-final ChromeI18n i18n = new ChromeI18n();
+final ChromeI18n i18n = new ChromeI18n._();
 
 // chrome.i18n
 
@@ -22,6 +21,8 @@ final ChromeI18n i18n = new ChromeI18n();
  * for English.
  */
 class ChromeI18n {
+
+  ChromeI18n._();
 
   /**
    * Gets the localized string for the specified message. If the message is

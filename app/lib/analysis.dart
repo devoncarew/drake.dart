@@ -30,7 +30,7 @@ String analysisLiteralToString(StringLiteral literal) {
   }
 }
 
-Future<AnalysisResult> analysisParseString(String contents, [chrome.ChromeFileEntry file]) {
+Future<AnalysisResult> analysisParseString(String contents, [chrome.FileEntry file]) {
   Completer completer = new Completer();
 
   // TODO: do this work on a web worker
@@ -73,7 +73,7 @@ class AnalysisResult {
 // TODO: implement this
 class AnalysisStringSource extends Source {
   AnalysisContext _context;
-  chrome.ChromeFileEntry file;
+  chrome.FileEntry file;
   String contents;
 
   AnalysisStringSource(this._context, this.contents, this.file) {
@@ -84,7 +84,7 @@ class AnalysisStringSource extends Source {
     if (object is AnalysisStringSource) {
       AnalysisStringSource other = (object as AnalysisStringSource);
 
-      return file == other.file || file.id == other.file.id;
+      return file == other.file || file.fullPath == other.file.fullPath;
     } else {
       return false;
     }
@@ -100,7 +100,8 @@ class AnalysisStringSource extends Source {
     receiver.accept2(contents, 0);
   }
 
-  String get encoding => file.id;
+  // TODO:
+  String get encoding => file.fullPath;
 
   String get fullName => file == null ? null : file.name;
 

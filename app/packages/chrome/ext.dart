@@ -4,8 +4,11 @@ library chrome_ext;
 
 export 'src/browser_action.dart';
 export 'src/context_menus.dart';
+export 'src/debugger.dart';
 export 'src/i18n.dart';
 export 'src/identity.dart';
+export 'src/media_galleries.dart';
+export 'src/permissions.dart';
 export 'src/power.dart';
 export 'src/push_messaging.dart';
 export 'src/runtime.dart';

@@ -1,37 +1,18 @@
 library chrome.common;
 
 import 'dart:async';
-import 'dart:html';
-import 'dart:json' as JSON;
+import 'dart:convert' show JSON;
 
 import 'package:js/js.dart' as js;
-import 'package:logging/logging.dart';
 
 import 'runtime.dart';
 
-dynamic get chromeProxy => js.context.chrome;
-
-bool isLinux() {
-  return _platform().indexOf('linux') != -1;
-}
-
-bool isMac() {
-  return _platform().indexOf('mac') != -1;
-}
-
-bool isWin() {
-  return _platform().indexOf('win') != -1;
-}
-
-String _platform() {
-  String str = window.navigator.platform;
-
-  return (str != null) ? str.toLowerCase() : '';
-}
+dynamic get jsContext => js.context as dynamic;
+dynamic get chromeProxy => jsContext.chrome;
 
 dynamic convertJsonResponse(dynamic response) {
   return js.scoped(() {
-    return JSON.parse(js.context.JSON.stringify(response));
+    return JSON.decode(jsContext.JSON.stringify(response));
   });
 }
 
@@ -45,7 +26,7 @@ dynamic jsifyMessage(dynamic message) {
   }
 }
 
-dynamic listify(js.Proxy jsArray) {
+List listify(dynamic jsArray) {
   var list = [];
   for (int i = 0; i < jsArray.length; i++) {
     list.add(jsArray[i]);
@@ -55,8 +36,8 @@ dynamic listify(js.Proxy jsArray) {
 }
 
 /**
- * An object for handling completion callbacks that are common in the
- * chrome.* APIs.
+ * An object for handling completion callbacks that are common in the chrome.*
+ * APIs.
  */
 class ChromeCompleter<T> {
   final Completer<T> _completer = new Completer();
@@ -66,7 +47,7 @@ class ChromeCompleter<T> {
     this._callback = new js.Callback.once(() {
       var le = runtime.lastError;
       if (le != null) {
-      _completer.completeError(le);
+        _completer.completeError(le);
       } else {
         _completer.complete();
       }
@@ -77,7 +58,7 @@ class ChromeCompleter<T> {
     this._callback = new js.Callback.once(([arg1]) {
       var le = runtime.lastError;
       if (le != null) {
-      _completer.completeError(le);
+        _completer.completeError(le);
       } else {
         if (transformer != null) {
           arg1 = transformer(arg1);
@@ -91,20 +72,16 @@ class ChromeCompleter<T> {
     this._callback = new js.Callback.once(([arg1, arg2]) {
       var le = runtime.lastError;
       if (le != null) {
-      _completer.completeError(le);
+        _completer.completeError(le);
       } else {
         _completer.complete(transformer(arg1, arg2));
       }
     });
   }
 
-  Future<T> get future {
-    return _completer.future;
-  }
+  Future<T> get future => _completer.future;
 
-  js.Callback get callback {
-    return _callback;
-  }
+  js.Callback get callback => _callback;
 }
 
 class ChromeStreamController<T> {

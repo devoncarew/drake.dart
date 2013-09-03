@@ -29,8 +29,6 @@ Directory get sdkDir {
 }
 
 void main() {
-  print("SDK location: ${sdkDir}");
-
   addTask('packages', copyPackagesTask());
   addTask('sdk', copySdkTask());
   addTask('compile', createDartCompilerTask([
@@ -72,7 +70,17 @@ Task copyPackagesTask() {
  */
 Task copySdkTask() {
   return new Task.async((TaskContext context) {
-    File versionFile = joinFile(sdkDir, ['version']);
+    Directory sdk = null;
+
+    if (context.arguments.rest.isEmpty) {
+      sdk  = sdkDir;
+    } else {
+      sdk = new Directory(context.arguments.rest.first);
+    }
+
+    print("SDK location: ${sdk.path}");
+
+    File versionFile = joinFile(sdk, ['version']);
 
     context.info('version ${versionFile.readAsStringSync().trim()}');
 
@@ -80,11 +88,12 @@ Task copySdkTask() {
         versionFile,
         joinDir(Directory.current, ['app', 'sdk']));
     copyDirectory(
-        joinDir(sdkDir, ['lib']),
+        joinDir(sdk, ['lib']),
         joinDir(Directory.current, ['app', 'sdk', 'lib']));
     createFileListings(joinDir(Directory.current, ['app', 'sdk']));
     return new Future.value(true);
-  }, description: 'copy the current Dart SDK into app/sdk');
+  }, description: 'copy the current Dart SDK into app/sdk',
+  extendedArgs: [new TaskArgument('dart-sdk')]);
 }
 
 /**

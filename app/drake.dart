@@ -382,7 +382,7 @@ class FileOpenAction extends WorkbenchAction {
   }
 
   void invoke() {
-    chrome.fileSystem.chooseOpenFile().then((chrome.ChromeFileEntry file) {
+    chrome.fileSystem.chooseEntry().then((chrome.FileEntry file) {
       if (file != null) {
         // TODO: if the file is already open, active the editor
 

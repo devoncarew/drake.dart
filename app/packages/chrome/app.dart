@@ -5,11 +5,15 @@ library chrome_app;
 
 export 'src/app.dart';
 export 'src/file_system.dart';
+export 'src/files.dart';
 export 'src/i18n.dart';
 export 'src/identity.dart';
+export 'src/media_galleries.dart';
 export 'src/power.dart';
+export 'src/permissions.dart';
 export 'src/push_messaging.dart';
 export 'src/runtime.dart';
 export 'src/serial.dart';
 export 'src/socket.dart';
 export 'src/storage.dart';
+export 'src/sync_file_system.dart';

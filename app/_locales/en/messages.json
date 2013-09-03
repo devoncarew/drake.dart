@@ -1,13 +1,10 @@
 {
-  // app strings
   "app_name": { "message": "Drake" },
   "app_description": { "message": "A Chrome app based development environment" },
 
-  // menus
   "file_new": { "message": "New" },
   "file_open": { "message": "Open" },
 
-  // resources
   "ace_modes": { "message":
     "css,dart,html,javascript,json,less,markdown,text,xml,yaml"
   },
@@ -20,7 +17,5 @@
     "bootstrap,bootstrap_cerulean.min,bootstrap_slate,bootstrap_spacelab.min"
   },
 
-  // last message
   "_file_end_": { "message": "Don't i18n" }
-  // last message
 }

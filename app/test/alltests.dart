@@ -49,15 +49,17 @@ class WorkbenchTestConfiguration implements Configuration {
   WorkbenchTestConfiguration(this.workbench);
 
   bool get autoStart => false;
-  
+
+  Duration timeout = const Duration(seconds: 5);
+
   void onInit() {
 
   }
 
   void onStart() {
-    
+
   }
-  
+
   void onDone(bool success) {
 
   }
@@ -67,17 +69,17 @@ class WorkbenchTestConfiguration implements Configuration {
   }
 
   void onTestStart(TestCase testCase) {
-    
+
   }
-  
+
   void onTestResultChanged(TestCase testCase) {
-    
+
   }
-  
+
   void onTestResult(TestCase testCase) {
-    
+
   }
-  
+
   void onSummary(int passed, int failed, int errors,
                  List<TestCase> results, String uncaughtError) {
     for (TestCase test in results) {

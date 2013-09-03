@@ -3,290 +3,221 @@ library chrome.file_system;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
-import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
 
 import 'common.dart';
+import 'files.dart';
 
-final ChromeFileSystem fileSystem  = new ChromeFileSystem();
+/// Accessor for the `chrome.fileSystem` namespace.
+///
+/// Additional documentation is available here:
+///   http://developer.chrome.com/apps/fileSystem.html.
+final ChromeFileSystem fileSystem  = new ChromeFileSystem._();
 
-// chrome.fileSystem
-
-// Examples here:
-//   http://developer.chrome.com/apps/app_storage.html
-//   http://www.html5rocks.com/en/tutorials/file/filesystem/
-
-// chrome.fileSystem docs here:
-//   http://developer.chrome.com/dev/apps/fileSystem.html
-
-// FileEntry interface definition:
-//   http://www.w3.org/TR/file-system-api/#the-fileentry-interface
-//   http://dev.w3.org/2006/webapi/FileAPI/
-
-//interface File : Blob {
-//  readonly attribute DOMString name;
-//  readonly attribute Date lastModifiedDate;
-//};
-
-//interface FileEntry : Entry {
-//    void createWriter (FileWriterCallback successCallback, optional ErrorCallback errorCallback);
-//    void file (FileCallback successCallback, optional ErrorCallback errorCallback);
-//};
-
-//interface FileCallback {
-//    void handleEvent (File file);
-//};
-
-//interface FileWriterCallback {
-//    void handleEvent (FileWriter fileWriter);
-//};
-
-//interface ErrorCallback {
-//    void handleEvent (DOMError err);
-//};
-
+/**
+ * Use the chrome.fileSystem API to create, read, navigate, and write to a
+ * sandboxed section of the user's local file system. With this API, packaged
+ * apps can read and write to a user-selected location. For example, a text
+ * editor app can use the API to read and write local documents.
+ */
 class ChromeFileSystem {
 
-  Future<ChromeFileEntry> chooseOpenFile() {
-    Completer completer = new Completer();
+  ChromeFileSystem._();
 
-    js.scoped(() {
-      js.Callback callback = new js.Callback.once((var fileEntry) {
-        if (fileEntry != null) {
-          completer.complete(new ChromeFileEntry(fileEntry));
-        } else {
-          completer.complete(null);
-        }
-      });
-
-      chromeProxy.fileSystem.chooseEntry(js.map({'type': 'openFile'}), callback);
-    });
-
-    return completer.future;
-  }
-
-  Future<ChromeFileEntry> chooseSaveFile() {
-    Completer completer = new Completer();
-
-    js.scoped(() {
-      js.Callback callback = new js.Callback.once((var fileEntry) {
-        if (fileEntry != null) {
-          completer.complete(new ChromeFileEntry(fileEntry));
-        } else {
-          completer.complete(null);
-        }
-      });
-
-      chromeProxy.fileSystem.chooseEntry(js.map({'type': 'saveFile'}), callback);
-    });
-
+  /**
+   * Get the display path of an Entry object. The display path is based on the
+   * full path of the file or directory on the local file system, but may be
+   * made more readable for display purposes.
+   */
+  Future<String> getDisplayPath(Entry entry) {
+    ChromeCompleter<String> completer = new ChromeCompleter.oneArg();
+    chromeProxy.fileSystem.getDisplayPath(entry.proxy, completer.callback);
     return completer.future;
   }
 
   /**
-   * Get the display path of a FileEntry object. The display path is based on
-   * the full path of the file on the local file system, but may be made more
-   * readable for display purposes.
+   * Get a writable Entry from another Entry. This call will fail if the
+   * application does not have the 'write' permission under 'fileSystem'. If
+   * entry is a DirectoryEntry, this call will fail if the application does not
+   * have the 'directory' permission under 'fileSystem'.
+   *
+   * Note that this will soon be deprecated.
    */
-  Future<String> getDisplayPath(ChromeFileEntry fileEntry) {
-    return js.scoped(() {
-      Completer completer = new Completer();
-
-      js.Callback callback = new js.Callback.once((var path) {
-        completer.complete(path);
-      });
-
-      chromeProxy.fileSystem.getDisplayPath(fileEntry._proxy, callback);
-
-      return completer.future;
-    });
+  @deprecated
+  Future<Entry> getWritableEntry(Entry entry) {
+    ChromeCompleter<Entry> completer = new ChromeCompleter.oneArg(Entry.createFrom);
+    chromeProxy.fileSystem.getWritableEntry(entry.proxy, completer.callback);
+    return completer.future;
   }
 
   /**
-   * Gets whether this FileEntry is writable or not.
+   * Gets whether this Entry is writable or not.
+   *
+   * Note that this will soon be deprecated.
    */
-  Future<bool> isWritableEntry(ChromeFileEntry fileEntry) {
-    return js.scoped(() {
-      Completer completer = new Completer();
-
-      js.Callback callback = new js.Callback.once((var writeable) {
-        completer.complete(writeable);
-      });
-
-      chromeProxy.fileSystem.isWritableEntry(fileEntry._proxy, callback);
-
-      return completer.future;
-    });
+  @deprecated
+  Future<bool> isWritableEntry(Entry entry) {
+    ChromeCompleter<bool> completer = new ChromeCompleter.oneArg();
+    chromeProxy.fileSystem.isWritableEntry(entry.proxy, completer.callback);
+    return completer.future;
   }
 
   /**
-   * Returns the file entry with the given id.
+   * Ask the user to choose a file.
+   *
+   * [type] is one of 'openFile', 'openWritableFile', 'saveFile'. Note that
+   * 'openWritableFile' will soon be deprecated.
+   *
+   * This will return a dom FileEntry. js.retain() has been called on it; it is
+   * the caller's responsibility to call js.release();
    */
-  ChromeFileEntry getEntryById(String id) {
-    return js.scoped(() {
-      return new ChromeFileEntry(chromeProxy.fileSystem.getEntryById(id));
-    });
+  Future<FileEntry> chooseEntry({
+    String type: 'openFile',
+    String suggestedName,
+    List<ChooseEntryAccepts> accepts,
+    bool acceptsAllTypes: true}) {
+
+    Map<String, dynamic> options = {};
+    if (type != null) options['type'] = type;
+    if (suggestedName != null) options['suggestedName'] = suggestedName;
+    if (accepts != null) options['accepts'] = js.array(accepts);
+    if (acceptsAllTypes != null) options['acceptsAllTypes'] = acceptsAllTypes;
+
+    ChromeCompleter<FileEntry> completer = new ChromeCompleter.twoArgs(
+        (fileEntry, fileEntries) => new FileEntry.retain(fileEntry));
+    chromeProxy.fileSystem.chooseEntry(js.map(options), completer.callback);
+    return completer.future;
   }
 
   /**
-   * Returns the id of the given file entry. This can be used to retrieve file
-   * entries with getEntryById(). When an app is restarted (ie: it is sent the
-   * onRestarted event) it can regain access to the file entries it had by
-   * remembering their ids and calling getEntryById().
+   * Ask the user to choose (open) a directory. This is sugar for the
+   * chrome.fileSystem.chooseEntry call.
+   *
+   * This will return a dom DirectoryEntry. js.retain() has been called on it;
+   * it is the caller's responsibility to call js.release();
    */
-  String getEntryId(ChromeFileEntry fileEntry) {
-    return js.scoped(() {
-      return chromeProxy.fileSystem.getEntryId(fileEntry._proxy);
+  Future<DirectoryEntry> chooseEntryDirectory({
+    String suggestedName,
+    List<ChooseEntryAccepts> accepts,
+    bool acceptsAllTypes: true}) {
+
+    Map<String, dynamic> options = {};
+    options['type'] = 'openDirectory';
+    if (suggestedName != null) options['suggestedName'] = suggestedName;
+    if (accepts != null) options['accepts'] = js.array(accepts);
+    if (acceptsAllTypes != null) options['acceptsAllTypes'] = acceptsAllTypes;
+
+    ChromeCompleter<DirectoryEntry> completer = new ChromeCompleter.twoArgs(
+        (fileEntry, fileEntries) => new DirectoryEntry.retain(fileEntry));
+    chromeProxy.fileSystem.chooseEntry(js.map(options), completer.callback);
+    return completer.future;
+  }
+
+  /**
+   * Ask the user to choose one or more files. This is sugar for the
+   * chrome.fileSystem.chooseEntry call.
+   *
+   * [type] is one of "openFile", "openWritableFile", or "saveFile"
+   *
+   * This will return a list of dom FileEntry objects.
+   */
+  Future<List<FileEntry>> chooseEntries({
+    String type: 'openFile',
+    String suggestedName,
+    List<ChooseEntryAccepts> accepts,
+    bool acceptsAllTypes: true}) {
+
+    Map<String, dynamic> options = {};
+    if (type != null) options['type'] = type;
+    if (suggestedName != null) options['suggestedName'] = suggestedName;
+    if (accepts != null) options['accepts'] = js.array(accepts);
+    if (acceptsAllTypes != null) options['acceptsAllTypes'] = acceptsAllTypes;
+    options['acceptsMultiple'] = true;
+
+    ChromeCompleter<List<FileEntry>> completer = new ChromeCompleter.twoArgs((fileEntry, fileEntries) {
+      if (fileEntries != null) {
+        return listify(fileEntries).map((entry) => Entry.createFrom(entry));
+      } else if (fileEntry != null) {
+        return [Entry.createFrom(fileEntry)];
+      } else {
+        return null;
+      }
     });
+    chromeProxy.fileSystem.chooseEntry(js.map(options), completer.callback);
+    return completer.future;
+  }
+
+  /**
+   * Returns the file entry with the given id if it can be restored. This call
+   * will fail otherwise. This method is new in Chrome 30.
+   *
+   * This will return a dom FileEntry. js.retain() has been called on it; it is
+   * the caller's responsibility to call js.release();
+   */
+  Future<FileEntry> restoreEntry(String id) {
+    ChromeCompleter<FileEntry> completer = new ChromeCompleter.oneArg(Entry.createFrom);
+    chromeProxy.fileSystem.restoreEntry(id, completer.callback);
+    return completer.future;
+  }
+
+  /**
+   * Returns whether a file entry for the given id can be restored, i.e. whether
+   * restoreEntry would succeed with this id now. This method is new in Chrome
+   * 30.
+   */
+  Future<bool> isRestorable(String id) {
+    ChromeCompleter<bool> completer = new ChromeCompleter.oneArg();
+    chromeProxy.fileSystem.isRestorable(id, completer.callback);
+    return completer.future;
+  }
+
+  /**
+   * Returns an id that can be passed to restoreEntry to regain access to a
+   * given file entry. Only the 500 most recently used entries are retained,
+   * where calls to retainEntry and restoreEntry count as use. If the app has
+   * the 'retainEntries' permission under 'fileSystem' (currently restricted to
+   * dev channel), entries are retained indefinitely. Otherwise, entries are
+   * retained only while the app is running and across restarts. This method is
+   * new in Chrome 30.
+   */
+  String retainEntry(Entry entry) {
+    return chromeProxy.fileSystem.retainEntry(entry.proxy);
   }
 }
 
-//interface Entry {
-//    readonly attribute boolean    isFile;
-//    readonly attribute boolean    isDirectory;
-//    void      getMetadata (MetadataCallback successCallback, optional ErrorCallback errorCallback);
-//    readonly attribute DOMString  name;
-//    readonly attribute DOMString  fullPath;
-//    readonly attribute FileSystem filesystem;
-//    void      moveTo (DirectoryEntry parent, optional DOMString newName, optional EntryCallback successCallback, optional ErrorCallback errorCallback);
-//    void      copyTo (DirectoryEntry parent, optional DOMString newName, optional EntryCallback successCallback, optional ErrorCallback errorCallback);
-//    DOMString toURL ();
-//    void      remove (VoidCallback successCallback, optional ErrorCallback errorCallback);
-//    void      getParent (EntryCallback successCallback, optional ErrorCallback errorCallback);
-//};
+/**
+ * For use in the [ChromeFileSystem.chooseEntry] and
+ * [ChromeFileSystem.chooseEntry] methods.
+ */
+class ChooseEntryAccepts implements js.Serializable {
+  /**
+   * This is the optional text description for this option. If not present, a
+   * description will be automatically generated; typically containing an
+   * expanded list of valid extensions (e.g. "text/html" may expand to "*.html,
+   * *.htm").
+   */
+  String description;
 
-//file id = 338AA34D90FC449DABB1249355C96C7F:solar.html undefined:1
-//file name = solar.html undefined:1
-//file fullPath = /solar.html undefined:1
-//file toURL = undefined:1
-//display path = ~/Google Drive/scratch/solar/web/solar.html
+  /**
+   * Mime-types to accept, e.g. "image/jpeg" or "audio/ *". One of mimeTypes or
+   * extensions must contain at least one valid element.
+   */
+  List<String> mimeTypes;
 
-class ChromeFileEntry {
-  js.Proxy _proxy;
+  /**
+   * Extensions to accept, e.g. "jpg", "gif", "crx".
+   */
+  List<String> extensions;
 
-  String _name;
-  String _fullPath;
-  bool _isFile;
-  bool _isDirectory;
+  ChooseEntryAccepts({this.description, this.mimeTypes, this.extensions});
 
-  ChromeFileEntry(js.Proxy proxy) {
-    this._proxy = proxy;
+  dynamic toJs() {
+    Map m = {};
 
-    js.retain(_proxy);
+    if (description != null) m['description'] = description;
+    if (mimeTypes != null) m['mimeTypes'] = mimeTypes;
+    if (extensions != null) m['extensions'] = extensions;
 
-    _name = _proxy.name;
-    _fullPath = _proxy.fullPath;
-    _isFile = _proxy.isFile;
-    _isDirectory = _proxy.isDirectory;
-  }
-
-  String get name => _name;
-
-  String toString() => name;
-
-  String get fullPath => _fullPath;
-
-  String get id => fileSystem.getEntryId(this);
-
-  String toURL() {
-    return js.scoped(() {
-      return _proxy.toURL();
-    });
-  }
-
-  // TODO: this seems to crash Dartium consistently -
-  Future<ChromeFileEntry> getParent() {
-    return js.scoped(() {
-      Completer completer = new Completer();
-
-      _proxy.getParent(
-          new js.Callback.once((var e) {
-            completer.complete(new ChromeFileEntry(e));
-          }),
-          new js.Callback.once((var e) {
-            completer.completeError(e);
-          })
-      );
-
-      return completer.future;
-    });
-  }
-
-  Future<String> readContents() {
-//    readOnlyEntry.file(function(file) {
-//      var reader = new FileReader();
-//
-//      reader.onerror = errorHandler;
-//      reader.onloadend = function(e) {
-//        console.log(e.target.result);
-//      };
-//
-//      reader.readAsText(file);
-//    });
-
-    Completer completer = new Completer();
-
-    js.scoped(() {
-      js.Callback contentsCallback = new js.Callback.once((var e) {
-        // TODO:
-        completer.complete(e.target.result);
-      });
-
-      js.Callback callback = new js.Callback.once((var file) {
-        var reader = new js.Proxy(js.context.FileReader);
-        (reader as dynamic).onloadend = contentsCallback;
-        (reader as dynamic).readAsText(file);
-      });
-
-      _proxy.file(callback);
-    });
-
-    return completer.future;
-  }
-
-  Future<ChromeFileEntry> writeContents(String contents) {
-//  chrome.fileSystem.getWritableEntry(chosenFileEntry, function(writableEntry)
-
-//  writableFileEntry.createWriter(function(writer) {
-//    writer.onerror = errorHandler;
-//    writer.onwriteend = function(e) {
-//      console.log('write complete');
-//    };
-//    writer.write(new Blob(['1234567890'], {type: 'text/plain'}));
-//  }, errorHandler);
-
-    Completer completer = new Completer();
-
-    js.scoped(() {
-      js.Callback writeEndCallback = new js.Callback.once((var event) {
-        if (!completer.isCompleted) {
-          completer.complete(this);
-        }
-      });
-
-      js.Callback errorCallback = new js.Callback.once((var event) {
-        completer.completeError(event);
-      });
-
-      js.Callback writerCallback = new js.Callback.once((var writer) {
-        // blob = new Blob([contents])
-        var blob = new js.Proxy(js.context.Blob, js.array([contents]));
-
-        writer.onwriteend = writeEndCallback;
-        writer.onerror = errorCallback;
-        writer.write(blob, js.map({'type': 'text/plain'}));
-      });
-
-      js.Callback writeableCallback = new js.Callback.once((var writeableEntry) {
-        writeableEntry.createWriter(writerCallback, errorCallback);
-      });
-
-      chromeProxy.fileSystem.getWritableEntry(_proxy, writeableCallback);
-    });
-
-    return completer.future;
-  }
-
-  void dispose() {
-    js.release(_proxy);
+    return js.map(m);
   }
 }

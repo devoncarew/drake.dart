@@ -4,12 +4,13 @@ library chrome.runtime;
 import 'dart:async';
 
 import 'package:js/js.dart' as js;
-import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import 'common.dart';
+import 'files.dart';
 import 'tabs.dart';
 
+/// Accessor for the `chrome.runtime` namespace.
 final Runtime runtime = new Runtime._();
 
 /**
@@ -29,7 +30,7 @@ class Runtime {
 
   Runtime._();
 
-  js.Proxy get _runtime => js.context.chrome.runtime;
+  dynamic get _runtime => chromeProxy.runtime;
 
   /**
    * This will be defined during an API method callback if there was an error.
@@ -163,11 +164,29 @@ class Runtime {
     return completer.future;
   }
 
+  /**
+   * Returns a DirectoryEntry for the package directory.
+   */
+  Future<DirectoryEntry> getPackageDirectoryEntry() {
+    ChromeCompleter<DirectoryEntry> completer =
+        new ChromeCompleter.oneArg(Entry.createFrom);
+    _runtime.getPackageDirectoryEntry(completer.callback);
+    return completer.future;
+  }
+
+  /// Returns information about the current platform.
+  Future<PlatformInfo> getPlatformInfo() {
+    final completer = new ChromeCompleter.oneArg((platformInfo) =>
+        new PlatformInfo._(platformInfo));
+    _runtime.getPlatformInfo(completer.callback);
+    return completer.future;
+  }
+
   /// Events
 
   final ChromeStreamController _onStartup =
       new ChromeStreamController.zeroArgs(
-          () => js.context.chrome.runtime.onStartup,
+          () => chromeProxy.runtime.onStartup,
           () => null);
 
   /**
@@ -177,7 +196,7 @@ class Runtime {
 
   final ChromeStreamController<InstalledEvent> _onInstalled =
       new ChromeStreamController<InstalledEvent>.oneArg(
-          () => js.context.chrome.runtime.onInstalled,
+          () => chromeProxy.runtime.onInstalled,
           (details) => new InstalledEvent(
               details.reason, details['previousVersion']));
 
@@ -196,7 +215,7 @@ class Runtime {
 
   final ChromeStreamController _onSuspend =
       new ChromeStreamController.zeroArgs(
-          () => js.context.chrome.runtime.onSuspend,
+          () => chromeProxy.runtime.onSuspend,
           () => null);
 
   /**
@@ -213,7 +232,7 @@ class Runtime {
 
   final ChromeStreamController _onSuspendCanceled =
       new ChromeStreamController.zeroArgs(
-          () => js.context.chrome.runtime.onSuspendCanceled,
+          () => chromeProxy.runtime.onSuspendCanceled,
           () => null);
 
   /**
@@ -223,7 +242,7 @@ class Runtime {
 
   final ChromeStreamController<String> _onUpdateAvailable =
       new ChromeStreamController<String>.oneArg(
-          () => js.context.chrome.runtime.onUpdateAvailable,
+          () => chromeProxy.runtime.onUpdateAvailable,
           (details) => details.version);
 
   /**
@@ -240,7 +259,7 @@ class Runtime {
 
   ChromeStreamController<MessageEvent> _onMessage =
       new ChromeStreamController<MessageEvent>.threeArgs(
-          () => js.context.chrome.runtime.onMessage,
+          () => chromeProxy.runtime.onMessage,
           (message, sender, sendResponse) => new MessageEvent(
                 convertJsonResponse(message),
                 new MessageSender(sender),
@@ -261,7 +280,7 @@ class MessageSender {
 
   MessageSender._(this.id, this.url, this.tab);
 
-  MessageSender(js.Proxy sender) : this._(
+  MessageSender(sender) : this._(
       sender.id,
       sender['url'],
       sender['tab'] != null ? new Tab(sender.tab) : null);
@@ -299,7 +318,7 @@ class InstalledEvent {
 class MessageEvent {
   final dynamic message;
   final MessageSender sender;
-  js.Proxy _sendResponse;
+  var _sendResponse;
 
   MessageEvent(this.message, this.sender, this._sendResponse) {
     js.retain(_sendResponse);
@@ -323,4 +342,28 @@ class MessageEvent {
   }
 
   bool get responseSent => _sendResponse == null;
+}
+
+/// Information about the current platform.
+class PlatformInfo {
+  /// The operating system chrome is running on.
+  ///
+  /// One of "mac", "win", "android", "cros", "linux", or "openbsd".
+  final String os;
+
+  /// The machine's processor architecture.
+  ///
+  /// One of "arm", "x86-32", or "x86-64".
+  final String arch;
+
+  /// The native client architecture. This may be different from arch on some
+  /// platforms.
+  ///
+  /// One of "arm", "x86-32", or "x86-64".
+  final String nacl_arch;
+
+  PlatformInfo._(proxy)
+      : os = proxy.os
+      , arch = proxy.arch
+      , nacl_arch = proxy.nacl_arch;
 }

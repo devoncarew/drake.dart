@@ -1040,12 +1040,12 @@ class Toolbar {
  * API: http://ajaxorg.github.io/ace/#nav=api
  */
 class AceEditorPart extends TextEditorPart {
-  chrome.ChromeFileEntry _file;
+  chrome.FileEntry _file;
 
   AceEditor aceEditor;
   AceEditSession session;
 
-  AceEditorPart(Workbench workbench, [chrome.ChromeFileEntry file]) : super(workbench) {
+  AceEditorPart(Workbench workbench, [chrome.FileEntry file]) : super(workbench) {
     this._file = file;
 
     name = _file == null ? 'untitled' : _file.name;
@@ -1080,7 +1080,7 @@ class AceEditorPart extends TextEditorPart {
 
   Element createContent(Element container) {
     if (_file != null) {
-      _file.readContents().then((String contents) {
+      _file.readText().then((String contents) {
         session.getDocument().setValue(contents);
         aceEditor.navigateFileStart();
         dirty = false;
@@ -1111,7 +1111,7 @@ class AceEditorPart extends TextEditorPart {
     if (dirty) {
       // TODO: there is a race condition here if they type during long saves
       // we need to set the editor as read-only, and show a busy state
-      _file.writeContents(contents).then((chrome.ChromeFileEntry f) {
+      _file.writeText(contents).then((chrome.FileEntry f) {
         dirty = false;
         completer.complete(this);
       }).catchError((var error) {
@@ -1127,7 +1127,7 @@ class AceEditorPart extends TextEditorPart {
   Future<EditorPart> saveAs() {
     Completer completer = new Completer();
 
-    chrome.fileSystem.chooseSaveFile().then((chrome.ChromeFileEntry file) {
+    chrome.fileSystem.chooseEntry(type: 'saveFile').then((chrome.FileEntry file) {
       if (file != null) {
         _file = file;
         name = _file.name;
@@ -1157,7 +1157,7 @@ class AceEditorPart extends TextEditorPart {
     eventStream.close();
 
     if (_file != null) {
-      _file.dispose();
+      _file.release();
     }
 
     session.dispose();
