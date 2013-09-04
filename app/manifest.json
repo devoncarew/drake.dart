@@ -3,7 +3,7 @@
   "description" : "__MSG_app_description__",
 
   "version": "0.7.1.0",
-  "minimum_chrome_version": "29",
+  "minimum_chrome_version": "30",
   "manifest_version": 2,
 
   "default_locale": "en",
