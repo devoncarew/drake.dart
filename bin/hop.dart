@@ -114,6 +114,9 @@ Task copyInfoTask() {
  */
 Task copyArchiveTask() {
   return new Task.async((TaskContext context) {
+    Directory distDir = new Directory('dist');
+    distDir.createSync();
+
     // zip drake.zip . -r -x .*
     ProcessResult result = Process.runSync(
         'zip',
