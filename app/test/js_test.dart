@@ -1,7 +1,9 @@
 
 library js_test;
 
-import '../packages/unittest/unittest.dart';
+import 'package:unittest/unittest.dart';
+//import '../packages/unittest/unittest.dart';
+
 import '../packages/js/js.dart' as js;
 
 main() {

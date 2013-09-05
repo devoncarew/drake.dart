@@ -3,6 +3,7 @@ library drake;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:js' as jsx;
 
 import 'packages/chrome/app.dart' as chrome;
 
@@ -15,9 +16,9 @@ import 'lib/jobs.dart';
 import 'lib/widgets.dart';
 import 'lib/workbench.dart';
 
-import 'test/alltests.dart' as testing;
-
 void main() {
+  jsx.context['console'].callMethod('log', ['from drake']);
+
   Drake drake = new Drake();
 }
 
@@ -135,8 +136,6 @@ class Drake {
     }));
     toolsMenu.addSeparator();
     toolsMenu.add(new BMenuItem('Debug: Analyze', handleAnalyze));
-    toolsMenu.addSeparator();
-    toolsMenu.add(new BMenuItem('Run Tests', handleRunTests));
 
     menubar.add(toolsMenu);
   }
@@ -263,10 +262,6 @@ class Drake {
         }
       });
     }
-  }
-
-  void handleRunTests(var event) {
-    testing.runTests(workbench);
   }
 
   void handleJob1(var event) {

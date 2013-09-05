@@ -31,14 +31,16 @@ Directory get sdkDir {
 void main() {
   addTask('packages', copyPackagesTask());
   addTask('sdk', copySdkTask());
+  addTask('mode_test', modeTestTask(true));
+  addTask('mode_notest', modeTestTask(false));
   addTask('compile', createDartCompilerTask([
       'app/drake.dart'],
       packageRoot: 'app/packages',
       allowUnsafeEval: false,
       verbose: false,
       suppressWarnings: true));
-  addTask('archive', copyArchiveTask());
   addTask('info', copyInfoTask());
+  addTask('archive', copyArchiveTask());
 
   runHop(paranoid: false);
 }
@@ -54,6 +56,8 @@ Task copyPackagesTask() {
   List<String> packages = ['analyzer_experimental', 'compiler_unsupported',
       'chrome', 'meta', 'stack_trace', 'browser', 'js', 'unittest', 'logging',
       'path', 'unmodifiable_collection'];
+//  List<String> packages = ['analyzer_experimental', 'compiler_unsupported',
+//      'chrome', 'meta', 'browser', 'js', 'logging', 'unmodifiable_collection'];
 
   return new Task.async((TaskContext context) {
     for (String dirName in packages) {
@@ -110,6 +114,39 @@ Task copyInfoTask() {
 }
 
 /**
+ * Switch the application over to the test mode.
+ */
+Task modeTestTask(bool doTests) {
+  final testMode = 'src="drake_test.dart';
+  final noTestMode = 'src="drake.dart';
+
+  return new Task.async((TaskContext context) {
+    File htmlFile = joinFile(Directory.current, ['app', 'drake.html']);
+
+    try {
+      String contents = htmlFile.readAsStringSync();
+
+      if (doTests) {
+        if (contents.contains(noTestMode)) {
+          contents = contents.replaceAll(noTestMode, testMode);
+          htmlFile.writeAsStringSync(contents);
+        }
+      } else {
+        if (contents.contains(testMode)) {
+          contents = contents.replaceAll(testMode, noTestMode);
+          htmlFile.writeAsStringSync(contents);
+        }
+      }
+
+      return new Future.value(true);
+    } catch (e) {
+      context.fail(e.toString());
+      return new Future.value(false);
+    }
+  }, description: 'convert drake.html over to test execution');
+}
+
+/**
  * Zip the app/ directory into drake.zip.
  */
 Task copyArchiveTask() {
@@ -124,7 +161,7 @@ Task copyArchiveTask() {
         workingDirectory: 'app');
 
     return new Future.value(result.exitCode == 0);
-  }, description: 'copy the current Dart SDK into app/sdk');
+  }, description: 'archive the app/ directory into dist/drake.zip');
 }
 
 void createFileListings(Directory dir) {
@@ -155,6 +192,12 @@ void copyFile(File srcFile, Directory destDir) {
     destDir.createSync(recursive: true);
     destFile.writeAsBytesSync(srcFile.readAsBytesSync());
   }
+}
+
+String _commentOut(String htmlEntity) {
+  htmlEntity = htmlEntity.substring(1, htmlEntity.length - 1);
+
+  return "<!-- ${htmlEntity} -->";
 }
 
 // These utils should all essentially be available in dart:io.

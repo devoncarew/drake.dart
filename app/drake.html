@@ -43,13 +43,16 @@
 
   <script src="ace/ace.js"></script>
 
-  <script src="packages/browser/dart.js"></script>
+  <!-- this is necessary for both package:js and dart:js -->
   <script src="packages/browser/interop.js"></script>
+
+  <!-- this is only used by package:js -->
   <script src="packages/js/dart_interop.js"></script>
 
-  <!-- TODO: I think the deploy process needs to swap the dart / js scripts -->
+  <!-- this starts the Dart VM in Dartium, and injects drake.dart.js otherwise -->
+  <script src="drake_bootstrap.js" defer></script>
+
   <script type="application/dart" src="drake.dart" defer></script>
-  <!-- script src="drake.dart.js" defer></script -->
 </body>
 
 </html>

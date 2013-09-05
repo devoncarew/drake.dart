@@ -1,7 +1,9 @@
 
 library ace_test;
 
-import '../packages/unittest/unittest.dart';
+import 'package:unittest/unittest.dart';
+//import '../packages/unittest/unittest.dart';
+
 import '../lib/ace.dart';
 import '../lib/workbench.dart';
 

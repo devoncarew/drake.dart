@@ -1,7 +1,8 @@
 
 library alltests;
 
-import '../packages/unittest/unittest.dart';
+import 'package:unittest/unittest.dart';
+//import '../packages/unittest/unittest.dart';
 
 import '../lib/workbench.dart';
 
