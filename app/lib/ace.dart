@@ -1,5 +1,5 @@
 
-library ace;
+library drake.ace;
 
 import 'dart:async';
 import 'dart:html';

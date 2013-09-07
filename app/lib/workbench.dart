@@ -1,6 +1,6 @@
 // UI workbench code.
 
-library workbench;
+library drake.workbench;
 
 import 'dart:async';
 import 'dart:html';

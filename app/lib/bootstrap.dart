@@ -1,5 +1,5 @@
 
-library bootstrap;
+library drake.bootstrap;
 
 import 'dart:async';
 import 'dart:html';

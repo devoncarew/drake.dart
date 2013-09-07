@@ -1,5 +1,5 @@
 
-library filesystem_chrome;
+library drake.filesystem_chrome;
 
 import 'dart:async';
 
@@ -12,19 +12,19 @@ void registerChromeFileSystem() {
 }
 
 class ChromeFileSystem extends FileSystem {
-  
+
   FileSystemFolder get root {
     // TODO: implement
-    
+
   }
-  
+
   String get id {
     // TODO: implement
-    
+
   }
-  
+
   Future<FileSystemEntity> unpickle(String pickle) {
     // TODO: implement
-    
+
   }
 }

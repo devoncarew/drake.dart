@@ -1,6 +1,6 @@
 // A resource workspace implementation.
 
-library workspace;
+library drake.workspace;
 
 import 'dart:async';
 

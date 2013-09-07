@@ -1,5 +1,5 @@
 
-library preferences_chrome;
+library drake.preferences_chrome;
 
 import 'dart:async';
 

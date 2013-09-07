@@ -1,5 +1,5 @@
 
-library analysis;
+library drake.analysis;
 
 import 'dart:async';
 

@@ -1,5 +1,5 @@
 
-library chrome_socket;
+library drake.chrome_socket;
 
 import 'dart:async';
 

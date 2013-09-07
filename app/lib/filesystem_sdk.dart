@@ -1,5 +1,5 @@
 
-library filesystem_sdk;
+library drake.filesystem_sdk;
 
 import 'dart:async';
 import 'dart:html' as html;

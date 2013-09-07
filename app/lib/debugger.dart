@@ -1,5 +1,5 @@
 
-library debugger;
+library drake.debugger;
 
 import 'dart:async';
 
