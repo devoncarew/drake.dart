@@ -22,10 +22,9 @@ is not a normal symlinked pub directory but has the same layout as one.
 
 Run './hop packages' to copy library code from packages/ to app/packages/.
 
-Deployment
+Documentation
 ----------
-To deploy, run the app, then choose Tools > Extensions from the chrome menu.
-Check 'Developer mode' and select 'Pack extension...'.
+API documentation is available [here](http://devoncarew.github.io/drake.dart/).
 
 Ace
 ---

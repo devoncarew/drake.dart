@@ -10,4 +10,4 @@ dist/
 *.js.deps
 *.js.map
 app/drake.dart.js
-
+docs/
