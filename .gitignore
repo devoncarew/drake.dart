@@ -1,0 +1,15 @@
+.buildlog
+.project
+*.dart.js.deps
+*.dart.js.map
+*.dart.js
+.DS_Store
+out
+packages
+pubspec.lock
+bin/
+docs/
+app/
+example/
+test/
+tool/
