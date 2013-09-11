@@ -1,2 +1,2 @@
 #!/bin/bash
-dart ./bin/hop.dart --log-level all $@
+dart tool/hop.dart --log-level all $@
