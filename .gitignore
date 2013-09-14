@@ -2,6 +2,7 @@ lines.sh
 pubspec.lock
 *.pem
 /packages/
+/tool/packages
 dist/
 .svn
 .DS_Store

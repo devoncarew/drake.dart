@@ -8,7 +8,7 @@ import '../lib/workbench.dart';
 
 import 'ace_test.dart' as ace_test;
 import 'analysis_test.dart' as analysis_test;
-import 'chrome_socket_test.dart' as chrome_socket_test;
+//import 'chrome_socket_test.dart' as chrome_socket_test;
 import 'common_test.dart' as common_test;
 import 'filesystem_sdk_test.dart' as filesystem_sdk_test;
 import 'jobs_test.dart' as jobs_test;
@@ -22,7 +22,8 @@ bool _testsDefined = false;
 main() {
   ace_test.main();
   analysis_test.main();
-  chrome_socket_test.main();
+  // TODO: add these back once we restore the run feature
+  //chrome_socket_test.main();
   common_test.main();
   filesystem_sdk_test.main();
   jobs_test.main();
@@ -41,6 +42,8 @@ void runTests(Workbench workbench) {
     main();
 
     _testsDefined = true;
+
+    rerunTests();
   }
 }
 
