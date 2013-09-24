@@ -36,7 +36,6 @@ void main() {
   addTask('compile', createDartCompilerTask([
       'app/drake.dart'],
       packageRoot: 'app/packages',
-      allowUnsafeEval: false,
       verbose: false,
       suppressWarnings: true));
   addTask('info', copyInfoTask());
