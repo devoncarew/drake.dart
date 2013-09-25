@@ -171,7 +171,7 @@ class ChromeSocket {
 
       var int8View = new js.Proxy((js.context as dynamic).Int8Array, js.array(data));
 
-      _chrome.socket.write(socketId, int8View.buffer, callback);
+      _chrome.socket.write(socketId, int8View['buffer'], callback);
 
       return completer.future;
     });
@@ -199,7 +199,7 @@ class ChromeSocket {
           _closeRead();
         } else {
           var int8View = new js.Proxy((js.context as dynamic).Int8Array, data);
-          List<int> result = new List<int>(int8View.length);
+          List<int> result = new List<int>(int8View['length']);
 
           for (int i = 0; i < result.length; i++) {
             result[i] = int8View[i];
