@@ -1,4 +1,4 @@
-# Drake
+### Drake
 
 A Chrome app based web development environment
 
@@ -6,8 +6,6 @@ A Chrome app based web development environment
 
 Drake - a prototype effort from the Dart Editor team, and [Spark](https://github.com/GoogleChrome/code-editor-app),
 a proof-of-concept IDE from the Chrome Apps team, have merged and is now Spark,
-hosted here:
+hosted [here](https://github.com/dart-lang/spark).
 
-    [dart-lang/spark](https://github.com/dart-lang/spark)
-
- Contributions welcome!
+Contributions welcome!
